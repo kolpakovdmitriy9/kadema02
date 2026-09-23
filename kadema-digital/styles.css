@@ -33,7 +33,17 @@ body {
 }
 
 /* Фиксированная ширина 1440; на узких экранах script.js масштабирует через zoom */
-.page { position: relative; width: 1440px; margin: 0 auto; }
+.page {
+  position: relative; width: 1440px; margin: 0 auto;
+  /* общее «полотно» тёмных блоков: карточка «Как это работает», этапы и сцена с фото.
+     В сцене с фото script.js плавно переводит его в светлое — перекрашивается всё сразу */
+  --canvas: #111;
+  --canvas-ink: #fff;
+  --canvas-soft: rgba(255,255,255,.5);
+  --canvas-line: rgba(255,255,255,.2);
+  --canvas-pill: rgba(255,255,255,.1);
+  --canvas-dot: rgba(255,255,255,.4);
+}
 
 /* ============ HEADER ============ */
 .header {
@@ -273,12 +283,12 @@ body {
   border-radius: calc(40px * (1 - var(--p)));
   /* параллакс: пока блок заходит, карточка ниже и догоняет текст над ней быстрее скролла */
   transform: translate3d(0, calc((1 - var(--e)) * 160px), 0);
-  background: #111;
+  background: var(--canvas);
   overflow: hidden;
   isolation: isolate;
   display: flex; flex-direction: column; align-items: center;
   padding: 44px calc(44px + 16px * var(--p));
-  color: #fff;
+  color: var(--canvas-ink);
   /* резкий старт и долгая доводка: окно почти сразу набирает скорость */
   transition: --p 800ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width, height, transform;
@@ -290,16 +300,16 @@ body {
   position: relative; z-index: 1;
   display: flex; align-items: center; gap: 10px;
   padding: 12px 16px;
-  background: rgba(255,255,255,.1);
+  background: var(--canvas-pill);
   border-radius: 40px;
   font-weight: 500; font-size: 16px; line-height: 100%;
 }
-.pill__dot { width: 6px; height: 6px; border-radius: 100px; background: rgba(255,255,255,.4); }
+.pill__dot { width: 6px; height: 6px; border-radius: 100px; background: var(--canvas-dot); }
 
 /* текст всегда по центру блока, даже когда карточка раскрыта на весь экран */
 .how__text { position: relative; z-index: 2; align-self: center; flex: none; width: 488px; display: flex; flex-direction: column; gap: 40px; }
 .how__text h3 { width: 488px; font-weight: 500; font-size: 46px; line-height: 100%; }
-.how__text p { width: 434px; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(255,255,255,.5); }
+.how__text p { width: 434px; font-weight: 500; font-size: 16px; line-height: 140%; color: var(--canvas-soft); }
 
 /* место под кучу: всё, что осталось между плашкой и текстом */
 .how__media {
@@ -338,8 +348,8 @@ body {
   position: relative;
   display: flex; flex-direction: column; align-items: center;
   padding: 96px 0 60px;         /* сверху: 96 + 44 (поле карточки выше) = 140px от абзаца до этапа */
-  background: #111;
-  color: #fff;
+  background: var(--canvas);
+  color: var(--canvas-ink);
   letter-spacing: -0.04em;
 }
 /* дорожка: высота = блок + прокрутка на все пункты (--duo-steps × --duo-step) */
@@ -377,12 +387,12 @@ body {
   flex: 1 1 0;
   display: flex; flex-direction: column; gap: 40px;
   padding: 24px 44px 44px;
-  border: 0 solid rgba(255,255,255,.2);
+  border: 0 solid var(--canvas-line);
 }
 .duo__col--team { border-width: 0 0 1px 1px; border-radius: 0 0 0 40px; }
 .duo__col--ai   { border-width: 0 1px 1px 0; border-radius: 0 0 40px 0; }
-.duo__head { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 16px; line-height: 100%; color: rgba(255,255,255,.5); }
-.duo__dot { width: 6px; height: 6px; border-radius: 10px; background: #fff; flex: none; }
+.duo__head { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 16px; line-height: 100%; color: var(--canvas-soft); }
+.duo__dot { width: 6px; height: 6px; border-radius: 10px; background: var(--canvas-ink); flex: none; }
 .duo__dot--ai { border-radius: 2px; background: #209EE9; }
 .duo__dot--ai.is-thinking { animation: duo-think 0.9s ease-in-out infinite; }
 @keyframes duo-think { 50% { opacity: .25; transform: scale(.7); } }
@@ -394,7 +404,7 @@ body {
 }
 /* ИИ «думает»: три точки на месте текста */
 .duo__thinking { display: inline-flex; gap: 5px; height: 24px; align-items: center; }
-.duo__thinking i { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); animation: duo-dots 1s ease-in-out infinite; }
+.duo__thinking i { width: 5px; height: 5px; border-radius: 50%; background: var(--canvas-soft); animation: duo-dots 1s ease-in-out infinite; }
 .duo__thinking i:nth-child(2) { animation-delay: .15s; }
 .duo__thinking i:nth-child(3) { animation-delay: .3s; }
 @keyframes duo-dots { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
@@ -406,10 +416,10 @@ body {
 .duo__progress {
   position: absolute; left: 50%; top: 0;
   width: 1px; height: 133px;
-  background: rgba(255,255,255,.2);
+  background: var(--canvas-line);
   transform: translateX(-50%);
 }
-.duo__bar { position: absolute; left: 0; top: 0; width: 1px; height: 0; background: #fff;
+.duo__bar { position: absolute; left: 0; top: 0; width: 1px; height: 0; background: var(--canvas-ink);
   transition: height .5s cubic-bezier(0.22, 1, 0.36, 1); }  /* 4 фиксированных положения */
 
 /* ============ ЗАДАЧИ, КОТОРЫЕ РЕШАЕТ САЙТ ============ */
@@ -425,17 +435,11 @@ body {
 .tasks__track {
   --tasks-scene: 1100px;          /* прокрутка на сцену: смена фона идёт по времени, дальше — значок */
   height: calc(max(800px, var(--vh)) + var(--tasks-scene));
-  background: #111;
+  background: var(--canvas);
 }
 .tasks__stage {
   position: sticky; top: 0;
   height: max(800px, var(--vh));
-}
-/* светлый фон: проявляется поверх тёмного за один раз (прозрачность задаёт script.js) */
-.tasks__light {
-  position: absolute; inset: 0;
-  background: #FFF4F8;
-  opacity: 0;
 }
 .tasks__frame {
   position: absolute; left: calc(50% - 115px); top: 218px;
@@ -491,7 +495,7 @@ body {
   font-weight: 500; font-size: 80px; line-height: 100%;
   letter-spacing: -0.04em;
   text-align: center;
-  color: var(--tasks-ink, #fff);
+  color: var(--canvas-ink);
 }
 .tasks__sub {
   position: absolute; left: calc(50% - 232px); top: 769px;
@@ -499,7 +503,7 @@ body {
   font-weight: 500; font-size: 24px; line-height: 100%;
   letter-spacing: -0.04em;
   text-align: center;
-  color: var(--tasks-ink-soft, rgba(255,255,255,.5));
+  color: var(--canvas-soft);
 }
 /* сетка задач 3 × 2 */
 .tasks__grid {

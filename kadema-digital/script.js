@@ -296,15 +296,14 @@
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
      2) верх блока закрепляется — и дальше, как с тёмной карточкой, полуавтоматически
-        (по времени, изинг сильный ease-out) фон целиком перекрашивается из тёмного
-        в #FFF4F8, синхронно внутри фото проступает
+        (по времени, изинг сильный ease-out) всё тёмное полотно — сцена, этапы и
+        карточка выше — перекрашивается в #FFF4F8 (текст в чёрный), синхронно внутри фото проступает
         размытая маска — сначала тонкой рамкой по форме квадрата, потом вырез
         уменьшается и скругляется до круга 184px;
      3) по скроллу: появляется значок «1», затем «1» уезжает вверх, «2» встаёт снизу. */
   const tasks = document.getElementById('tasks');
   const tasksTrack = document.getElementById('tasksTrack');
   const tasksStage = document.getElementById('tasksStage');
-  const tasksLight = document.getElementById('tasksLight');
   const tasksFrame = document.getElementById('tasksFrame');
   const tasksVeil = document.getElementById('tasksVeil');
   const tasksBadge = document.getElementById('tasksBadge');
@@ -350,12 +349,17 @@
   const LIGHT_MS = 900;
   let lp = 0, lpFrom = 0, lpTo = 0, lpT0 = 0, lpRaf = 0;
   function renderLight() {
-    // фон перекрашивается целиком: светлый слой проявляется поверх тёмного
-    tasksLight.style.opacity = lp.toFixed(3);
-    // заголовок и подпись: белые на тёмном → чёрные на светлом
-    const ink = Math.round(255 * (1 - lp));
-    tasks.style.setProperty('--tasks-ink', `rgb(${ink},${ink},${ink})`);
-    tasks.style.setProperty('--tasks-ink-soft', `rgba(${ink},${ink},${ink},.5)`);
+    // перекрашивается всё тёмное полотно сразу — сцена, этапы и карточка выше:
+    // фон #111 → #FFF4F8, текст и линии из белого в чёрный
+    const k = (a, b) => Math.round(a + (b - a) * lp);
+    const ink = k(255, 0);
+    const s = page.style;
+    s.setProperty('--canvas', `rgb(${k(17, 255)},${k(17, 244)},${k(17, 248)})`);
+    s.setProperty('--canvas-ink', `rgb(${ink},${ink},${ink})`);
+    s.setProperty('--canvas-soft', `rgba(${ink},${ink},${ink},.5)`);
+    s.setProperty('--canvas-line', `rgba(${ink},${ink},${ink},.2)`);
+    s.setProperty('--canvas-pill', `rgba(${ink},${ink},${ink},.1)`);
+    s.setProperty('--canvas-dot', `rgba(${ink},${ink},${ink},.4)`);
     // маска: 1) рамка по форме квадрата (вырез 230 → 206), 2) вырез → круг 184
     const a = clamp01(lp / 0.4), b = clamp01((lp - 0.4) / 0.6);
     const size = FRAME - 24 * a - 22 * b;
