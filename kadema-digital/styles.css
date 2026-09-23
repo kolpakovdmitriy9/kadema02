@@ -327,7 +327,7 @@ body {
 /* дорожка: высота = блок + прокрутка на все пункты (--duo-steps × --duo-step) */
 .duo__track {
   --duo-step: 260px;              /* прокрутка на один пункт — пара щелчков колеса */
-  --duo-steps: 6;
+  --duo-steps: 4;
   width: 100%;
   height: calc(282px + var(--duo-step) * var(--duo-steps));
 }
