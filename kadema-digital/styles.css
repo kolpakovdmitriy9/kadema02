@@ -224,7 +224,7 @@ body {
 .avatars span + span { margin-left: -10px; }
 
 /* подзаголовок */
-.tagline { display: flex; flex-direction: column; gap: 32px; width: 1320px; height: 360px; color: var(--ink); }
+.tagline { display: flex; flex-direction: column; gap: 32px; width: 1320px; color: var(--ink); }   /* без лишних 120px снизу — ближе к карточке */
 .tagline__top { position: relative; height: 48px; }
 .tagline__top p { position: absolute; left: 443px; top: 0; width: 434px; font-weight: 500; font-size: 24px; line-height: 100%; }
 .tagline__big { font-weight: 500; font-size: 80px; line-height: 100%; text-align: center; }
@@ -235,10 +235,24 @@ body {
 @property --e { syntax: '<number>'; inherits: true; initial-value: 0; }
 
 /* Высота секции = сколько экранов блок держится закреплённым */
-.how { position: relative; height: calc(var(--vh) * 2.2); background: #fff; }
+.how {
+  /* Два закрепления без скриптов:
+     1) .how__stage прилипает к верху экрана (top: 0) — карточка раскрывается и держится;
+     2) затем вся секция поднимается, пока абзац «Объединяем скорость…» не встанет
+        над названием этапа (зазор 60px), и сама прилипает (top ниже) — стоит, пока идут этапы.
+     Отпускает её конец контейнера .hd — ровно в момент, когда открепляются этапы. */
+  position: sticky;
+  top: calc(var(--vh) * -1.7 - 157px);      /* −(высота секции − экран) − (экран/2 + 97 + 60) */
+  z-index: 1;
+  height: calc(var(--vh) * 2.2);
+  background: #fff;
+}
+/* контейнер удержания: заканчивается на 358px раньше блока этапов
+   (60 — отступ снизу + 282 высота этапов + 16 — разница верхов) */
+.hd { display: flow-root; margin-bottom: 358px; }   /* flow-root — чтобы отрицательный отступ ниже не схлопнулся с этим */
+.hd > .duo { margin-bottom: -358px; }
 .how__stage {
   position: sticky; top: 0;
-  z-index: 1;                    /* над фоном следующего блока, когда текст удерживается */
   height: var(--vh);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
@@ -348,7 +362,7 @@ body {
 }
 .duo__stage-name { font-weight: 500; font-size: 16px; line-height: 100%; text-align: center; }
 .duo__br { display: block; width: 7px; height: 29px; flex: none; overflow: visible; }
-.duo__br--r { transform: scaleX(-1); }            /* правая скобка — зеркало левой */
+.duo__br--l { transform: rotate(180deg); }        /* левая — исходная скобка, развёрнутая на 180° */
 
 /* две колонки: команда слева, ИИ справа */
 .duo__cols {

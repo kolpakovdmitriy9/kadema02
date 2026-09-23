@@ -186,7 +186,7 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onHold(); onTasks(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); ticking = false; });
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
@@ -272,30 +272,21 @@
     duoBar.style.height = (BAR_H * (step + 1) / n).toFixed(1) + 'px';   // 4 положения, переезд — CSS-переходом
     if (step !== duoStep || !duoSeen) { duoSeen = true; duoShow(step); }
   }
-  // колесо и тачпад: вниз за границу этапа не крутим, пока ИИ печатает
+  // Колесо и тачпад: пока ИИ печатает, прокрутку вниз сами доводим ровно
+  // до границы этапа и дальше не пускаем — без перескока и отката назад
   window.addEventListener('wheel', (e) => {
-    if (e.deltaY > 0 && duoTyping && window.scrollY >= duoMaxY - 4) e.preventDefault();
+    if (!duoTyping || e.deltaY <= 0 || duoMaxY === Infinity) return;
+    const px = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+    if (window.scrollY + px <= duoMaxY) return;               // до границы ещё далеко — обычный скролл
+    e.preventDefault();
+    if (window.scrollY < duoMaxY) window.scrollTo(0, duoMaxY);
   }, { passive: false });
   window.addEventListener('touchmove', (e) => {
     if (duoTyping && window.scrollY >= duoMaxY - 4) e.preventDefault();
   }, { passive: false });
-
-  /* Текст «Объединяем скорость…» не уезжает: когда карточка «Как это работает»
-     поднимется так, что текст встанет над названием этапа, она останавливается
-     и стоит, пока идут все этапы, а потом уходит вместе с ними. */
-  const HOLD_GAP = 60;                                        // от текста до названия этапа
-  const duoSec = document.getElementById('duo');
-  function onHold() {
-    const vh = window.innerHeight / Z;
-    const duoTop = duoSec.getBoundingClientRect().top / Z;
-    const t = duoTrack.getBoundingClientRect(), p = duoPin.getBoundingClientRect();
-    const run = (t.height - p.height) / Z;
-    const heldTop = -vh / 2 - 97 - HOLD_GAP;                  // низ текста = верх названия этапа − зазор
-    const natural = duoTop - vh;                              // где была бы карточка без удержания
-    const releaseTop = vh / 2 - 221 - run - vh;               // …в момент, когда этапы открепляются
-    const hold = Math.min(Math.max(heldTop - natural, 0), heldTop - releaseTop);
-    howStage.style.transform = hold > 0 ? `translate3d(0, ${hold.toFixed(1)}px, 0)` : '';
-  }
+  window.addEventListener('keydown', (e) => {
+    if (duoTyping && window.scrollY >= duoMaxY - 4 && ['ArrowDown', 'PageDown', 'Space', 'End'].includes(e.code)) e.preventDefault();
+  });
 
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
@@ -360,8 +351,8 @@
   onHeader();
   onHow();
   onDuo();
-  onHold();
+ 
   onTasks();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onHold(); onTasks(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); });
 })();
