@@ -8,7 +8,9 @@
   /* ---------- масштаб макета 1440 под ширину окна ---------- */
   let Z = 1;                                   // масштаб страницы (zoom)
   function fit() {
-    const z = Z = Math.min(1, window.innerWidth / 1440);
+    // ширина окна БЕЗ полосы прокрутки: макет 1440 всегда ровно по ширине видимой
+    // области — на узких экранах уменьшается, на широких увеличивается
+    const z = Z = document.documentElement.clientWidth / 1440;
     page.style.zoom = z;
     const vh = window.innerHeight / z;
     document.documentElement.style.setProperty('--vh', vh + 'px');

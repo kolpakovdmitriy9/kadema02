@@ -24,6 +24,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 html, body { background: #fff; }
+html { overflow-x: clip; }   /* страховка от горизонтальной прокрутки из-за округлений */
 body {
   font-family: var(--font);
   letter-spacing: -0.04em;
