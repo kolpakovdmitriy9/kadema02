@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kadema Digital — прототип</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page" id="page">
+
+  <!-- ============ HEADER (две части) ============ -->
+  <header class="header is-top" id="header">
+    <nav class="header__nav">
+      <a href="#" class="logo" aria-label="Kadema Digital">
+        <svg class="logo__mark" viewBox="0 0 28 28" aria-hidden="true">
+          <defs><linearGradient id="lg" x1="0" y1="1" x2="1" y2="0"><stop offset=".08" stop-color="#F02D13"/><stop offset=".9" stop-color="#F700A1"/></linearGradient></defs>
+          <rect width="28" height="28" rx="6" fill="url(#lg)"/>
+          <path d="M8 6h4v6.2L17.6 6h4.9l-6.3 7.1L23 22h-5l-4.7-6.2L12 17.2V22H8z" fill="#fff"/>
+        </svg>
+        <span class="logo__text">Kadema Digital</span>
+      </a>
+      <div class="header__links">
+        <a href="#">Услуги</a>
+        <a href="#">О компании</a>
+        <a href="#">Кейсы</a>
+        <a href="#">Блог</a>
+        <a href="#">Контакты</a>
+      </div>
+    </nav>
+
+    <div class="header__cta" id="headerCta">
+      <div class="cta-row">
+        <a href="#" class="cta-row__link">Обратный звонок</a>
+        <a href="#" class="btn-black">Обсудить проект</a>
+      </div>
+      <a href="#" class="calc-row">
+        <span class="calc-row__left">
+          <svg width="12" height="24" viewBox="0 0 12 24" aria-hidden="true" fill="#fff">
+            <rect x=".75" y="3.25" width="3.5" height="3.5" rx="1.75"/><rect x=".75" y="10.25" width="3.5" height="3.5" rx="1.75"/><rect x=".75" y="17.25" width="3.5" height="3.5" rx="1.75"/>
+            <rect x="7.75" y="3.25" width="3.5" height="3.5" rx="1.75"/><rect x="7.75" y="10.25" width="3.5" height="3.5" rx="1.75"/><rect x="7.75" y="17.25" width="3.5" height="3.5" rx="1.75"/>
+          </svg>
+          Калькулятор бюджета
+        </span>
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" fill="#fff"/>
+          <path d="M7.5 12h8.5M12.5 8l4 4-4 4" stroke="#000" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero__bg" id="heroBg"></div>
+
+    <div class="hero__tags-mask">
+      <div class="hero__tags">
+        <span>Адаптация под мобильные устройства</span><span>•</span>
+        <span>Быстрый запуск проекта</span><span>•</span>
+        <span>Базовая SEO-подготовка</span>
+      </div>
+    </div>
+
+    <div class="hero__content">
+      <h1>Разработка на базе искусственного интеллекта</h1>
+      <p>Создаём современные сайты для бизнеса от&nbsp;20&nbsp;000&nbsp;₽. Используем ИИ, чтобы сократить сроки и&nbsp;стоимость разработки, а&nbsp;стратегию, качество и&nbsp;запуск контролирует команда специалистов.</p>
+    </div>
+  </section>
+
+  <!-- ============ ОПЫТ ============ -->
+  <section class="section">
+    <h2 class="section__title">Опыт, подтвержденный результатами</h2>
+
+    <div class="cards">
+      <!-- колонка 1 -->
+      <article class="card card--photo card--main">
+        <div class="card__bg card__bg--main"></div>
+        <div class="card__text">
+          <h3>Cтоимость разработки<br>от 20 000 ₽</h3>
+          <div class="card__meta"><span>100% автоматизация</span><i></i><span>1 неделя</span></div>
+        </div>
+      </article>
+
+      <!-- колонка 2 -->
+      <div class="col">
+        <div class="stats">
+          <div class="stats__stack">
+            <div class="year year--dim">
+              <div class="year__title">2025 год</div>
+              <div class="year__row"><span class="trend"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6" /></svg></span>50 проектов</div>
+            </div>
+            <div class="year year--main">
+              <div class="year__title">2026 год</div>
+              <div class="year__row"><span class="trend"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6" /></svg></span>+70 постоянных проектов</div>
+            </div>
+            <div class="year year--dim">
+              <div class="year__title">2024 год</div>
+              <div class="year__row"><span class="trend"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6" /></svg></span>40 проектов</div>
+            </div>
+          </div>
+        </div>
+        <div class="badge badge--pink">
+          <div class="badge__square"></div>
+          <div class="badge__text">
+            <div class="badge__title">10 лет на рынке</div>
+            <div class="badge__sub">digital-маркетинга</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- колонка 3 -->
+      <div class="col">
+        <div class="badge badge--gray">
+          <div class="badge__text">
+            <div class="badge__title">30 специалистов</div>
+            <div class="badge__sub">в команде</div>
+          </div>
+          <div class="avatars"><span></span><span></span><span></span></div>
+        </div>
+        <article class="card card--photo card--mobile">
+          <div class="card__bg card__bg--mobile"></div>
+          <div class="card__text">
+            <h3>Адаптация под мобильные устройства</h3>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="tagline">
+      <div class="tagline__top"><p>Не нейросеть вместо команды, <br>а&nbsp;команда,</p></div>
+      <p class="tagline__big">усиленная искусственным <br>интеллектом</p>
+    </div>
+  </section>
+
+  <!-- ============ КАК ЭТО РАБОТАЕТ (раскрывается на весь экран при скролле) ============ -->
+  <section class="how" id="how">
+    <div class="how__stage" id="howStage">
+      <div class="how__card" id="howCard">
+        <div class="collage" id="collage">
+          <div class="collage__item c1"></div>
+          <div class="collage__item c2"></div>
+          <div class="collage__item c3"></div>
+          <div class="collage__item c4"></div>
+          <div class="collage__item c5"></div>
+          <div class="collage__item c6"></div>
+        </div>
+        <div class="pill"><span class="pill__dot"></span>Как это работает</div>
+        <div class="how__text">
+          <h3>ИИ ускоряет работу, но&nbsp;не&nbsp;принимает решения за бизнес</h3>
+          <p>Объединяем скорость нейросетей в анализе, коде и&nbsp;контенте с&nbsp;экспертным контролем, создавая быстрые и&nbsp;адаптированные под ваш бизнес сайты вместо типовых шаблонов</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="after"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
