@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=duo-4">
+<link rel="stylesheet" href="styles.css?v=tasks-1">
 </head>
 <body>
 <div class="page" id="page">
@@ -182,17 +182,55 @@
     </div>
     </div></div>
 
-    <div class="duo__frame" aria-hidden="true">
-      <div class="duo__img"></div>
-      <div class="duo__veil"></div>
+  </section>
+
+  <!-- ============ ЗАДАЧИ, КОТОРЫЕ РЕШАЕТ САЙТ ============
+       Фото подъезжает и по скроллу растёт до своего размера; затем сцена закрепляется:
+       тёмный фон переходит в светлый, из углов фото вырастает размытая маска с круглым
+       вырезом, появляется значок «1», после небольшого скролла он прыгает на «2». -->
+  <section class="tasks" id="tasks">
+    <div class="tasks__track" id="tasksTrack">
+      <div class="tasks__stage" id="tasksStage">
+        <div class="tasks__frame" id="tasksFrame" aria-hidden="true">
+          <div class="tasks__img"></div>
+          <div class="tasks__veil" id="tasksVeil"></div>
+        </div>
+        <div class="tasks__badge" id="tasksBadge" aria-hidden="true"><span id="tasksBadgeNum">1</span></div>
+        <h2 class="tasks__title" id="tasksTitle">Не нейросеть вместо команды, <br>а&nbsp;команда, усиленная ИИ</h2>
+        <p class="tasks__sub" id="tasksSub">Задачи, которые решает сайт</p>
+      </div>
     </div>
 
-    <h2 class="duo__title">Не нейросеть вместо команды, <br>а&nbsp;команда, усиленная ИИ</h2>
-    <p class="duo__sub">Задачи, которые решает сайт</p>
+    <div class="tasks__grid">
+      <div class="task">
+        <h4 class="task__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.1 6.9L21 12l-6.9 2.1L12 21l-2.1-6.9L3 12l6.9-2.1z"/></svg>Запуск нового направления</h4>
+        <p class="task__text">Быстро соберём сайт под новый продукт или&nbsp;услугу и подготовим его к первым заявкам</p>
+      </div>
+      <div class="task">
+        <h4 class="task__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2h6v2h-1v5.2l5.6 9.4A2.2 2.2 0 0 1 17.7 22H6.3a2.2 2.2 0 0 1-1.9-3.4L10 9.2V4H9z"/></svg>Проверка бизнес-гипотезы</h4>
+        <p class="task__text">Запустим посадочную за считаные дни и&nbsp;проверим спрос до больших вложений</p>
+      </div>
+      <div class="task">
+        <h4 class="task__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 0 1 7.4 5H22l-3.5 4L15 9h2.2A6 6 0 0 0 6.3 10.3L4.4 9.6A8 8 0 0 1 12 4zm-7 7l3.5 4H6.8a6 6 0 0 0 10.9 1.7l1.9.7A8 8 0 0 1 4.6 15H2z"/></svg>Обновление устаревшего сайта</h4>
+        <p class="task__text">Переведём сайт на современный дизайн и&nbsp;технологии, сохранив то, что уже работает</p>
+      </div>
+      <div class="task">
+        <h4 class="task__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3v16l-6-3H9l1 5H7l-1-5a4 4 0 0 1 0-8h8l6-5z"/></svg>Запуск рекламы</h4>
+        <p class="task__text">Сделаем посадочные под рекламные кампании, чтобы трафик превращался в&nbsp;заявки</p>
+      </div>
+      <div class="task">
+        <h4 class="task__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>Выход в новый регион</h4>
+        <p class="task__text">Адаптируем сайт под новый рынок: язык, контент и&nbsp;локальные особенности</p>
+      </div>
+      <div class="task">
+        <h4 class="task__title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v2h-1v10H13v2.3l3.6 3.6-1.4 1.4L12 19.1l-3.2 3.2-1.4-1.4L11 17.3V15H4V5H3z"/></svg>Презентация компании</h4>
+        <p class="task__text">Покажем компанию, команду и&nbsp;кейсы так, чтобы вызывать доверие с первого экрана</p>
+      </div>
+    </div>
   </section>
 
   <div class="after"></div>
 </div>
-<script src="script.js?v=duo-4"></script>
+<script src="script.js?v=tasks-1"></script>
 </body>
 </html>

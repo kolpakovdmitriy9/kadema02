@@ -185,16 +185,16 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); ticking = false; });
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
      Блок закрепляется по центру экрана, пункты переключаются скроллом —
-     не сразу, а примерно через пару прокруток колеса (--duo-step в styles.css):
+     не сразу, а после заметной прокрутки (--duo-step в styles.css):
      - название этапа в скобках и текст команды меняются сразу;
      - ИИ сначала «обдумывает» (точки, мигающий маркер), потом печатает текст
        по буквам с живым неровным темпом;
-     - прогресс-бар по центру заполняется по скроллу — видно, сколько осталось. */
+     - прогресс-бар по центру встаёт в одно из 4 положений — видно, сколько осталось. */
   const DUO_STEPS = [
     ['Стратегия и исследования',
      'Определяет стратегию, позиционирование и принимает ключевые решения',
@@ -256,10 +256,60 @@
     const run = t.height - p.height;                          // путь закреплённого блока
     const q = Math.min(1, Math.max(0, (p.top - t.top) / run));
     const n = DUO_STEPS.length;
-    duoBar.style.height = (BAR_H * (1 + q * (n - 1)) / n).toFixed(1) + 'px';
     const step = Math.min(n - 1, Math.floor(q * n));
+    duoBar.style.height = (BAR_H * (step + 1) / n).toFixed(1) + 'px';   // 4 положения, переезд — CSS-переходом
     if (step !== duoStep || !duoSeen) { duoSeen = true; duoShow(step); }
   }
+
+  /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
+     1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
+     2) верх блока закрепляется, и дальше по скроллу:
+        тёмный фон → #FFF4F8 (заголовок из белого в чёрный) → из углов фото
+        вырастает размытая маска с круглым вырезом → появляется значок «1» →
+        после небольшой прокрутки значок прыгает и меняется на «2». */
+  const tasksTrack = document.getElementById('tasksTrack');
+  const tasksStage = document.getElementById('tasksStage');
+  const tasksFrame = document.getElementById('tasksFrame');
+  const tasksVeil = document.getElementById('tasksVeil');
+  const tasksBadge = document.getElementById('tasksBadge');
+  const tasksBadgeNum = document.getElementById('tasksBadgeNum');
+  const TASKS_FROM = 0.6;                              // стартовый масштаб фото
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const span = (q, a, b) => clamp01((q - a) / (b - a));
+  const smooth = (t) => t * t * (3 - 2 * t);
+  let badgeNum = 1;
+
+  function setBadgeNum(n) {
+    if (n === badgeNum) return;
+    badgeNum = n;
+    tasksBadge.classList.remove('is-jump');
+    void tasksBadge.offsetWidth;
+    tasksBadge.classList.add('is-jump');
+    setTimeout(() => { tasksBadgeNum.textContent = n; }, 230);   // цифра меняется в верхней точке прыжка
+  }
+  tasksBadge.addEventListener('animationend', () => tasksBadge.classList.remove('is-jump'));
+
+  function onTasks() {
+    const r = tasksTrack.getBoundingClientRect();
+    const vh = window.innerHeight;
+    if (r.bottom < 0 || r.top > vh) return;
+    // 1) заход: верх блока идёт от низа экрана к верху — фото растёт до 1
+    const enter = 1 - Math.pow(1 - clamp01(1 - r.top / vh), 3);
+    tasksFrame.style.setProperty('--tasks-scale', (TASKS_FROM + (1 - TASKS_FROM) * enter).toFixed(4));
+    // 2) сцена на закреплённом блоке
+    const q = clamp01(-r.top / (r.height - tasksStage.getBoundingClientRect().height));
+    const bg = smooth(span(q, 0.02, 0.28));             // тёмный → светлый
+    const m = smooth(span(q, 0.34, 0.62));              // маска из углов
+    const st = tasks.style;
+    st.setProperty('--tasks-bg', `rgb(${mix([17, 17, 17], [255, 244, 248], bg)})`);
+    st.setProperty('--tasks-ink', `rgb(${mix([255, 255, 255], [0, 0, 0], bg)})`);
+    st.setProperty('--tasks-ink-soft', `rgba(${mix([255, 255, 255], [0, 0, 0], bg)}, .5)`);
+    tasksVeil.style.setProperty('--r', (170 - 78 * m).toFixed(1) + 'px');
+    tasksBadge.classList.toggle('is-on', q >= 0.68);
+    setBadgeNum(q >= 0.84 ? 2 : 1);
+  }
+  const tasks = document.getElementById('tasks');
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
   function buildTicker() {
@@ -274,6 +324,7 @@
   onHeader();
   onHow();
   onDuo();
+  onTasks();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); });
 })();
