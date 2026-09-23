@@ -55,10 +55,15 @@
     <div class="hero__bg" id="heroBg"></div>
 
     <div class="hero__tags-mask">
-      <div class="hero__tags">
-        <span>Адаптация под мобильные устройства</span><span>•</span>
-        <span>Быстрый запуск проекта</span><span>•</span>
-        <span>Базовая SEO-подготовка</span>
+      <!-- бегущая строка: группа продублирована в script.js для бесшовного цикла -->
+      <div class="hero__tags" id="heroTags">
+        <div class="hero__tags-group">
+          <span>Стоимость разработки от&nbsp;20&nbsp;000&nbsp;₽</span><span>•</span>
+          <span>Быстрый запуск проекта</span><span>•</span>
+          <span>Адаптация под мобильные устройства</span><span>•</span>
+          <span>Базовая SEO-подготовка</span><span>•</span>
+          <span>Готовность сайта к&nbsp;запуску рекламы</span><span>•</span>
+        </div>
       </div>
     </div>
 
@@ -137,14 +142,7 @@
   <section class="how" id="how">
     <div class="how__stage" id="howStage">
       <div class="how__card" id="howCard">
-        <div class="collage" id="collage">
-          <div class="collage__item c1"></div>
-          <div class="collage__item c2"></div>
-          <div class="collage__item c3"></div>
-          <div class="collage__item c4"></div>
-          <div class="collage__item c5"></div>
-          <div class="collage__item c6"></div>
-        </div>
+        <div class="stack" id="stack"></div>
         <div class="pill"><span class="pill__dot"></span>Как это работает</div>
         <div class="how__text">
           <h3>ИИ ускоряет работу, но&nbsp;не&nbsp;принимает решения за бизнес</h3>

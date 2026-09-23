@@ -135,11 +135,16 @@ body {
 
 .hero__tags-mask {
   position: absolute; left: 44px; top: 235px; width: 609px; height: 75px;
-  display: flex; align-items: center; padding-left: 16px;
+  display: flex; align-items: center; overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.5) 10%, #000 49.52%, rgba(0,0,0,.5) 90%, transparent 100%);
           mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.5) 10%, #000 49.52%, rgba(0,0,0,.5) 90%, transparent 100%);
 }
-.hero__tags { display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 19px; white-space: nowrap; }
+/* бесконечная лента: две одинаковые группы, сдвиг ровно на ширину одной */
+.hero__tags { display: flex; width: max-content; animation: tags-marquee 30s linear infinite; }
+.hero__tags-group { display: flex; align-items: center; gap: 4px; padding-right: 4px; font-size: 14px; line-height: 19px; white-space: nowrap; }
+.hero__tags-mask:hover .hero__tags { animation-play-state: paused; }
+@keyframes tags-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .hero__tags { animation: none; } }
 
 .hero__content {
   position: absolute; left: 60px; bottom: 100px; width: 1160px;
@@ -235,7 +240,7 @@ body {
 
 /* ============ КАК ЭТО РАБОТАЕТ ============ */
 /* Высота секции = длина «прокрутки» анимации раскрытия */
-.how { position: relative; height: calc(var(--vh) * 2.6); background: #fff; }
+.how { position: relative; height: calc(var(--vh) * 3.2); background: #fff; }
 .how__stage {
   position: sticky; top: 0;
   height: var(--vh);
@@ -267,45 +272,31 @@ body {
 }
 .pill__dot { width: 6px; height: 6px; border-radius: 100px; background: rgba(255,255,255,.4); }
 
-.how__text { position: relative; z-index: 2; align-self: stretch; display: flex; flex-direction: column; gap: 40px; }
+/* текст всегда по центру блока, даже когда карточка раскрыта на весь экран */
+.how__text { position: relative; z-index: 2; align-self: center; width: 488px; display: flex; flex-direction: column; gap: 40px; }
 .how__text h3 { width: 488px; font-weight: 500; font-size: 46px; line-height: 100%; }
 .how__text p { width: 434px; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(255,255,255,.5); }
 
-/* коллаж-заглушка: 763×458, центр блока; элементы разлетаются от --p */
-.collage {
-  position: absolute; z-index: 0;
+/* куча картинок: карточки ложатся россыпью вокруг центра, нижние уходят под кучу.
+   Положение каждой карточки задаёт script.js. */
+.stack {
   --k: 1; /* масштаб под высоту окна, задаётся в script.js */
-  left: 50%; top: calc(139px * var(--k));
-  width: 763px; height: 458px;
-  transform: translateX(-50%) scale(calc(var(--k) * (1 + .15 * var(--p))));
-  transform-origin: 50% 0;
+  position: absolute; z-index: 0;
+  left: 50%; top: 44%;
+  width: 0; height: 0;
+  transform: scale(calc(var(--k) * (1 + .12 * var(--p))));
 }
-.collage__item {
-  position: absolute; left: 50%; top: 50%;
-  border-radius: 2px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+.stack__card {
+  position: absolute; left: 0; top: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.25);
   background-size: cover; background-position: center;
-  transform: translate(-50%, -50%)
-             translate(calc(var(--dx) * var(--p)), calc(var(--dy) * var(--p)))
-             rotate(calc(var(--r) + var(--dr) * var(--p)));
+  will-change: transform, opacity;
+  display: flex; align-items: flex-end; padding: 18px;
+  font-weight: 500; letter-spacing: -0.04em; line-height: 95%;
 }
-.c1 { width: 240px; height: 300px; --r: 8deg;  --dr: 6deg;  --dx: 380px; --dy: 10px;
-      margin: 10px 0 0 90px;
-      background-image: url(images/collage-1.jpg), linear-gradient(160deg, #2c4a36, #1b2e22); }
-.c2 { width: 180px; height: 160px; --r: -4deg; --dr: -8deg; --dx: -420px; --dy: 40px;
-      margin: 40px 0 0 -170px;
-      background-image: url(images/collage-2.jpg), linear-gradient(135deg, #9fb2c8, #e8edf2 60%, #6d7f94); }
-.c3 { width: 200px; height: 210px; --r: -6deg; --dr: -10deg; --dx: -230px; --dy: -30px;
-      margin: 0 0 0 -95px;
-      background-image: url(images/collage-3.jpg), linear-gradient(170deg, #7d8ea3, #1d2a3a); }
-.c4 { width: 170px; height: 200px; --r: 4deg;  --dr: 10deg; --dx: 200px; --dy: 60px;
-      margin: 10px 0 0 110px;
-      background-image: url(images/collage-4.jpg), linear-gradient(135deg, #c9a37a, #8b5e34); }
-.c5 { width: 190px; height: 250px; --r: -8deg; --dr: 4deg;  --dx: 0px;   --dy: 0px;
-      margin: 10px 0 0 0;
-      background-image: url(images/collage-5.jpg), linear-gradient(180deg, #f3eee6 0 35%, #ff6a2c 35% 100%); }
-.c6 { width: 64px; height: 64px; --r: -52deg; --dr: 20deg; --dx: 40px; --dy: 60px;
-      margin: 35px 0 0 5px; border-radius: 4px;
-      background: #f2e416 repeating-linear-gradient(90deg, transparent 0 10px, rgba(0,0,0,.8) 10px 13px); }
+.stack__card span { font-size: 34px; }
+.stack__card small { font-size: 15px; display: block; margin-top: 8px; opacity: .7; }
 
 .after { height: 200px; background: #fff; }
