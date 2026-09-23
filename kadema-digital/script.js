@@ -13,28 +13,6 @@
     document.documentElement.style.setProperty('--vh', vh + 'px');
   }
 
-  /* ---------- заглушка фона hero: светящиеся «плитки» ---------- */
-  function buildSlabs() {
-    const bg = document.getElementById('heroBg');
-    const n = 16;
-    for (let i = 0; i < n; i++) {
-      const t = i / (n - 1);
-      const s = document.createElement('div');
-      s.className = 'slab';
-      // от оранжево-розового слева к фиолетовому справа
-      const hue1 = 350 + t * 0 - (1 - t) * 18;
-      const hue2 = 300 - t * 20;
-      s.style.left = (760 + i * 44) + 'px';
-      s.style.top = (470 - Math.sin(t * Math.PI * 1.3) * 140 - t * 60) + 'px';
-      s.style.height = (240 + Math.sin(t * 9) * 40 + t * 80) + 'px';
-      s.style.background =
-        `linear-gradient(180deg, hsl(${hue1} 100% 88%) 0%, hsl(${hue1} 95% 62%) 35%, hsl(${hue2} 95% 45%) 100%)`;
-      s.style.opacity = 0.55 + t * 0.45;
-      s.style.zIndex = n - Math.abs(i - n * 0.6) | 0;
-      bg.appendChild(s);
-    }
-  }
-
   /* ---------- шапка: при загрузке видно всё (включая калькулятор),
      скролл вниз — прячется, скролл вверх — появляется без калькулятора;
      калькулятор раскрывается по наведению на правую часть ---------- */
@@ -219,7 +197,6 @@
   }
 
   fit();
-  buildSlabs();
   buildTicker();
   onHeader();
   onHow();

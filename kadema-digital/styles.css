@@ -59,8 +59,7 @@ body {
   border-radius: 20px;
 }
 .logo { display: flex; align-items: center; gap: 8px; width: 200px; height: 30px; }
-.logo__mark { width: 28px; height: 28px; flex: none; }
-.logo__text { font-weight: 600; font-size: 22px; letter-spacing: -0.02em; color: #fff; white-space: nowrap; }
+.logo__svg { display: block; width: 200px; height: 30px; flex: none; }
 .header__links { display: flex; align-items: center; gap: 32px; }
 .header__links a, .cta-row__link {
   font-weight: 600; font-size: 16px; line-height: 140%; color: #fff; white-space: nowrap;
@@ -111,21 +110,13 @@ body {
 /* ============ HERO ============ */
 .hero { position: relative; height: 760px; background: #000; overflow: hidden; color: #fff; }
 .hero__bg {
-  position: absolute; left: 0; top: -220px; width: 1440px; height: 1152px;
+  position: absolute; inset: 0;
   background:
-    url(images/hero.jpg) center / cover no-repeat,
+    url(images/hero.webp) center / cover no-repeat,
     radial-gradient(60% 50% at 20% 45%, #3a0710 0%, rgba(0,0,0,0) 70%),
     radial-gradient(40% 40% at 85% 40%, #4a0033 0%, rgba(0,0,0,0) 70%),
     #120003;
   overflow: hidden;
-}
-/* заглушка: «плитки» как на рендере (генерируются в script.js) */
-.slab {
-  position: absolute;
-  width: 74px; height: 300px;
-  border-radius: 16px;
-  transform: skewY(-18deg);
-  box-shadow: 0 0 60px rgba(255, 40, 160, .35), inset 0 0 0 1px rgba(255,255,255,.25);
 }
 .hero__bg::after { /* затемнение снизу-слева для читаемости текста */
   content: ""; position: absolute; inset: 0;
