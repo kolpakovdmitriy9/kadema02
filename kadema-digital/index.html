@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=gap-1">
+<link rel="stylesheet" href="styles.css?v=squircle-1">
 </head>
 <body>
 <div class="page" id="page">
@@ -197,11 +197,13 @@
   <section class="tasks" id="tasks">
     <div class="tasks__track" id="tasksTrack">
       <div class="tasks__stage" id="tasksStage">
+        <!-- светлая подложка: вырастает из-за квадрата с фото и разворачивается на весь экран -->
+        <div class="tasks__light" id="tasksLight" aria-hidden="true"></div>
         <div class="tasks__frame" id="tasksFrame" aria-hidden="true">
           <div class="tasks__img"></div>
           <div class="tasks__veil" id="tasksVeil"><div class="tasks__veil-img"></div></div>
         </div>
-        <div class="tasks__badge" id="tasksBadge" aria-hidden="true"><span id="tasksBadgeNum">1</span></div>
+        <div class="tasks__badge" id="tasksBadge" aria-hidden="true"><span class="tasks__num is-cur">1</span><span class="tasks__num">2</span></div>
         <h2 class="tasks__title" id="tasksTitle">Не нейросеть вместо команды, <br>а&nbsp;команда, усиленная ИИ</h2>
         <p class="tasks__sub" id="tasksSub">Задачи, которые решает сайт</p>
       </div>
@@ -237,6 +239,6 @@
 
   <div class="after"></div>
 </div>
-<script src="script.js?v=gap-1"></script>
+<script src="script.js?v=squircle-1"></script>
 </body>
 </html>

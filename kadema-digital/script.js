@@ -293,32 +293,114 @@
 
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
-     2) верх блока закрепляется, и дальше по скроллу:
-        тёмный фон → #FFF4F8 (заголовок из белого в чёрный) → из углов фото
-        вырастает размытая маска с круглым вырезом → появляется значок «1» →
-        после небольшой прокрутки значок прыгает и меняется на «2». */
+     2) верх блока закрепляется — и дальше, как с тёмной карточкой, полуавтоматически
+        (по времени, изинг сильный ease-out): из-за фото вырастает светлая подложка
+        #FFF4F8 и разворачивается на весь экран, синхронно внутри фото проступает
+        размытая маска — сначала тонкой рамкой по форме квадрата, потом вырез
+        уменьшается и скругляется до круга 184px;
+     3) по скроллу: появляется значок «1», затем «1» уезжает вверх, «2» встаёт снизу. */
+  const tasks = document.getElementById('tasks');
   const tasksTrack = document.getElementById('tasksTrack');
   const tasksStage = document.getElementById('tasksStage');
+  const tasksLight = document.getElementById('tasksLight');
   const tasksFrame = document.getElementById('tasksFrame');
   const tasksVeil = document.getElementById('tasksVeil');
   const tasksBadge = document.getElementById('tasksBadge');
-  const tasksBadgeNum = document.getElementById('tasksBadgeNum');
+  const tasksNums = tasksBadge.querySelectorAll('.tasks__num');
   const TASKS_FROM = 0.6;                              // стартовый масштаб фото
-  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const FRAME = 230, FRAME_R = 56;
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
-  const span = (q, a, b) => clamp01((q - a) / (b - a));
-  const smooth = (t) => t * t * (3 - 2 * t);
-  let badgeNum = 1;
+  const mix = (a, b, t) => a + (b - a) * t;
+  const easeOut = (t) => t >= 1 ? 1 : (1 - Math.pow(2, -10 * t)) / (1 - Math.pow(2, -10));
 
+  /* Скругление «как в iOS» — сглаживание углов 100%, как в Figma (Corner smoothing).
+     Контур из кривых Безье вокруг дуги; при радиусе = половине стороны даёт круг. */
+  function squircle(x, y, w, h, radius, smoothing = 1) {
+    const budget = Math.min(w, h) / 2;
+    const R = Math.min(radius, budget);
+    if (R <= 0) return `M${x} ${y}H${x + w}V${y + h}H${x}Z`;
+    const s = Math.min(smoothing, budget / R - 1);
+    const p = Math.min((1 + smoothing) * R, budget);
+    const rad = (deg) => deg * Math.PI / 180;
+    const arcMeasure = 90 * (1 - s);
+    const arc = Math.sin(rad(arcMeasure / 2)) * R * Math.SQRT2;
+    const alpha = (90 - arcMeasure) / 2;
+    const p34 = R * Math.tan(rad(alpha / 2));
+    const beta = 45 * s;
+    const c = p34 * Math.cos(rad(beta));
+    const d = c * Math.tan(rad(beta));
+    const bb = (p - arc - c - d) / 3;
+    const aa = 2 * bb;
+    const f = (n) => +n.toFixed(3);
+    const A = f(aa), B = f(aa + bb), C = f(aa + bb + c), D = f(d), Cc = f(c), BC = f(bb + c), ARC = f(arc), RR = f(R);
+    return `M${f(x + w - p)} ${f(y)}` +
+      `c${A} 0 ${B} 0 ${C} ${D}a${RR} ${RR} 0 0 1 ${ARC} ${ARC}c${D} ${Cc} ${D} ${BC} ${D} ${C}` +
+      `L${f(x + w)} ${f(y + h - p)}` +
+      `c0 ${A} 0 ${B} ${-D} ${C}a${RR} ${RR} 0 0 1 ${-ARC} ${ARC}c${-Cc} ${D} ${-BC} ${D} ${-C} ${D}` +
+      `L${f(x + p)} ${f(y + h)}` +
+      `c${-A} 0 ${-B} 0 ${-C} ${-D}a${RR} ${RR} 0 0 1 ${-ARC} ${-ARC}c${-D} ${-Cc} ${-D} ${-BC} ${-D} ${-C}` +
+      `L${f(x)} ${f(y + p)}` +
+      `c0 ${-A} 0 ${-B} ${D} ${-C}a${RR} ${RR} 0 0 1 ${ARC} ${-ARC}c${Cc} ${-D} ${BC} ${-D} ${C} ${-D}Z`;
+  }
+  tasksFrame.style.clipPath = `path("${squircle(0, 0, FRAME, FRAME, FRAME_R)}")`;
+
+  // Разворот подложки и маска — одно общее значение lp (0…1), анимация по времени
+  const LIGHT_MS = 900;
+  let lp = 0, lpFrom = 0, lpTo = 0, lpT0 = 0, lpRaf = 0;
+  function renderLight() {
+    const st = tasksStage.getBoundingClientRect();
+    const W = st.width / Z, H = st.height / Z;
+    const x0 = W / 2 - FRAME / 2, y0 = 218;
+    const L = tasksLight.style;
+    L.opacity = lp > 0.001 ? '1' : '0';
+    L.left = mix(x0, 0, lp).toFixed(1) + 'px';
+    L.top = mix(y0, 0, lp).toFixed(1) + 'px';
+    L.width = mix(FRAME, W, lp).toFixed(1) + 'px';
+    L.height = mix(FRAME, H, lp).toFixed(1) + 'px';
+    L.borderRadius = mix(FRAME_R, 0, lp).toFixed(1) + 'px';
+    // заголовок и подпись: белые на тёмном → чёрные на светлом
+    const ink = Math.round(255 * (1 - lp));
+    tasks.style.setProperty('--tasks-ink', `rgb(${ink},${ink},${ink})`);
+    tasks.style.setProperty('--tasks-ink-soft', `rgba(${ink},${ink},${ink},.5)`);
+    // маска: 1) рамка по форме квадрата (вырез 230 → 206), 2) вырез → круг 184
+    const a = clamp01(lp / 0.4), b = clamp01((lp - 0.4) / 0.6);
+    const size = FRAME - 24 * a - 22 * b;
+    const r = mix(FRAME_R, FRAME_R - 4, a) + (92 - (FRAME_R - 4)) * b;
+    const o = (FRAME - size) / 2;
+    tasksVeil.style.clipPath = lp < 0.002 ? 'inset(50%)'
+      : `path(evenodd, "M0 0H${FRAME}V${FRAME}H0Z${squircle(o, o, size, size, r)}")`;
+  }
+  function lpTick(now) {
+    const t = clamp01((now - lpT0) / LIGHT_MS);
+    lp = lpFrom + (lpTo - lpFrom) * easeOut(t);
+    renderLight();
+    lpRaf = t < 1 ? requestAnimationFrame(lpTick) : 0;
+  }
+  function setLight(target, instant) {
+    if (instant) { cancelAnimationFrame(lpRaf); lpRaf = 0; lp = lpTo = target; renderLight(); return; }
+    if (target === lpTo) return;
+    lpFrom = lp; lpTo = target; lpT0 = performance.now();
+    if (!lpRaf) lpRaf = requestAnimationFrame(lpTick);
+  }
+
+  // Значок: «1» уезжает вверх, «2» встаёт снизу (и обратно при скролле назад)
+  let badgeNum = 1;
   function setBadgeNum(n) {
     if (n === badgeNum) return;
+    const [one, two] = tasksNums;
+    const from = n === 2 ? one : two, to = n === 2 ? two : one;
+    // новая цифра заходит с той стороны, куда движемся: вперёд — снизу, назад — сверху
+    to.style.transition = 'none';
+    to.classList.remove('is-cur', 'is-up');
+    if (n === 1) to.classList.add('is-up');
+    void to.offsetWidth;
+    to.style.transition = '';
+    from.classList.remove('is-cur');
+    from.classList.toggle('is-up', n === 2);
+    to.classList.remove('is-up');
+    to.classList.add('is-cur');
     badgeNum = n;
-    tasksBadge.classList.remove('is-jump');
-    void tasksBadge.offsetWidth;
-    tasksBadge.classList.add('is-jump');
-    setTimeout(() => { tasksBadgeNum.textContent = n; }, 230);   // цифра меняется в верхней точке прыжка
   }
-  tasksBadge.addEventListener('animationend', () => tasksBadge.classList.remove('is-jump'));
 
   function onTasks() {
     const r = tasksTrack.getBoundingClientRect();
@@ -329,17 +411,13 @@
     tasksFrame.style.setProperty('--tasks-scale', (TASKS_FROM + (1 - TASKS_FROM) * enter).toFixed(4));
     // 2) сцена на закреплённом блоке
     const q = clamp01(-r.top / (r.height - tasksStage.getBoundingClientRect().height));
-    const bg = smooth(span(q, 0.02, 0.4));              // тёмный → светлый
-    const m = bg;                                       // маска из углов — синхронно со сменой фона
-    const st = tasks.style;
-    st.setProperty('--tasks-bg', `rgb(${mix([17, 17, 17], [255, 244, 248], bg)})`);
-    st.setProperty('--tasks-ink', `rgb(${mix([255, 255, 255], [0, 0, 0], bg)})`);
-    st.setProperty('--tasks-ink-soft', `rgba(${mix([255, 255, 255], [0, 0, 0], bg)}, .5)`);
-    tasksVeil.style.setProperty('--r', (170 - 78 * m).toFixed(1) + 'px');
-    tasksBadge.classList.toggle('is-on', q >= 0.55);
-    setBadgeNum(q >= 0.78 ? 2 : 1);
+    // подложка и маска: запускаются, как только блок закрепился; при быстром
+    // скролле (ушли дальше середины сцены) — сразу в конечное состояние
+    if (q > 0.5 && lp < 1) setLight(1, true);
+    else setLight(-r.top > 1 ? 1 : 0);
+    tasksBadge.classList.toggle('is-on', q >= 0.3);
+    setBadgeNum(q >= 0.62 ? 2 : 1);
   }
-  const tasks = document.getElementById('tasks');
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
   function buildTicker() {
