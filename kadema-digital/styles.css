@@ -157,7 +157,7 @@ body {
 .cards > * { flex: 1 1 0; min-width: 0; }
 .col { display: flex; flex-direction: column; gap: 10px; }
 
-.card { position: relative; border-radius: 16px; overflow: hidden; isolation: isolate; }
+.card { position: relative; border-radius: 24px; overflow: hidden; isolation: isolate; }
 .card__bg { position: absolute; z-index: -1; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
 .card:hover .card__bg { transform: scale(1.04); }
 .card__bg--main {
@@ -210,7 +210,7 @@ body {
 .year--main .trend svg { width: 21.77px; height: 21.77px; }
 
 /* плашки */
-.badge { flex: none; height: 122px; border-radius: 16px; display: flex; align-items: center; gap: 16px; padding: 0 32px; }
+.badge { flex: none; height: 122px; border-radius: 24px; display: flex; align-items: center; gap: 16px; padding: 0 32px; }
 .badge--pink { background: #F50F72; color: #fff; align-items: flex-end; padding-bottom: 33px; }
 .badge--gray { background: #E5E4E4; color: #000; }
 .badge__square { width: 56px; height: 56px; background: #fff; border-radius: 12px; flex: none; }
