@@ -54,56 +54,134 @@
   /* ---------- «Как это работает» ----------
      1) карточка начинает расти, как только блок заходит в экран, и раскрывается
         на весь экран примерно к моменту, когда блок закрепился;
-     2) стопка картинок «перелистывается» скроллом: карточки из хвоста сверху
-        съезжают вниз, растут и накрывают главную; при обратном скролле улетают вверх. */
+     2) внутри — бесконечная «куча» картинок: новая карточка шлёпается сверху
+        (крупнее ×1.07 и с доворотом 2° → оседает за 140 мс), нижние заранее
+        незаметно уменьшаются и уходят под кучу, колода идёт по кругу. */
   const stack = document.getElementById('stack');
-  // заглушки: [ширина, высота, фон, цвет текста, подпись, поворот в хвосте, сдвиг по x]
+  // заглушки: [ширина, высота, фон, цвет текста, подпись]
   const CARDS = [
-    [250, 310, 'linear-gradient(160deg,#ff5a1f,#f50f72)', '#111', 'ИИ<br>+ команда', -9, -20],
-    [260, 300, 'linear-gradient(170deg,#f2f2f2,#bdbdbd 55%,#3d3d3d)', '#111', '', 7, 25],
-    [240, 300, 'repeating-linear-gradient(135deg,#d6361a 0 22px,#5a0c05 22px 34px)', '#fff', '', -12, -10],
-    [250, 250, 'radial-gradient(60% 60% at 45% 55%,#ff8a2c,#f6b4a0 55%,#b9d3ec)', '#111', '', 10, 30],
-    [240, 300, 'linear-gradient(180deg,#8ec5ff,#2a6fb8)', '#fff', '', -6, -30],
-    [230, 290, 'linear-gradient(180deg,#e9d6bf,#c8a27a)', '#111', 'Быстрый<br>запуск<small>1 неделя</small>', 14, 15],
-    [260, 290, 'linear-gradient(200deg,#1d3b5c,#0b1520)', '#fff', '', -10, -15],
-    [240, 300, 'radial-gradient(70% 60% at 30% 20%,#ff66c4,#ff3b1f 55%,#fff 56%)', '#111', 'Адаптив<small>под любой экран</small>', 8, 20],
-    [250, 260, 'repeating-linear-gradient(160deg,#6fb3d9 0 6px,#a9d8f0 6px 12px)', '#111', '', -14, -25],
-    [240, 300, 'linear-gradient(170deg,#c25a2c,#7a3016)', '#fff', '', 6, 10],
-    [230, 280, 'linear-gradient(180deg,#b7d2ea,#e6eef6 50%,#8a8f96)', '#111', '', -8, -20],
-    [250, 310, '#ff4f1a', '#111', 'Сайт<br>от 20 000 ₽<small>под ваш бизнес</small>', 12, 0],
+    [250, 310, 'linear-gradient(160deg,#ff5a1f,#f50f72)', '#111', 'ИИ<br>+ команда'],
+    [260, 300, 'linear-gradient(170deg,#f2f2f2,#bdbdbd 55%,#3d3d3d)', '#111', ''],
+    [240, 300, 'repeating-linear-gradient(135deg,#d6361a 0 22px,#5a0c05 22px 34px)', '#fff', ''],
+    [250, 250, 'radial-gradient(60% 60% at 45% 55%,#ff8a2c,#f6b4a0 55%,#b9d3ec)', '#111', ''],
+    [240, 300, 'linear-gradient(180deg,#8ec5ff,#2a6fb8)', '#fff', ''],
+    [230, 290, 'linear-gradient(180deg,#e9d6bf,#c8a27a)', '#111', 'Быстрый<br>запуск<small>1 неделя</small>'],
+    [260, 290, 'linear-gradient(200deg,#1d3b5c,#0b1520)', '#fff', ''],
+    [240, 300, 'radial-gradient(70% 60% at 30% 20%,#ff66c4,#ff3b1f 55%,#fff 56%)', '#111', 'Адаптив<small>под любой экран</small>'],
+    [250, 260, 'repeating-linear-gradient(160deg,#6fb3d9 0 6px,#a9d8f0 6px 12px)', '#111', ''],
+    [240, 300, 'linear-gradient(170deg,#c25a2c,#7a3016)', '#fff', ''],
+    [230, 280, 'linear-gradient(180deg,#b7d2ea,#e6eef6 50%,#8a8f96)', '#111', ''],
+    [250, 310, '#ff4f1a', '#111', 'Сайт<br>от 20 000 ₽<small>под ваш бизнес</small>'],
   ];
-  const cards = CARDS.map(([w, h, bg, color, label, rot, dx], i) => {
+
+  const PILE_MAX = 12;           // сколько карточек лежит в куче одновременно
+  const SINK_FROM = 6;           // с какой карточки сверху начинается уход под кучу
+  const SINK_SCALE = 0.55;       // масштаб самой нижней
+  const SINK_OMEGA = 5;          // 1/с — жёсткость пружины ухода (без рывков)
+  const SPREAD_X = 120, SPREAD_Y = 48;   // разброс центров, px макета
+  const MIN_STEP = 66;           // новая не ложится ровно на предыдущую, px
+  const ROT_MIN = 2, ROT_MAX = 7;
+  const DROP_SCALE = 1.07, DROP_ROT = 2, DROP_LIFT = 5, DROP_MS = 140;
+  const DROP_EASE = 'cubic-bezier(0.22, 0.8, 0.3, 1)';
+  const RHYTHM_FRAMES = [5, 3, 6, 4, 7, 3, 5, 8, 4, 6, 3, 5]; // интервалы, кадры 30 fps
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+  let seq = 0, beat = 0, pileTimer = 0, pileOn = false;
+  let last = { x: 0, y: 0, r: 0 };
+
+  function placement() {
+    let x, y, tries = 0;
+    do {
+      x = rand(-SPREAD_X, SPREAD_X);
+      y = rand(-SPREAD_Y, SPREAD_Y);
+    } while (Math.hypot(x - last.x, (y - last.y) * 1.5) < MIN_STEP && ++tries < 24);
+    // чаще наклон в сторону, противоположную предыдущей карточке
+    const flip = Math.random() < 0.75 ? -Math.sign(last.r || 1) : Math.sign(last.r || 1);
+    last = { x, y, r: flip * rand(ROT_MIN, ROT_MAX) };
+    return last;
+  }
+
+  const pileTransform = (x, y, r, s) =>
+    `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${r.toFixed(2)}deg) scale(${s})`;
+
+  // рисует карточку по плавной глубине _dv (0 — верхняя)
+  function applyDepth(el) {
+    const k = el._dv || 0;
+    const t = Math.min(Math.max((k - SINK_FROM) / (PILE_MAX - SINK_FROM), 0), 1);
+    const e = t * t * (3 - 2 * t);
+    const p = el._pos;
+    el.style.transform = pileTransform(p.x * (1 - e), p.y * (1 - e), p.r * (1 - 0.5 * e),
+      (1 - (1 - SINK_SCALE) * e).toFixed(4));
+    const o = Math.min(Math.max(PILE_MAX - k, 0), 1);
+    el.style.opacity = o < 1 ? o.toFixed(3) : '';
+  }
+
+  function drop() {
+    const i = seq++ % CARDS.length;
+    const [w, h, bg, color, label] = CARDS[i];
     const el = document.createElement('div');
     el.className = 'stack__card';
     el.style.cssText = `width:${w}px;height:${h}px;margin:${-h / 2}px 0 0 ${-w / 2}px;color:${color};` +
       `background-image:url(images/stack-${i + 1}.jpg),${bg.startsWith('#') ? `linear-gradient(${bg},${bg})` : bg};`;
     if (label) el.innerHTML = `<span>${label}</span>`;
+    el._pos = placement();
+    applyDepth(el);
     stack.appendChild(el);
-    return { el, rot, dx };
-  });
-  const TAIL = 4;                        // сколько карточек видно в хвосте
-  const T_START = -TAIL, T_END = cards.length - 3;
+    if (!reduceMotion && el.animate) {
+      const p = el._pos;
+      el.animate(
+        [{ transform: pileTransform(p.x, p.y - DROP_LIFT, p.r + DROP_ROT, DROP_SCALE) },
+         { transform: pileTransform(p.x, p.y, p.r, 1) }],
+        { duration: DROP_MS, easing: DROP_EASE }
+      );
+    }
+    // все, кто ниже, опускаются на ступень — дальше их ведёт пружина в pileFrame()
+    const kids = stack.children;
+    for (let n = kids.length - 2, k = 1; n >= 0; n--, k++) kids[n]._depth = Math.min(k, PILE_MAX + 1);
+  }
 
-  function placeCards(t) {
-    for (let i = 0; i < cards.length; i++) {
-      const c = cards[i], s = i - t;     // 0 — главная, >0 — в хвосте, <0 — ушла под новую
-      const el = c.el.style;
-      if (s < -1 || s > TAIL + 0.5) { el.opacity = 0; el.visibility = 'hidden'; continue; }
-      el.visibility = 'visible';
-      if (s < 0) {                       // прежняя главная: остаётся под новой и гаснет
-        el.transform = `scale(${1 + s * 0.06})`;
-        el.opacity = Math.max(0, 1 + s * 1.6);
-        el.zIndex = 0;
-        continue;
-      }
-      const m = Math.min(1, s);
-      const y = -330 * (1 - 1 / (1 + 0.9 * s));
-      const sc = 1 / (1 + 1.35 * s);
-      el.transform = `translate(${c.dx * m}px, ${y}px) rotate(${c.rot * m}deg) scale(${sc})`;
-      el.opacity = Math.max(0, Math.min(1, (TAIL + 0.5 - s) / 1.2));
-      el.zIndex = Math.round(100 - s * 10);
+  let lastFrame = 0;
+  function pileFrame(now) {
+    const dt = Math.min((now - (lastFrame || now)) / 1000, 0.05);
+    lastFrame = now;
+    const w = SINK_OMEGA;
+    for (const el of [...stack.children]) {
+      const target = el._depth || 0;
+      let x = el._dv || 0, v = el._vv || 0;
+      if (Math.abs(target - x) < 1e-3 && Math.abs(v) < 1e-3) continue;
+      v += (w * w * (target - x) - 2 * w * v) * dt;   // пружина с критическим затуханием
+      x += v * dt;
+      el._dv = x; el._vv = v;
+      if (x >= PILE_MAX) { el.remove(); continue; }  // уже полностью под кучей
+      applyDepth(el);
+    }
+    if (pileOn) requestAnimationFrame(pileFrame);
+  }
+
+  function schedule() {
+    const frames = RHYTHM_FRAMES[beat++ % RHYTHM_FRAMES.length];
+    pileTimer = setTimeout(() => { drop(); schedule(); }, reduceMotion ? 700 : frames * (1000 / 30));
+  }
+
+  // куча живёт, только пока блок на экране и вкладка активна
+  let howVisible = false;
+  function setPile(on) {
+    if (on === pileOn) return;
+    pileOn = on;
+    clearTimeout(pileTimer);
+    if (on) {
+      if (!stack.children.length) drop();
+      lastFrame = 0;
+      requestAnimationFrame(pileFrame);
+      schedule();
     }
   }
+  new IntersectionObserver(([e]) => {
+    howVisible = e.isIntersecting;
+    setPile(howVisible && !document.hidden);
+  }).observe(how);
+  document.addEventListener('visibilitychange', () => setPile(howVisible && !document.hidden));
 
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -113,9 +191,6 @@
     const entered = vh - r.top;                        // сколько блок уже проехал от низа экрана
     const p = easeOut(clamp01(entered / (vh * 1.1)));  // раскрытие: старт при заходе, финиш чуть после закрепления
     howCard.style.setProperty('--p', p.toFixed(4));
-    const total = r.height;                            // весь путь: от захода до открепления
-    const q = clamp01(entered / (total * 0.92));       // хвост 8% — пауза на последней карточке
-    placeCards(T_START + (T_END - T_START) * q);
   }
 
   let ticking = false;

@@ -277,8 +277,8 @@ body {
 .how__text h3 { width: 488px; font-weight: 500; font-size: 46px; line-height: 100%; }
 .how__text p { width: 434px; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(255,255,255,.5); }
 
-/* стопка картинок: главная карточка по центру, над ней «хвост» из уменьшенных.
-   Положение каждой карточки задаёт script.js по скроллу. */
+/* куча картинок: карточки ложатся россыпью вокруг центра, нижние уходят под кучу.
+   Положение каждой карточки задаёт script.js. */
 .stack {
   --k: 1; /* масштаб под высоту окна, задаётся в script.js */
   position: absolute; z-index: 0;
@@ -290,7 +290,7 @@ body {
   position: absolute; left: 0; top: 0;
   border-radius: 3px;
   overflow: hidden;
-  box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.25);
   background-size: cover; background-position: center;
   will-change: transform, opacity;
   display: flex; align-items: flex-end; padding: 18px;
