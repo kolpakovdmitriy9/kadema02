@@ -180,6 +180,9 @@
     const e = Math.min(1, Math.max(0, 1 - top / vh));
     howCard.style.setProperty('--e', e.toFixed(4));
     howCard.classList.toggle('is-open', top <= 1);
+    // Быстрый скролл: если секция уехала дальше трети экрана, а раскрытие ещё
+    // не доиграло, карточка сразу встаёт во весь экран — тёмный блок не рвётся
+    howCard.classList.toggle('is-full', -top > vh * 0.33);
   }
 
   let ticking = false;

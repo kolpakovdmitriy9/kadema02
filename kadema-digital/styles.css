@@ -282,6 +282,7 @@ body {
   will-change: width, height, transform;
 }
 .how__card.is-open { --p: 1; }
+.how__card.is-full { --p: 1; transition: none; }   /* быстрый скролл — сразу во весь экран */
 
 .pill {
   position: relative; z-index: 1;
