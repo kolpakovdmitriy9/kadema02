@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=pile-4">
+<link rel="stylesheet" href="styles.css?v=duo-2">
 </head>
 <body>
 <div class="page" id="page">
@@ -158,8 +158,41 @@
     </div>
   </section>
 
+  <!-- ============ КОМАНДА + ИИ: этапы работы (идёт сразу за раскрытой карточкой) ============ -->
+  <section class="duo" id="duo">
+    <!-- дорожка скролла: блок закреплён по центру экрана, пока идут пункты -->
+    <div class="duo__track" id="duoTrack"><div class="duo__pin" id="duoPin">
+    <div class="duo__stage">
+      <span class="duo__br duo__br--l" aria-hidden="true"></span>
+      <span class="duo__stage-name" id="duoStage">Стратегия и исследования</span>
+      <span class="duo__br duo__br--r" aria-hidden="true"></span>
+    </div>
+
+    <div class="duo__cols">
+      <div class="duo__col duo__col--team">
+        <div class="duo__head"><i class="duo__dot"></i><span>Команда</span></div>
+        <p class="duo__text" id="duoTeam">Определяет стратегию сайта</p>
+      </div>
+      <div class="duo__col duo__col--ai">
+        <div class="duo__head"><i class="duo__dot duo__dot--ai" id="duoAiDot"></i><span>Искусственный интеллект</span></div>
+        <p class="duo__text duo__text--ai" id="duoAi" aria-live="polite">Анализирует рынок и конкурентов</p>
+      </div>
+      <!-- прогресс по центру: сколько пунктов пройдено и сколько осталось -->
+      <div class="duo__progress" aria-hidden="true"><i class="duo__bar" id="duoBar"></i></div>
+    </div>
+    </div></div>
+
+    <div class="duo__frame" aria-hidden="true">
+      <div class="duo__img"></div>
+      <div class="duo__veil"></div>
+    </div>
+
+    <h2 class="duo__title">Не нейросеть вместо команды, <br>а&nbsp;команда, усиленная ИИ</h2>
+    <p class="duo__sub">Задачи, которые решает сайт</p>
+  </section>
+
   <div class="after"></div>
 </div>
-<script src="script.js?v=pile-4"></script>
+<script src="script.js?v=duo-2"></script>
 </body>
 </html>

@@ -313,3 +313,128 @@ body {
 .stack__card small { font-size: 15px; display: block; margin-top: 8px; opacity: .7; }
 
 .after { height: 200px; background: #fff; }
+
+/* ============ КОМАНДА + ИИ ============ */
+/* Продолжение тёмного контейнера под раскрытой карточкой (в макете — с 992px). */
+.duo {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 80px 0 281px;
+  background: #111;
+  color: #fff;
+  letter-spacing: -0.04em;
+}
+/* дорожка: высота = блок + прокрутка на все пункты (--duo-steps × --duo-step) */
+.duo__track {
+  --duo-step: 260px;              /* прокрутка на один пункт — пара щелчков колеса */
+  --duo-steps: 6;
+  width: 100%;
+  height: calc(282px + var(--duo-step) * var(--duo-steps));
+}
+.duo__pin {
+  position: sticky;
+  top: calc(var(--vh) / 2 - 141px);   /* закреплён по центру экрана */
+  height: 282px;
+  display: flex; flex-direction: column; align-items: center; gap: 80px;
+}
+
+/* [ Стратегия и исследования ] — уголки по краям */
+.duo__stage {
+  display: flex; align-items: center; gap: 10px;
+  height: 28px;
+  white-space: nowrap;
+}
+.duo__stage-name { font-weight: 500; font-size: 16px; line-height: 100%; text-align: center; }
+.duo__br { position: relative; width: 6px; height: 28px; flex: none; }
+.duo__br::before, .duo__br::after { content: ""; position: absolute; width: 6px; height: 6px; border: 0 solid #fff; }
+.duo__br::before { top: 0; }
+.duo__br::after { bottom: 0; }
+.duo__br--l::before { border-width: 1px 0 0 1px; }
+.duo__br--l::after  { border-width: 0 0 1px 1px; }
+.duo__br--r::before { border-width: 1px 1px 0 0; }
+.duo__br--r::after  { border-width: 0 1px 1px 0; }
+
+/* две колонки: команда слева, ИИ справа */
+.duo__cols {
+  position: relative;
+  width: 1320px; height: 174px; flex: none;
+  display: flex;
+}
+.duo__col {
+  flex: 1 1 0;
+  display: flex; flex-direction: column; gap: 40px;
+  padding: 24px 44px 44px;
+  border: 0 solid rgba(255,255,255,.2);
+}
+.duo__col--team { border-width: 0 0 1px 1px; border-radius: 0 0 0 40px; }
+.duo__col--ai   { border-width: 0 1px 1px 0; border-radius: 0 0 40px 0; }
+.duo__head { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 16px; line-height: 100%; color: rgba(255,255,255,.5); }
+.duo__dot { width: 6px; height: 6px; border-radius: 10px; background: #fff; flex: none; }
+.duo__dot--ai { border-radius: 2px; background: #209EE9; }
+.duo__dot--ai.is-thinking { animation: duo-think 0.9s ease-in-out infinite; }
+@keyframes duo-think { 50% { opacity: .25; transform: scale(.7); } }
+.duo__text {
+  width: 428px; min-height: 48px;
+  letter-spacing: -0.04em;
+  padding-left: 16px;
+  font-weight: 400; font-size: 20px; line-height: 24px;
+}
+/* ИИ «думает»: три точки на месте текста */
+.duo__thinking { display: inline-flex; gap: 5px; height: 24px; align-items: center; }
+.duo__thinking i { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); animation: duo-dots 1s ease-in-out infinite; }
+.duo__thinking i:nth-child(2) { animation-delay: .15s; }
+.duo__thinking i:nth-child(3) { animation-delay: .3s; }
+@keyframes duo-dots { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+/* ИИ «печатает»: мигающая каретка в конце набранного текста */
+.duo__caret { display: inline-block; width: 2px; height: 20px; margin-left: 2px; vertical-align: -3px; background: #209EE9; animation: duo-caret 1s steps(1) infinite; }
+@keyframes duo-caret { 50% { opacity: 0; } }
+
+/* прогресс-бар по центру между колонками */
+.duo__progress {
+  position: absolute; left: 50%; top: 0;
+  width: 1px; height: 133px;
+  background: rgba(255,255,255,.2);
+  transform: translateX(-50%);
+}
+.duo__bar { position: absolute; left: 0; top: 0; width: 1px; height: 0; background: #fff; }
+
+/* круглое «окно» в скруглённом квадрате: вокруг — затемнение с размытием */
+.duo__frame {
+  position: relative; flex: none;
+  margin-top: 370px;
+  width: 230px; height: 230px;
+  border-radius: 56px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.duo__img {
+  position: absolute; left: -141px; top: -120px;
+  width: 512px; height: 448px;
+  background:
+    url(images/duo.jpg) center / cover no-repeat,
+    radial-gradient(40% 40% at 55% 50%, #ff7a3d 0%, #f50f72 45%, #3a0a2a 100%);
+}
+.duo__veil {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.2);
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  /* вычитаем круг 184px по центру — в нём картинка видна чётко */
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 91.5px, #000 92.5px);
+          mask: radial-gradient(circle at 50% 50%, transparent 91.5px, #000 92.5px);
+}
+
+.duo__title {
+  margin-top: 81px;
+  width: 1172px;
+  font-weight: 500; font-size: 80px; line-height: 100%;
+  letter-spacing: -0.04em;        /* em — от 80px, а не от унаследованного */
+  text-align: center;
+}
+.duo__sub {
+  margin-top: 80px;
+  width: 464px;
+  font-weight: 500; font-size: 24px; line-height: 100%;
+  letter-spacing: -0.04em;
+  text-align: center;
+  color: rgba(255,255,255,.5);
+}

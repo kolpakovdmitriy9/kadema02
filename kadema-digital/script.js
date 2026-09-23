@@ -185,7 +185,74 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); ticking = false; });
+  }
+
+  /* ---------- «Команда + ИИ»: этапы работы ----------
+     Блок закрепляется по центру экрана, пункты переключаются скроллом —
+     не сразу, а примерно через пару прокруток колеса (--duo-step в styles.css):
+     - название этапа в скобках и текст команды меняются сразу;
+     - ИИ сначала «обдумывает» (точки, мигающий маркер), потом печатает текст
+       по буквам с живым неровным темпом;
+     - прогресс-бар по центру заполняется по скроллу — видно, сколько осталось. */
+  const DUO_STEPS = [
+    ['Стратегия и исследования', 'Определяет стратегию сайта',          'Анализирует рынок и конкурентов'],
+    ['Структура и сценарии',     'Проектирует пользовательский путь',   'Готовит варианты структуры'],
+    ['Тексты и смыслы',          'Проверяет смысл, факты и оффер',      'Создаёт черновики текстов'],
+    ['Дизайн',                   'Контролирует дизайн и единый стиль',  'Генерирует визуальные концепции'],
+    ['Разработка',               'Проверяет работу и безопасность',     'Ускоряет написание кода'],
+    ['Тестирование и запуск',    'Тестирует сайт перед запуском',       'Находит технические ошибки'],
+  ];
+  const DUO_THINK_MS = 900;         // ИИ «думает»
+  const DUO_TYPE_MS = 34;           // средняя задержка между буквами
+  const duoTrack = document.getElementById('duoTrack');
+  const duoPin = document.getElementById('duoPin');
+  const duoStage = document.getElementById('duoStage');
+  const duoTeam = document.getElementById('duoTeam');
+  const duoAi = document.getElementById('duoAi');
+  const duoAiDot = document.getElementById('duoAiDot');
+  const duoBar = document.getElementById('duoBar');
+  const BAR_H = 133;
+  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false;
+
+  function duoShow(i) {
+    duoStep = i;
+    const run = ++duoRun;                       // отменяет недопечатанный пункт
+    clearTimeout(duoTimer);
+    const [stage, team, ai] = DUO_STEPS[i];
+    duoStage.textContent = stage;
+    duoTeam.textContent = team;                 // человек — сразу
+    duoAi.innerHTML = '<span class="duo__thinking"><i></i><i></i><i></i></span>';
+    duoAiDot.classList.add('is-thinking');
+    duoTimer = setTimeout(() => {               // ИИ обдумал — печатает
+      if (run !== duoRun) return;
+      duoAiDot.classList.remove('is-thinking');
+      duoAi.innerHTML = '<span></span><i class="duo__caret"></i>';
+      const out = duoAi.firstChild;
+      let k = 0;
+      const typeNext = () => {
+        if (run !== duoRun) return;
+        out.textContent = ai.slice(0, ++k);
+        if (k >= ai.length) return;
+        const ch = ai[k - 1];
+        // живой темп: чуть дольше после пробела и знаков препинания
+        const d = DUO_TYPE_MS * (0.55 + Math.random() * 0.9) + (ch === ' ' ? 40 : 0) + (/[,.]/.test(ch) ? 160 : 0);
+        duoTimer = setTimeout(typeNext, d);
+      };
+      typeNext();
+    }, DUO_THINK_MS);
+  }
+
+  function onDuo() {
+    const t = duoTrack.getBoundingClientRect();
+    const p = duoPin.getBoundingClientRect();
+    if (t.bottom < 0 || t.top > window.innerHeight) return;   // блок вне экрана
+    const run = t.height - p.height;                          // путь закреплённого блока
+    const q = Math.min(1, Math.max(0, (p.top - t.top) / run));
+    const n = DUO_STEPS.length;
+    duoBar.style.height = (BAR_H * (1 + q * (n - 1)) / n).toFixed(1) + 'px';
+    const step = Math.min(n - 1, Math.floor(q * n));
+    if (step !== duoStep || !duoSeen) { duoSeen = true; duoShow(step); }
   }
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
@@ -200,6 +267,7 @@
   buildTicker();
   onHeader();
   onHow();
+  onDuo();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); });
 })();
