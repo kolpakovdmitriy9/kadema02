@@ -67,8 +67,17 @@
     requestAnimationFrame(() => { onHeader(); onHow(); ticking = false; });
   }
 
+  /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
+  function buildTicker() {
+    const track = document.getElementById('heroTags');
+    const clone = track.firstElementChild.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  }
+
   fit();
   buildSlabs();
+  buildTicker();
   onHeader();
   onHow();
   window.addEventListener('scroll', onScroll, { passive: true });
