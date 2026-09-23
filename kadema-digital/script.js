@@ -6,8 +6,9 @@
   const howCard = document.getElementById('howCard');
 
   /* ---------- масштаб макета 1440 под ширину окна ---------- */
+  let Z = 1;                                   // масштаб страницы (zoom)
   function fit() {
-    const z = Math.min(1, window.innerWidth / 1440);
+    const z = Z = Math.min(1, window.innerWidth / 1440);
     page.style.zoom = z;
     const vh = window.innerHeight / z;
     document.documentElement.style.setProperty('--vh', vh + 'px');
@@ -185,7 +186,7 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onHold(); onTasks(); ticking = false; });
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
@@ -209,8 +210,8 @@
      'Проектирует архитектуру, проверяет безопасность и тестирует перед запуском',
      'Ускоряет код, генерирует автотесты и находит ошибки'],
   ];
-  const DUO_THINK_MS = 900;         // ИИ «думает»
-  const DUO_TYPE_MS = 34;           // средняя задержка между буквами
+  const DUO_THINK_MS = 450;         // ИИ «думает»
+  const DUO_TYPE_MS = 14;           // средняя задержка между буквами
   const duoTrack = document.getElementById('duoTrack');
   const duoPin = document.getElementById('duoPin');
   const duoStage = document.getElementById('duoStage');
@@ -219,13 +220,14 @@
   const duoAiDot = document.getElementById('duoAiDot');
   const duoBar = document.getElementById('duoBar');
   const BAR_H = 133;
-  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false;
+  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false, duoTyping = false;
 
   function duoShow(i) {
     duoStep = i;
     const run = ++duoRun;                       // отменяет недопечатанный пункт
     clearTimeout(duoTimer);
     const [stage, team, ai] = DUO_STEPS[i];
+    duoTyping = true;                           // пока ИИ не допишет — дальше не пускаем
     duoStage.textContent = stage;
     duoTeam.textContent = team;                 // человек — сразу
     duoAi.innerHTML = '<span class="duo__thinking"><i></i><i></i><i></i></span>';
@@ -239,26 +241,60 @@
       const typeNext = () => {
         if (run !== duoRun) return;
         out.textContent = ai.slice(0, ++k);
-        if (k >= ai.length) return;
+        if (k >= ai.length) { duoTyping = false; return; }
         const ch = ai[k - 1];
         // живой темп: чуть дольше после пробела и знаков препинания
-        const d = DUO_TYPE_MS * (0.55 + Math.random() * 0.9) + (ch === ' ' ? 40 : 0) + (/[,.]/.test(ch) ? 160 : 0);
+        const d = DUO_TYPE_MS * (0.55 + Math.random() * 0.9) + (ch === ' ' ? 18 : 0) + (/[,.]/.test(ch) ? 90 : 0);
         duoTimer = setTimeout(typeNext, d);
       };
       typeNext();
     }, DUO_THINK_MS);
   }
 
+  // Граница прокрутки: пока ИИ печатает, дальше конца текущего этапа не пускаем
+  let duoMaxY = Infinity;
   function onDuo() {
     const t = duoTrack.getBoundingClientRect();
     const p = duoPin.getBoundingClientRect();
-    if (t.bottom < 0 || t.top > window.innerHeight) return;   // блок вне экрана
-    const run = t.height - p.height;                          // путь закреплённого блока
-    const q = Math.min(1, Math.max(0, (p.top - t.top) / run));
     const n = DUO_STEPS.length;
+    const run = t.height - p.height;                          // путь закреплённого блока (px экрана)
+    const pinTop = window.innerHeight / 2 - 141 * Z;          // где блок закрепляется
+    const trackY = t.top + window.scrollY;
+    duoMaxY = duoStep >= 0 && duoTyping
+      ? trackY - pinTop + run * (duoStep + 1) / n - 2
+      : Infinity;
+    // возвращаем только небольшой перескок (колесо, тачпад, клавиши);
+    // дальний прыжок — ползунок, якорь, загрузка страницы ниже — не держим
+    if (window.scrollY > duoMaxY && window.scrollY - duoMaxY < 600) { window.scrollTo(0, duoMaxY); return; }
+    if (t.bottom < 0 || t.top > window.innerHeight) return;   // блок вне экрана
+    const q = Math.min(1, Math.max(0, (p.top - t.top) / run));
     const step = Math.min(n - 1, Math.floor(q * n));
     duoBar.style.height = (BAR_H * (step + 1) / n).toFixed(1) + 'px';   // 4 положения, переезд — CSS-переходом
     if (step !== duoStep || !duoSeen) { duoSeen = true; duoShow(step); }
+  }
+  // колесо и тачпад: вниз за границу этапа не крутим, пока ИИ печатает
+  window.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0 && duoTyping && window.scrollY >= duoMaxY - 4) e.preventDefault();
+  }, { passive: false });
+  window.addEventListener('touchmove', (e) => {
+    if (duoTyping && window.scrollY >= duoMaxY - 4) e.preventDefault();
+  }, { passive: false });
+
+  /* Текст «Объединяем скорость…» не уезжает: когда карточка «Как это работает»
+     поднимется так, что текст встанет над названием этапа, она останавливается
+     и стоит, пока идут все этапы, а потом уходит вместе с ними. */
+  const HOLD_GAP = 60;                                        // от текста до названия этапа
+  const duoSec = document.getElementById('duo');
+  function onHold() {
+    const vh = window.innerHeight / Z;
+    const duoTop = duoSec.getBoundingClientRect().top / Z;
+    const t = duoTrack.getBoundingClientRect(), p = duoPin.getBoundingClientRect();
+    const run = (t.height - p.height) / Z;
+    const heldTop = -vh / 2 - 97 - HOLD_GAP;                  // низ текста = верх названия этапа − зазор
+    const natural = duoTop - vh;                              // где была бы карточка без удержания
+    const releaseTop = vh / 2 - 221 - run - vh;               // …в момент, когда этапы открепляются
+    const hold = Math.min(Math.max(heldTop - natural, 0), heldTop - releaseTop);
+    howStage.style.transform = hold > 0 ? `translate3d(0, ${hold.toFixed(1)}px, 0)` : '';
   }
 
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
@@ -299,15 +335,15 @@
     tasksFrame.style.setProperty('--tasks-scale', (TASKS_FROM + (1 - TASKS_FROM) * enter).toFixed(4));
     // 2) сцена на закреплённом блоке
     const q = clamp01(-r.top / (r.height - tasksStage.getBoundingClientRect().height));
-    const bg = smooth(span(q, 0.02, 0.28));             // тёмный → светлый
-    const m = smooth(span(q, 0.34, 0.62));              // маска из углов
+    const bg = smooth(span(q, 0.02, 0.4));              // тёмный → светлый
+    const m = bg;                                       // маска из углов — синхронно со сменой фона
     const st = tasks.style;
     st.setProperty('--tasks-bg', `rgb(${mix([17, 17, 17], [255, 244, 248], bg)})`);
     st.setProperty('--tasks-ink', `rgb(${mix([255, 255, 255], [0, 0, 0], bg)})`);
     st.setProperty('--tasks-ink-soft', `rgba(${mix([255, 255, 255], [0, 0, 0], bg)}, .5)`);
     tasksVeil.style.setProperty('--r', (170 - 78 * m).toFixed(1) + 'px');
-    tasksBadge.classList.toggle('is-on', q >= 0.68);
-    setBadgeNum(q >= 0.84 ? 2 : 1);
+    tasksBadge.classList.toggle('is-on', q >= 0.55);
+    setBadgeNum(q >= 0.78 ? 2 : 1);
   }
   const tasks = document.getElementById('tasks');
 
@@ -324,7 +360,8 @@
   onHeader();
   onHow();
   onDuo();
+  onHold();
   onTasks();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onHold(); onTasks(); });
 })();

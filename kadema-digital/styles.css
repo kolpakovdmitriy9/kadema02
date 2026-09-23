@@ -238,6 +238,7 @@ body {
 .how { position: relative; height: calc(var(--vh) * 2.2); background: #fff; }
 .how__stage {
   position: sticky; top: 0;
+  z-index: 1;                    /* над фоном следующего блока, когда текст удерживается */
   height: var(--vh);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
@@ -335,24 +336,19 @@ body {
   position: sticky;
   top: calc(var(--vh) / 2 - 141px);   /* закреплён по центру экрана */
   height: 282px;
+  z-index: 2;                    /* над удерживаемой карточкой «Как это работает» */
   display: flex; flex-direction: column; align-items: center; gap: 80px;
 }
 
 /* [ Стратегия и исследования ] — уголки по краям */
 .duo__stage {
   display: flex; align-items: center; gap: 10px;
-  height: 28px;
+  height: 29px;
   white-space: nowrap;
 }
 .duo__stage-name { font-weight: 500; font-size: 16px; line-height: 100%; text-align: center; }
-.duo__br { position: relative; width: 6px; height: 28px; flex: none; }
-.duo__br::before, .duo__br::after { content: ""; position: absolute; width: 6px; height: 6px; border: 0 solid #fff; }
-.duo__br::before { top: 0; }
-.duo__br::after { bottom: 0; }
-.duo__br--l::before { border-width: 1px 0 0 1px; }
-.duo__br--l::after  { border-width: 0 0 1px 1px; }
-.duo__br--r::before { border-width: 1px 1px 0 0; }
-.duo__br--r::after  { border-width: 0 1px 1px 0; }
+.duo__br { display: block; width: 7px; height: 29px; flex: none; overflow: visible; }
+.duo__br--r { transform: scaleX(-1); }            /* правая скобка — зеркало левой */
 
 /* две колонки: команда слева, ИИ справа */
 .duo__cols {
@@ -428,16 +424,23 @@ body {
   will-change: transform;
 }
 .tasks__img { position: absolute; inset: 0; background: url(images/duo.jpg) center / cover no-repeat, #3a0a2a; }
-/* маска: полупрозрачная размытая подложка, вырастает из углов внутрь.
+/* маска: размытая и затемнённая копия фото, вырастает из углов внутрь.
+   Размывается сама картинка (а не фон под ней), поэтому края квадрата остаются
+   чёткими; край круглого выреза — тоже чёткий.
    --r — радиус выреза: 170px (маски нет) → 92px (круг 184px, как в макете) */
 .tasks__veil {
   position: absolute; inset: 0;
-  background: rgba(0,0,0,.3);
-  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  overflow: hidden;
   --r: 170px;
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent calc(var(--r) - 7px), #000 calc(var(--r) + 7px));
-          mask: radial-gradient(circle at 50% 50%, transparent calc(var(--r) - 7px), #000 calc(var(--r) + 7px));
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent calc(var(--r) - .5px), #000 calc(var(--r) + .5px));
+          mask: radial-gradient(circle at 50% 50%, transparent calc(var(--r) - .5px), #000 calc(var(--r) + .5px));
 }
+.tasks__veil-img {
+  position: absolute; inset: -12px;             /* запас, чтобы размытие не светлело у краёв */
+  background: url(images/duo.jpg) center / cover no-repeat, #3a0a2a;
+  filter: blur(5px);
+}
+.tasks__veil::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.3); }
 /* значок в углу: появляется «1», потом прыгает на «2» */
 .tasks__badge {
   position: absolute; left: calc(50% + 69px); top: 198px;
