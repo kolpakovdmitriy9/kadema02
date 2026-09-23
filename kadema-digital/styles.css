@@ -241,6 +241,7 @@ body {
 /* ============ КАК ЭТО РАБОТАЕТ ============ */
 /* --p анимируется переходом: 0 — карточка 576px по центру, 1 — на весь экран */
 @property --p { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --e { syntax: '<number>'; inherits: true; initial-value: 0; }
 
 /* Высота секции = сколько экранов блок держится закреплённым */
 .how { position: relative; height: calc(var(--vh) * 2.2); background: #fff; }
@@ -251,11 +252,19 @@ body {
   overflow: hidden;
 }
 .how__card {
+  /* --e — заход блока в экран (0…1, по скроллу): параллакс и лёгкое расширение;
+     --p — резкое раскрытие на весь экран (0/1, переходом по времени) */
+  --e: 0;
   --p: 0;
+  --grow: calc(var(--e) * var(--e));            /* расширение нарастает к концу захода */
+  --w0: calc(576px + 80px * var(--grow));        /* ширина до раскрытия */
+  --h0: calc(min(992px, var(--vh) - 80px) - 40px + 40px * var(--grow));
   position: relative;
-  width: calc(576px + (1440px - 576px) * var(--p));
-  height: calc(min(992px, var(--vh) - 80px) + (var(--vh) - min(992px, var(--vh) - 80px)) * var(--p));
+  width: calc(var(--w0) + (1440px - var(--w0)) * var(--p));
+  height: calc(var(--h0) + (var(--vh) - var(--h0)) * var(--p));
   border-radius: calc(40px * (1 - var(--p)));
+  /* параллакс: пока блок заходит, карточка ниже и догоняет текст над ней быстрее скролла */
+  transform: translate3d(0, calc((1 - var(--e)) * 160px), 0);
   background: #111;
   overflow: hidden;
   isolation: isolate;
@@ -264,7 +273,7 @@ body {
   color: #fff;
   /* резкий старт и долгая доводка: окно почти сразу набирает скорость */
   transition: --p 800ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: width, height;
+  will-change: width, height, transform;
 }
 .how__card.is-open { --p: 1; }
 

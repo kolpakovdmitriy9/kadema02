@@ -190,13 +190,17 @@
     stack.style.setProperty('--k', Math.max(0, Math.min(1.1, width / PILE_W, height / PILE_H)).toFixed(3));
   }).observe(howMedia);
 
-  // Пока блок едет по странице, карточка не меняет размер. Как только она
-  // встаёт по центру экрана (секция закрепилась), карточка резко раскрывается
-  // на весь экран — переход по времени, изинг как в референсе (сильный
-  // ease-out). При скролле обратно так же сворачивается.
+  // Три фазы: 1) пока блок заходит в экран, карточка с параллаксом догоняет
+  // текст над собой и понемногу расширяется во все стороны (--e, по скроллу);
+  // 2) как только встаёт по центру экрана (секция закрепилась), резко
+  // раскрывается на весь экран — переход по времени, сильный ease-out;
+  // 3) при скролле обратно всё проигрывается в обратную сторону.
   function onHow() {
-    const pinned = how.getBoundingClientRect().top <= 1;
-    howCard.classList.toggle('is-open', pinned);
+    const top = how.getBoundingClientRect().top;
+    const vh = window.innerHeight;
+    const e = Math.min(1, Math.max(0, 1 - top / vh));
+    howCard.style.setProperty('--e', e.toFixed(4));
+    howCard.classList.toggle('is-open', top <= 1);
   }
 
   let ticking = false;
