@@ -11,4 +11,4 @@
 `hero.jpg`, `case-main.jpg`, `case-mobile.jpg`, `collage-1.jpg` … `collage-5.jpg`.
 
 ## Шрифт
-В макете Vela Sans: если он установлен в системе, подхватится сам. Иначе используется Onest (лежит в `fonts/`).
+Vela Sans подключён из `fonts/` (400, 500, 600). Onest оставлен запасным шрифтом.
