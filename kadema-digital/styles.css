@@ -408,8 +408,7 @@ body {
   isolation: isolate;
 }
 .duo__img {
-  position: absolute; left: -141px; top: -120px;
-  width: 512px; height: 448px;
+  position: absolute; inset: 0;
   background:
     url(images/duo.jpg) center / cover no-repeat,
     radial-gradient(40% 40% at 55% 50%, #ff7a3d 0%, #f50f72 45%, #3a0a2a 100%);
