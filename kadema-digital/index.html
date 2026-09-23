@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=pile-1">
+<link rel="stylesheet" href="styles.css?v=pile-2">
 </head>
 <body>
 <div class="page" id="page">
@@ -138,12 +138,13 @@
     </div>
   </section>
 
-  <!-- ============ КАК ЭТО РАБОТАЕТ (раскрывается на весь экран при скролле) ============ -->
+  <!-- ============ КАК ЭТО РАБОТАЕТ (раскрывается на весь экран, когда встаёт по центру) ============ -->
   <section class="how" id="how">
     <div class="how__stage" id="howStage">
       <div class="how__card" id="howCard">
-        <div class="stack" id="stack"></div>
         <div class="pill"><span class="pill__dot"></span>Как это работает</div>
+        <!-- место под кучу картинок: между плашкой и текстом, куча вписывается в него -->
+        <div class="how__media" id="howMedia"><div class="stack" id="stack"></div></div>
         <div class="how__text">
           <h3>ИИ ускоряет работу, но&nbsp;не&nbsp;принимает решения за бизнес</h3>
           <p>Объединяем скорость нейросетей в анализе, коде и&nbsp;контенте с&nbsp;экспертным контролем, создавая быстрые и&nbsp;адаптированные под ваш бизнес сайты вместо типовых шаблонов</p>
@@ -154,6 +155,6 @@
 
   <div class="after"></div>
 </div>
-<script src="script.js?v=pile-1"></script>
+<script src="script.js?v=pile-2"></script>
 </body>
 </html>

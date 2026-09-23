@@ -11,8 +11,6 @@
     page.style.zoom = z;
     const vh = window.innerHeight / z;
     document.documentElement.style.setProperty('--vh', vh + 'px');
-    // коллаж рассчитан на карточку высотой 992px — ужимаем на низких экранах
-    document.getElementById('stack').style.setProperty('--k', Math.min(1, (vh - 80) / 992).toFixed(3));
   }
 
   /* ---------- заглушка фона hero: светящиеся «плитки» ---------- */
@@ -183,14 +181,22 @@
   }).observe(how);
   document.addEventListener('visibilitychange', () => setPile(howVisible && !document.hidden));
 
-  const clamp01 = (v) => Math.min(1, Math.max(0, v));
-  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+  // Куча вписывается в свободное место между плашкой и текстом, поэтому
+  // картинки никогда не заходят на текст — ни в карточке, ни на весь экран.
+  const PILE_W = 620, PILE_H = 470;      // габарит кучи с разбросом и наклонами, px макета
+  const howMedia = document.getElementById('howMedia');
+  new ResizeObserver(([e]) => {
+    const { width, height } = e.contentRect;
+    stack.style.setProperty('--k', Math.max(0, Math.min(1.1, width / PILE_W, height / PILE_H)).toFixed(3));
+  }).observe(howMedia);
+
+  // Пока блок едет по странице, карточка не меняет размер. Как только она
+  // встаёт по центру экрана (секция закрепилась), карточка резко раскрывается
+  // на весь экран — переход по времени, изинг как в референсе (сильный
+  // ease-out). При скролле обратно так же сворачивается.
   function onHow() {
-    const r = how.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const entered = vh - r.top;                        // сколько блок уже проехал от низа экрана
-    const p = easeOut(clamp01(entered / (vh * 1.1)));  // раскрытие: старт при заходе, финиш чуть после закрепления
-    howCard.style.setProperty('--p', p.toFixed(4));
+    const pinned = how.getBoundingClientRect().top <= 1;
+    howCard.classList.toggle('is-open', pinned);
   }
 
   let ticking = false;
