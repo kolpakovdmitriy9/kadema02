@@ -24,7 +24,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 html, body { background: #fff; }
-html { overflow-x: clip; }   /* страховка от горизонтальной прокрутки из-за округлений */
 body {
   font-family: var(--font);
   letter-spacing: -0.04em;
@@ -432,11 +431,9 @@ body {
   position: sticky; top: 0;
   height: max(800px, var(--vh));
 }
-/* светлая подложка: геометрию по ходу разворота задаёт script.js */
+/* светлый фон: проявляется поверх тёмного за один раз (прозрачность задаёт script.js) */
 .tasks__light {
-  position: absolute; left: calc(50% - 115px); top: 218px;
-  width: 230px; height: 230px;
-  border-radius: 56px;
+  position: absolute; inset: 0;
   background: #FFF4F8;
   opacity: 0;
 }

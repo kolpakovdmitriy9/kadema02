@@ -296,8 +296,8 @@
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
      2) верх блока закрепляется — и дальше, как с тёмной карточкой, полуавтоматически
-        (по времени, изинг сильный ease-out): из-за фото вырастает светлая подложка
-        #FFF4F8 и разворачивается на весь экран, синхронно внутри фото проступает
+        (по времени, изинг сильный ease-out) фон целиком перекрашивается из тёмного
+        в #FFF4F8, синхронно внутри фото проступает
         размытая маска — сначала тонкой рамкой по форме квадрата, потом вырез
         уменьшается и скругляется до круга 184px;
      3) по скроллу: появляется значок «1», затем «1» уезжает вверх, «2» встаёт снизу. */
@@ -350,16 +350,8 @@
   const LIGHT_MS = 900;
   let lp = 0, lpFrom = 0, lpTo = 0, lpT0 = 0, lpRaf = 0;
   function renderLight() {
-    const st = tasksStage.getBoundingClientRect();
-    const W = st.width / Z, H = st.height / Z;
-    const x0 = W / 2 - FRAME / 2, y0 = 218;
-    const L = tasksLight.style;
-    L.opacity = lp > 0.001 ? '1' : '0';
-    L.left = mix(x0, 0, lp).toFixed(1) + 'px';
-    L.top = mix(y0, 0, lp).toFixed(1) + 'px';
-    L.width = mix(FRAME, W, lp).toFixed(1) + 'px';
-    L.height = mix(FRAME, H, lp).toFixed(1) + 'px';
-    L.borderRadius = mix(FRAME_R, 0, lp).toFixed(1) + 'px';
+    // фон перекрашивается целиком: светлый слой проявляется поверх тёмного
+    tasksLight.style.opacity = lp.toFixed(3);
     // заголовок и подпись: белые на тёмном → чёрные на светлом
     const ink = Math.round(255 * (1 - lp));
     tasks.style.setProperty('--tasks-ink', `rgb(${ink},${ink},${ink})`);
