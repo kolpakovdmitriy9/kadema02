@@ -669,6 +669,10 @@
   }).join('');
   const petals = [...ecoFlower.children];
   petals[0].firstElementChild.style.backgroundImage = ecoTop;
+  // фото внутри лепестков поворачиваются обратно — всегда стоят ровно
+  function uprightPetals() {
+    petals.forEach((el, k) => { const a = (k + ecoCur) * 45; el.firstElementChild.style.transform = a ? `rotate(${-a}deg)` : ''; });
+  }
 
   // Цветок крупный: не мельче 0.88 от макета; если экран низкий — центр
   // опускается так, чтобы верхний лепесток (с фразой) был целиком виден,
@@ -704,10 +708,12 @@
   // Поворот — пошаговый, как в этапах: шаг после «усилия» колесом,
   // сам поворот доигрывает по времени и останавливается на лепестке
   let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0;
+  uprightPetals();
   function setEcoStep(i) {
     if (i === ecoCur) return;
     ecoCur = i;
     ecoFlower.style.transform = i ? `rotate(${i * 45}deg)` : '';
+    uprightPetals();
     setPhrase((8 - i) % 8);                                   // по часовой: на 12 часов встаёт лепесток слева
   }
   function ecoZone() {

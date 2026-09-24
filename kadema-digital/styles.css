@@ -6,19 +6,12 @@
 @font-face { font-family: 'Vela Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/VelaSans-Medium.woff) format('woff'); }
 @font-face { font-family: 'Vela Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/VelaSans-SemiBold.woff2) format('woff2'); }
 
-/* Onest — запасной шрифт */
-@font-face { font-family: 'Onest'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/onest-cyrillic-400-normal.woff2) format('woff2'); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
-@font-face { font-family: 'Onest'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/onest-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+20BD,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: 'Onest'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/onest-cyrillic-500-normal.woff2) format('woff2'); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
-@font-face { font-family: 'Onest'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/onest-latin-500-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+20BD,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: 'Onest'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/onest-cyrillic-600-normal.woff2) format('woff2'); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
-@font-face { font-family: 'Onest'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/onest-latin-600-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+20BD,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 a { color: inherit; text-decoration: none; }
 
 :root {
-  --font: 'Vela Sans', 'Onest', system-ui, sans-serif;
+  --font: 'Vela Sans', system-ui, sans-serif;
   --ink: #051729;
   --vh: 100vh; /* пересчитывается в script.js с учётом масштаба */
 }
@@ -592,7 +585,7 @@ body {
 .tariff__more li { break-inside: avoid; padding: 0 0 10px 16px; position: relative; font-weight: 500; font-size: 16px; line-height: 140%; }
 .tariff__more li::before { content: ""; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 2px; background: #F50F72; }
 .chev-btn svg { width: 24px; height: 24px; fill: #000; }
-.price__note { padding-right: 24px; font-family: "Golos Text", var(--font); font-weight: 400; font-size: 14px; line-height: 23px; letter-spacing: 0; color: #304153; }
+.price__note { padding-right: 24px; font-weight: 400; font-size: 14px; line-height: 23px; letter-spacing: 0; color: #304153; }
 .chev-btn { width: 68px; height: 44px; border-radius: 24px; border: 0; background: rgba(0,0,0,.1); display: grid; place-items: center; cursor: pointer; }
 
 /* ---------- Этапы разработки ---------- */
@@ -652,7 +645,7 @@ body {
 .eco__flyer { position: absolute; left: 0; top: 0; z-index: 3; visibility: hidden; transform-style: preserve-3d; pointer-events: none; }
 /* две стороны летящей карточки */
 .eco__face { position: absolute; inset: 0; border-radius: inherit; background-size: cover; background-position: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.eco__face--back { transform: rotateY(180deg); }
+.eco__face--back { transform: rotateY(180deg); background-size: 156.25% auto; background-repeat: no-repeat; }   /* тот же масштаб, что у фото в лепестке (300 / 192) — посадка без скачка */
 .steps__media > * { transition: opacity .3s; }
 .steps__media.is-gone { background: transparent; }
 .steps__media.is-gone > * { opacity: 0; }
@@ -663,8 +656,11 @@ body {
   width: 192px; height: 225px; border-radius: 61px;
   background: #2A2A30; overflow: hidden;
 }
-.petal i { position: absolute; inset: -10px; background-size: cover; background-position: center; }
-.petal:first-child i { inset: 0; }   /* верхний = обратная сторона летящей карточки, без запаса — подмена незаметна */
+.petal i {   /* фото в лепестке всегда стоит ровно: крутится в обратную сторону синхронно с цветком */
+  position: absolute; left: 50%; top: 50%; width: 300px; height: 300px; margin: -150px 0 0 -150px;
+  background-size: 300px auto; background-position: center; background-repeat: no-repeat;
+  transition: transform 1.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
 .eco__text { position: relative; margin: calc(56px - var(--eco-gap, 0px)) 0 0 60px; width: 545px; display: flex; flex-direction: column; gap: 40px; }
 .eco__text h3 { width: 476px; font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; }
 .eco__text p { width: 434px; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(0,0,0,.5); }
@@ -702,6 +698,7 @@ body {
 .work:hover .work__img { transform: scale(1.03); }
 .work__title { position: absolute; left: 44px; top: 50px; width: 476px; font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; }
 .work__logo { position: absolute; right: 44px; top: 44px; width: 72px; height: 72px; border-radius: 50%; background: #D9D9D9 center / cover; }
+.work__logo svg { display: block; width: 100%; height: 100%; }   /* логотип клиента (пока условный знак) */
 .work__about { position: absolute; left: 44px; right: 44px; bottom: 128px;   /* линия всегда в 44px над статусом (44 + 40 + 44) */
   padding-bottom: 44px; border-bottom: 1px solid rgba(255,255,255,.4); display: flex; flex-direction: column; gap: 24px; opacity: 0; transform: translateY(16px); transition: opacity .45s ease, transform .6s cubic-bezier(0.22, 1, 0.36, 1); }
 .work:hover .work__about, .work:focus-visible .work__about { opacity: 1; transform: none; transition-delay: .08s; }
