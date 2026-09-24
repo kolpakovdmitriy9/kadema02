@@ -246,13 +246,23 @@ body {
 
 /* Высота секции = сколько экранов блок держится закреплённым */
 .how {
-  /* .how__stage прилипает к верху экрана (top: 0) — карточка раскрывается и держится;
-     дальше секция едет со страницей, этапы идут следом (между абзацем и названием
-     этапа всегда 140px — задано отступами, без удержаний) */
-  position: relative;
+  /* Два закрепления без скриптов:
+     1) .how__stage прилипает к верху экрана (top: 0) — карточка раскрывается и держится;
+     2) дальше секция едет вместе с этапами (между абзацем «Объединяем скорость…»
+        и названием этапа всегда ровно 140px) и прилипает в тот же момент, что и этапы, —
+        стоит, пока они идут. Отпускает её конец контейнера .hd — вместе с этапами. */
+  position: sticky;
+  /* низ секции = верх этапов в момент закрепления (экран/2 − 141) − 140 + 44:
+     top = экран/2 − 237 − высота секции (2.2 экрана) */
+  top: calc(var(--vh) * -1.7 - 237px);
+  z-index: 1;
   height: calc(var(--vh) * 2.2);
   background: #fff;
 }
+/* контейнер удержания: заканчивается на 438px раньше блока этапов
+   (60 — отступ снизу + 282 высота этапов + 96 — отступ сверху до названия этапа) */
+.hd { display: flow-root; margin-bottom: 438px; }   /* flow-root — чтобы отрицательный отступ ниже не схлопнулся с этим */
+.hd > .duo { margin-bottom: -438px; }
 .how__stage {
   position: sticky; top: 0;
   height: var(--vh);
@@ -342,11 +352,18 @@ body {
   color: var(--canvas-ink);
   letter-spacing: -0.04em;
 }
-/* блок этапов едет вместе со страницей — без закрепления и остановок */
-.duo__track { width: 100%; }
+/* дорожка: высота = блок + прокрутка на все пункты (--duo-steps × --duo-step) */
+.duo__track {
+  --duo-step: 520px;              /* прокрутка на один этап — заметно больше пары щелчков */
+  --duo-steps: 4;
+  width: 100%;
+  height: calc(282px + var(--duo-step) * var(--duo-steps));
+}
 .duo__pin {
-  position: relative;
+  position: sticky;
+  top: calc(var(--vh) / 2 - 141px);   /* закреплён по центру экрана */
   height: 282px;
+  z-index: 2;                    /* над удерживаемой карточкой «Как это работает» */
   display: flex; flex-direction: column; align-items: center; gap: 80px;
 }
 
@@ -414,16 +431,9 @@ body {
   padding-bottom: 172px;
   letter-spacing: -0.04em;
 }
-/* дорожка: верхняя часть блока закреплена, пока идёт сцена с фото */
-.tasks__track {
-  --tasks-scene: 700px;           /* прокрутка на сцену: перекраска и маска — по времени, дальше значок */
-  height: calc(max(800px, var(--vh)) + var(--tasks-scene));
-  background: var(--canvas);
-}
-.tasks__stage {
-  position: sticky; top: 0;
-  height: max(800px, var(--vh));
-}
+/* верх блока: фото, значок, заголовок, подпись — едут вместе со страницей, без остановок */
+.tasks__track { background: var(--canvas); }
+.tasks__stage { position: relative; height: 800px; }
 .tasks__frame {
   position: absolute; left: calc(50% - 115px); top: 218px;
   width: 230px; height: 230px;

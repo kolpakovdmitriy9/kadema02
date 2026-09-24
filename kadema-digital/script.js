@@ -195,8 +195,8 @@
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
-     Блок едет вместе со страницей; этапы переключаются по ходу, пока он
-     проезжает через экран:
+     Блок закрепляется по центру экрана, пункты переключаются скроллом —
+     не сразу, а после заметной прокрутки (--duo-step в styles.css):
      - название этапа в скобках и текст команды меняются сразу;
      - ИИ сначала «обдумывает» (точки, мигающий маркер), потом печатает текст
        по буквам с живым неровным темпом;
@@ -217,6 +217,7 @@
   ];
   const DUO_THINK_MS = 450;         // ИИ «думает»
   const DUO_TYPE_MS = 14;           // средняя задержка между буквами
+  const duoTrack = document.getElementById('duoTrack');
   const duoPin = document.getElementById('duoPin');
   const duoStage = document.getElementById('duoStage');
   const duoTeam = document.getElementById('duoTeam');
@@ -224,13 +225,14 @@
   const duoAiDot = document.getElementById('duoAiDot');
   const duoBar = document.getElementById('duoBar');
   const BAR_H = 133;
-  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false;
+  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false, duoTyping = false;
 
   function duoShow(i) {
     duoStep = i;
     const run = ++duoRun;                       // отменяет недопечатанный пункт
     clearTimeout(duoTimer);
     const [stage, team, ai] = DUO_STEPS[i];
+    duoTyping = true;                           // пока ИИ не допишет — дальше не пускаем
     duoStage.textContent = stage;
     duoTeam.textContent = team;                 // человек — сразу
     duoAi.innerHTML = '<span class="duo__thinking"><i></i><i></i><i></i></span>';
@@ -244,7 +246,7 @@
       const typeNext = () => {
         if (run !== duoRun) return;
         out.textContent = ai.slice(0, ++k);
-        if (k >= ai.length) return;
+        if (k >= ai.length) { duoTyping = false; return; }
         const ch = ai[k - 1];
         // живой темп: чуть дольше после пробела и знаков препинания
         const d = DUO_TYPE_MS * (0.55 + Math.random() * 0.9) + (ch === ' ' ? 18 : 0) + (/[,.]/.test(ch) ? 90 : 0);
@@ -254,31 +256,53 @@
     }, DUO_THINK_MS);
   }
 
-  // Этапы переключаются по ходу, пока блок проезжает через экран: центр блока
-  // идёт от 85% высоты окна до 15% — этот путь делится на 4 этапа. Без остановок.
+  // Граница прокрутки: пока ИИ печатает, дальше конца текущего этапа не пускаем
+  let duoMaxY = Infinity;
   function onDuo() {
+    const t = duoTrack.getBoundingClientRect();
     const p = duoPin.getBoundingClientRect();
-    const vh = window.innerHeight;
-    if (p.bottom < 0 || p.top > vh) return;                   // блок вне экрана
     const n = DUO_STEPS.length;
-    const c = (p.top + p.bottom) / 2 / vh;
-    const q = Math.min(1, Math.max(0, (0.85 - c) / 0.7));
+    const run = t.height - p.height;                          // путь закреплённого блока (px экрана)
+    const pinTop = window.innerHeight / 2 - 141 * Z;          // где блок закрепляется
+    const trackY = t.top + window.scrollY;
+    duoMaxY = duoStep >= 0 && duoTyping
+      ? trackY - pinTop + run * (duoStep + 1) / n - 2
+      : Infinity;
+    // возвращаем только небольшой перескок (колесо, тачпад, клавиши);
+    // дальний прыжок — ползунок, якорь, загрузка страницы ниже — не держим
+    if (window.scrollY > duoMaxY && window.scrollY - duoMaxY < 600) { window.scrollTo(0, duoMaxY); return; }
+    if (t.bottom < 0 || t.top > window.innerHeight) return;   // блок вне экрана
+    const q = Math.min(1, Math.max(0, (p.top - t.top) / run));
     const step = Math.min(n - 1, Math.floor(q * n));
     duoBar.style.height = (BAR_H * (step + 1) / n).toFixed(1) + 'px';   // 4 положения, переезд — CSS-переходом
     if (step !== duoStep || !duoSeen) { duoSeen = true; duoShow(step); }
   }
+  // Колесо и тачпад: пока ИИ печатает, прокрутку вниз сами доводим ровно
+  // до границы этапа и дальше не пускаем — без перескока и отката назад
+  window.addEventListener('wheel', (e) => {
+    if (!duoTyping || e.deltaY <= 0 || duoMaxY === Infinity) return;
+    const px = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+    if (window.scrollY + px <= duoMaxY) return;               // до границы ещё далеко — обычный скролл
+    e.preventDefault();
+    if (window.scrollY < duoMaxY) window.scrollTo(0, duoMaxY);
+  }, { passive: false });
+  window.addEventListener('touchmove', (e) => {
+    if (duoTyping && window.scrollY >= duoMaxY - 4) e.preventDefault();
+  }, { passive: false });
+  window.addEventListener('keydown', (e) => {
+    if (duoTyping && window.scrollY >= duoMaxY - 4 && ['ArrowDown', 'PageDown', 'Space', 'End'].includes(e.code)) e.preventDefault();
+  });
 
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
-     2) верх блока закрепляется — и дальше, как с тёмной карточкой, полуавтоматически
+     2) блок не останавливается; когда его верх подходит к верху экрана — полуавтоматически
         (по времени, изинг сильный ease-out) всё тёмное полотно — сцена, этапы и
         карточка выше — перекрашивается в #FFF4F8 (текст в чёрный), синхронно внутри фото проступает
         размытая маска — сначала тонкой рамкой по форме квадрата, потом вырез
         уменьшается и скругляется до круга 184px;
-     3) дальше по скроллу появляется значок «2». */
+     3) дальше по ходу скролла появляется значок «2». */
   const tasks = document.getElementById('tasks');
   const tasksTrack = document.getElementById('tasksTrack');
-  const tasksStage = document.getElementById('tasksStage');
   const tasksFrame = document.getElementById('tasksFrame');
   const tasksVeil = document.getElementById('tasksVeil');
   const tasksBadge = document.getElementById('tasksBadge');
@@ -355,21 +379,24 @@
     if (!lpRaf) lpRaf = requestAnimationFrame(lpTick);
   }
 
+  // Всё едет вместе со скроллом, без остановок; эффекты срабатывают, когда
+  // верх блока проезжает отметки на экране (в px макета от верха окна):
+  const T_LIGHT = 140;    // перекраска полотна и маска
+  const T_BADGE = -100;   // значок «2» (фото ещё целиком на экране)
+  const T_FAST = -200;    // дальше — при быстром скролле перекраска сразу в конец
   function onTasks() {
     const r = tasksTrack.getBoundingClientRect();
     const vh = window.innerHeight;
     if (r.bottom < 0 || r.top > vh) return;
+    const top = r.top / Z;                               // верх блока, px макета
     // 1) заход: верх блока идёт от низа экрана к верху — фото растёт до 1
     const enter = 1 - Math.pow(1 - clamp01(1 - r.top / vh), 3);
     tasksFrame.style.setProperty('--tasks-scale', (TASKS_FROM + (1 - TASKS_FROM) * enter).toFixed(4));
-    // 2) сцена на закреплённом блоке
-    const q = clamp01(-r.top / (r.height - tasksStage.getBoundingClientRect().height));
-    // перекраска и маска запускаются, как только блок закрепился; при быстром
-    // скролле (ушли дальше середины сцены) — сразу в конечное состояние
-    if (q > 0.5 && lp < 1) setLight(1, true);
-    else setLight(-r.top > 1 ? 1 : 0);
+    // 2) перекраска и маска — по времени; при быстром скролле сразу в конец
+    if (top < T_FAST && lp < 1) setLight(1, true);
+    else setLight(top <= T_LIGHT ? 1 : 0);
     // 3) значок «2» — появляется с пружинкой
-    tasksBadge.classList.toggle('is-on', q >= 0.4);
+    tasksBadge.classList.toggle('is-on', top <= T_BADGE);
   }
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
