@@ -644,7 +644,12 @@
   const stepsInfo = stepsTrack.querySelector('.steps__info');
   // Фото верхнего лепестка — последнее фото этапов: оно и перелетает
   const lastSlide = stepsSlides.lastElementChild.style.backgroundImage;
-  ecoFlyer.style.backgroundImage = lastSlide;
+  // Карточка в полёте переворачивается: спереди фото этапов, сзади —
+  // картинка верхнего лепестка, она и встаёт на место
+  const ecoTop = 'url(images/eco-1.jpg),linear-gradient(160deg,#8d939c,#5d636c)';
+  ecoFlyer.innerHTML = '<i class="eco__face"></i><i class="eco__face eco__face--back"></i>';
+  ecoFlyer.children[0].style.backgroundImage = lastSlide;      // через style: в url есть кавычки
+  ecoFlyer.children[1].style.backgroundImage = ecoTop;
   // Откуда прилетает лепесток — вразнобой со всех сторон:
   // [dx, dy] в px макета, поворот и масштаб в начале полёта, задержка (доля сборки)
   const ECO_FROM = [null,
@@ -661,7 +666,7 @@
     return `<div class="petal"><i style="background-image:${bg}"></i></div>`;
   }).join('');
   const petals = [...ecoFlower.children];
-  petals[0].firstElementChild.style.backgroundImage = lastSlide;
+  petals[0].firstElementChild.style.backgroundImage = ecoTop;
 
   // Цветок крупный: не мельче 0.88 от макета; если экран низкий — центр
   // опускается так, чтобы верхний лепесток (с фразой) был целиком виден,
@@ -775,7 +780,10 @@
       ecoFlyer.style.width = (w / Z).toFixed(1) + 'px';
       ecoFlyer.style.height = (h / Z).toFixed(1) + 'px';
       ecoFlyer.style.borderRadius = (61 * ecoS * easeOutCubic(Math.min(1, f / 0.3))).toFixed(1) + 'px';
-      ecoFlyer.style.transform = `rotate(${(-8 * Math.sin(Math.PI * e)).toFixed(2)}deg)`;
+      // переворот на 180° на большей части пути (0.2–0.85), с перспективой
+      const flip = 180 * easeInOut(Math.min(1, Math.max(0, (f - 0.2) / 0.65)));
+      ecoFlyer.style.transform = `perspective(${(2.2 * Math.max(w, h) / Z).toFixed(0)}px) ` +
+        `rotate(${(-8 * Math.sin(Math.PI * e)).toFixed(2)}deg) rotateY(${flip.toFixed(2)}deg)`;
     }
 
     // шаг поворота по положению скролла (полоса прокрутки, клавиши, свайп)
