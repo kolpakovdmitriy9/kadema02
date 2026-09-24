@@ -567,10 +567,27 @@ body {
 @keyframes price-in { from { opacity: 0; transform: translateY(12px); } }
 .tariff { border-bottom: 1px solid #CCC; padding: 44px 0 44px 24px; cursor: pointer; }
 .tariff:last-child { border-bottom: 0; }
+.tariff__head { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-right: 24px; }
 .tariff__name { font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; color: rgba(0,0,0,.5); transition: color .3s; }
 .tariff__price { margin-top: 22px; font-weight: 500; font-size: 24px; line-height: 100%; color: rgba(0,0,0,.5); transition: color .3s; }
 .tariff.is-active .tariff__name, .tariff.is-active .tariff__price,
 .tariff:hover .tariff__name, .tariff:hover .tariff__price { color: #000; }
+.tariff__toggle {
+  flex: none; width: 68px; height: 44px; border-radius: 24px; border: 0;
+  background: rgba(0,0,0,.1); display: grid; place-items: center; cursor: pointer;
+  transition: background .3s;
+}
+.tariff__toggle svg { width: 24px; height: 24px; fill: #000; }
+.tariff__toggle svg { transition: transform .4s cubic-bezier(0.22, 1, 0.36, 1); }
+.tariff.is-open .tariff__toggle svg { transform: rotate(180deg); }   /* поворачивается только стрелка */
+/* что входит в тариф — раскрывается, пункты в 2–3 колонки */
+.tariff__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(0.22, 1, 0.36, 1); }
+.tariff.is-open .tariff__more { grid-template-rows: 1fr; }
+.tariff__more > div { overflow: hidden; }
+.tariff__more p { margin-top: 22px; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(0,0,0,.6); max-width: 820px; }
+.tariff__more ul { margin: 16px 24px 0 0; padding: 0; list-style: none; columns: 3 220px; column-gap: 32px; }
+.tariff__more li { break-inside: avoid; padding: 0 0 10px 16px; position: relative; font-weight: 500; font-size: 16px; line-height: 140%; }
+.tariff__more li::before { content: ""; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 2px; background: #F50F72; }
 .chev-btn svg { width: 24px; height: 24px; fill: #000; }
 .price__note { padding-right: 24px; font-family: "Golos Text", var(--font); font-weight: 400; font-size: 14px; line-height: 23px; letter-spacing: 0; color: #304153; }
 .chev-btn { width: 68px; height: 44px; border-radius: 24px; border: 0; background: rgba(0,0,0,.1); display: grid; place-items: center; cursor: pointer; }
@@ -606,9 +623,9 @@ body {
 /* ---------- Экономика проекта ---------- */
 .eco { position: relative; margin-top: 48px; padding-bottom: 160px; }
 /* цветок закреплён; --eco-s — масштаб, --eco-y — центр цветка, --eco-gap — пустота под ним (script.js).
-   Дорожка: сборка (400px) + 8 поворотов по 360px + небольшая пауза в конце */
-.eco__track { height: calc(var(--vh) + 400px + 8 * 360px + 160px); }
-.eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow: hidden; }
+   Дорожка: догон фото (160px) + сборка (720px) + 8 поворотов по 440px + пауза в конце */
+.eco__track { height: calc(var(--vh) + 160px + 720px + 8 * 440px + 160px); }
+.eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow-x: clip; overflow-y: visible; }
 .eco__row {
   position: absolute; left: 60px; right: 60px; z-index: 2;
   top: calc(var(--eco-y) - 310px * var(--eco-s));          /* на уровне верхнего лепестка */
