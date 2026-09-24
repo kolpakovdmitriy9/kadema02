@@ -635,6 +635,7 @@
   const ecoStage = document.getElementById('ecoStage');
   const ecoRow = ecoStage.querySelector('.eco__row');
   const ecoFlower = document.getElementById('ecoFlower');
+  const ecoFlowerBox = ecoFlower.parentElement;
   const ecoPhrase = document.getElementById('ecoPhrase');
   const ecoFlyer = document.getElementById('ecoFlyer');
   const stepsMedia = stepsTrack.querySelector('.steps__media');
@@ -671,6 +672,7 @@
   // опускается так, чтобы верхний лепесток (с фразой) был целиком виден,
   // а нижний может немного уходить за край
   let ecoS = 1, ecoY = 0, ecoH = 0;
+  const ecoPull = () => parseFloat(eco.style.getPropertyValue('--eco-pull')) || 0;
   function fitEco() {
     ecoH = window.innerHeight / Z;
     ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 846));
@@ -679,6 +681,9 @@
     ecoStage.style.setProperty('--eco-y', ecoY.toFixed(1) + 'px');
     // пустота под цветком — текст ниже подтягивается к нему
     eco.style.setProperty('--eco-gap', (ecoH - ecoY - 423 * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
+    // где низ закреплённого блока этапов (px макета от верха экрана) — на столько подтягиваем экономику
+    const sh = stepsStage.offsetHeight;
+    eco.style.setProperty('--eco-pull', (Math.max(0, (ecoH - sh) / 2) + sh).toFixed(1) + 'px');
   }
   fitEco();
 
@@ -704,8 +709,8 @@
     setPhrase((8 - i) % 8);                                   // по часовой: на 12 часов встаёт лепесток слева
   }
   function ecoZone() {
-    // скролл, при котором собран цветок: фото село (закрепление + ECO_CATCH) и прошла сборка
-    const s0 = ecoTrack.getBoundingClientRect().top + window.scrollY + (ECO_CATCH + ECO_BUILD) * Z;
+    // скролл, при котором собран цветок: фото село и прошла досборка
+    const s0 = ecoTrack.getBoundingClientRect().top + window.scrollY + (ecoPull() + 48 + ECO_CATCH + ECO_BUILD) * Z;
     return { start: s0, end: s0 + ECO_STEPS * ECO_TURN * Z, step: ECO_TURN * Z };
   }
   window.addEventListener('wheel', (e) => {
@@ -717,7 +722,7 @@
     if ((dir > 0 && ecoCur >= ECO_STEPS && y >= end - 2) ||
         (dir < 0 && ecoCur <= 0 && y <= start + 2)) return;   // крайний лепесток — отпускаем страницу
     e.preventDefault();
-    if (ecoBusy) return;
+    if (ecoBusy || flyF < 1) return;                          // пока фото не село на место — не крутим
     clearTimeout(ecoAccT);
     ecoAccT = setTimeout(() => { ecoAcc = 0; }, 260);
     ecoAcc += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
@@ -732,9 +737,8 @@
 
   let flyF = -1, flyTarget = -1, flyRaf = 0;
   function flyTick() {
-    // большой скачок (прыжок по странице) — сразу, небольшой — мягко догоняем
-    flyF = flyTarget < 0 || flyF < 0 || Math.abs(flyTarget - flyF) > 0.35
-      ? flyTarget : flyF + (flyTarget - flyF) * 0.2;
+    // всегда мягко догоняем, даже при быстром скролле — без перескоков
+    flyF = flyTarget < 0 || flyF < 0 ? flyTarget : flyF + (flyTarget - flyF) * 0.16;
     if (Math.abs(flyTarget - flyF) < 0.0005) flyF = flyTarget;
     drawFlyer(flyF);
     flyRaf = flyF === flyTarget ? 0 : requestAnimationFrame(flyTick);
@@ -745,13 +749,12 @@
     ecoFlyer.style.visibility = flying ? 'visible' : 'hidden';
     if (!flying) return;
     const e = easeInOut(f);
-    // старт — неподвижная точка экрана (где фото стояло закреплённым в этапах),
-    // финиш — настоящее место верхнего лепестка: карточка садится ровно в кольцо,
-    // даже пока цветок ещё доезжает до закрепления
+    // старт — где фото стояло закреплённым в этапах, финиш — место верхнего лепестка
+    // всё в координатах закреплённой сцены — от прокрутки страницы не зависит
+    const o = ecoStage.getBoundingClientRect();
     const m = stepsMedia.getBoundingClientRect();
-    const a = { left: m.left, top: Math.max(0, (window.innerHeight - m.height) / 2), width: m.width, height: m.height };
+    const a = { left: m.left, top: o.top + Math.max(0, (window.innerHeight - m.height) / 2), width: m.width, height: m.height };
     const b = petals[0].getBoundingClientRect();
-    const o = eco.getBoundingClientRect();
     // одна мягкая дуга: чуть в сторону и вниз от прямой, без лишних поворотов
     const arc = Math.sin(Math.PI * e);
     const cx = lerp(a.left + a.width / 2, b.left + b.width / 2, e) - 90 * Z * arc;
@@ -770,19 +773,15 @@
   function onEco() {
     const vh = window.innerHeight;
     const top = ecoTrack.getBoundingClientRect().top;
-    // 1) фото летит, как только отпускает блок этапов, и встаёт на 12 часов
-    //    чуть позже закрепления цветка; 2) затем по очереди подлетают остальные;
-    //    3) затем 8 плавных поворотов
-    const sh = stepsStage.offsetHeight * Z;                  // высота блока этапов (≤ 800, на низком экране — окно)
-    const start = Math.max(0, (vh - sh) / 2) + sh + 48 * Z;
-    const u = start - top;                                    // px с начала перелёта
-    const flyLen = start + ECO_CATCH * Z;
+    // 1) фото летит, как только отпускает блок этапов; 2) одновременно подлетают
+    //    остальные лепестки; 3) затем пошаговые повороты
+    // сцена цветка закрепляется ровно в момент, когда отпускает блок этапов
+    // (экономика подтянута под него, --eco-pull), поэтому весь полёт идёт
+    // внутри неподвижной сцены
+    const u = -top;                                           // px с начала перелёта
+    const flyLen = (ecoPull() + 48 + ECO_CATCH) * Z;
     const f = Math.min(1, Math.max(0, u / flyLen));
-    // пока идёт сборка, цветок уже стоит там, где встанет после закрепления:
-    // сцена ещё подъезжает снизу — компенсируем её сдвиг. Лепестки в этот момент
-    // за краями экрана, поэтому включение компенсации не видно
-    const lift = u > 0 ? Math.max(0, top) : 0;
-    ecoStage.style.transform = lift ? `translate3d(0, ${(-lift / Z).toFixed(2)}px, 0)` : '';
+    ecoFlowerBox.style.visibility = u > 0 ? '' : 'hidden';    // пока этапы на месте — цветка не видно
     // остальные стартуют почти вместе с фото и долетают вместе с ним
     const g0 = flyLen * 0.12, g = Math.min(1, Math.max(0, (u - g0) / (flyLen - g0 + ECO_BUILD * Z)));
 
@@ -815,7 +814,8 @@
     if (!flyRaf) flyRaf = requestAnimationFrame(flyTick);
 
     // шаг поворота по положению скролла (полоса прокрутки, клавиши, свайп)
-    if (!ecoBusy) setEcoStep(Math.min(ECO_STEPS, Math.max(0, Math.round((u - flyLen - ECO_BUILD * Z) / (ECO_TURN * Z)))));
+    const ecoIdx = Math.min(ECO_STEPS, Math.max(0, Math.round((u - flyLen - ECO_BUILD * Z) / (ECO_TURN * Z))));
+    if (!ecoBusy && (flyF >= 1 || ecoIdx === 0)) setEcoStep(ecoIdx);   // до посадки фото — только исходное положение
   }
   onEco();
 

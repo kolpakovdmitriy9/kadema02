@@ -624,11 +624,13 @@ body {
 .steps__text { width: 399px; font-weight: 500; font-size: 20px; line-height: 140%; }
 
 /* ---------- Экономика проекта ---------- */
-.eco { position: relative; margin-top: 48px; padding-bottom: 160px; }
+/* --eco-pull (script.js) — высота закреплённого блока этапов: экономика подтянута под него,
+   чтобы сцена цветка уже была закреплена, когда этапы отпускают, — полёт идёт внутри неё */
+.eco { position: relative; margin-top: calc(-1 * var(--eco-pull, 0px)); padding-bottom: 160px; }
 /* цветок закреплён; --eco-s — масштаб, --eco-y — центр цветка, --eco-gap — пустота под ним (script.js).
-   Дорожка: догон фото (160px) + досборка (60px) + 7 шагов по 520px + пауза в конце */
-.eco__track { height: calc(var(--vh) + 160px + 60px + 7 * 520px + 200px); }
-.eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow-x: clip; overflow-y: visible; }
+   Дорожка: уход этапов (--eco-pull + 48px) и догон фото (160px) + досборка (60px) + 7 шагов по 520px + пауза */
+.eco__track { height: calc(var(--vh) + var(--eco-pull, 0px) + 48px + 160px + 60px + 7 * 520px + 200px); }
+.eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow-x: clip; overflow-y: visible; pointer-events: none; }
 .eco__row {
   position: absolute; left: 60px; right: 60px; z-index: 2;
   top: calc(var(--eco-y) - 310px * var(--eco-s));          /* на уровне верхнего лепестка */
@@ -659,6 +661,7 @@ body {
   background: #2A2A30; overflow: hidden;
 }
 .petal i { position: absolute; inset: -10px; background-size: cover; background-position: center; }
+.petal:first-child i { inset: 0; }   /* верхний = обратная сторона летящей карточки, без запаса — подмена незаметна */
 .eco__text { position: relative; margin: calc(56px - var(--eco-gap, 0px)) 0 0 60px; width: 545px; display: flex; flex-direction: column; gap: 40px; }
 .eco__text h3 { width: 476px; font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; }
 .eco__text p { width: 434px; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(0,0,0,.5); }
