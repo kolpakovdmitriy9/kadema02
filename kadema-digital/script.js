@@ -191,7 +191,7 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); ticking = false; });
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
@@ -399,6 +399,202 @@
     tasksBadge.classList.toggle('is-on', top <= T_BADGE);
   }
 
+  /* ================= БЕЛАЯ ЧАСТЬ ================= */
+
+  /* ---------- параллакс: белый блок выезжает из-под розового, облака плывут ---------- */
+  const white = document.getElementById('white');
+  const priceIntro = document.getElementById('priceIntro');
+  const clouds = [...document.querySelectorAll('.cloud')];
+  function onWhite() {
+    const r = white.getBoundingClientRect();
+    const vh = window.innerHeight;
+    if (r.top > vh || r.bottom < 0) return;
+    // пока верх белого блока идёт от низа экрана к трети — содержимое догоняет (было выше, под розовым)
+    const e = clamp01(1 - (r.top - vh * 0.25) / (vh * 0.75));
+    priceIntro.style.transform = `translate3d(0, ${(-(1 - e) * 180).toFixed(1)}px, 0)`;
+    const y = r.top / Z;                                  // положение блока, px макета
+    for (const c of clouds) c.style.transform = `translate3d(0, ${(y * parseFloat(c.dataset.speed)).toFixed(1)}px, 0)`;
+  }
+
+  /* ---------- тарифы: табы по категориям, раскрытие «что входит» ---------- */
+  const PRICE = [
+    { desc: 'Когда сайт нужен быстро: под акцию, новый продукт или проверку спроса. Запуск — от одной недели.',
+      items: [
+        ['Промо-сайт, 2–3 экрана', 'от 20 000 ₽', 'Подойдёт для акции, мероприятия, нового продукта или отдельного рекламного предложения.',
+          ['Структура и тексты под задачу', 'Дизайн в стиле бренда', 'Адаптация под мобильные', 'Форма заявки', 'Подключение аналитики', 'Публикация на домене']],
+        ['Лендинг, от 4 экранов', 'от 30 000 ₽', 'Посадочная страница для презентации услуги, продукта и получения заявок.',
+          ['Анализ конкурентов', 'Прототип и сценарий страницы', 'Уникальный дизайн', 'Адаптация под мобильные', 'Формы заявок и квиз', 'Базовое SEO и аналитика']],
+      ] },
+    { desc: 'Полноценный сайт компании: услуги, кейсы, каталог или магазин — с понятной структурой и формами заявок.',
+      items: [
+        ['Упрощённый корпоративный сайт', 'от 40 000 ₽', 'Компактный сайт с информацией о компании, услугах, преимуществах и контактах.',
+          ['До 5 страниц', 'Дизайн в стиле бренда', 'Адаптация под мобильные', 'Формы связи', 'Базовое SEO', 'Подключение аналитики']],
+        ['Стандартный корпоративный сайт', 'от 50 000 ₽', 'Полноценная структура с несколькими услугами, кейсами, информационными разделами и формами.',
+          ['Структура под услуги и кейсы', 'Прототипы ключевых страниц', 'Уникальный дизайн', 'Блог или новости', 'SEO и аналитика', 'Обучение работе с сайтом']],
+        ['Сайт-каталог без онлайн-оплаты', 'от 80 000 ₽', 'Каталог товаров или услуг с категориями, карточками и формами запроса стоимости.',
+          ['Категории и фильтры', 'Карточки товаров', 'Форма запроса цены', 'Импорт каталога', 'Адаптация под мобильные', 'SEO для категорий']],
+        ['Интернет-магазин', 'от 140 000 ₽', 'Каталог, карточки товаров, корзина, оформление заказа и необходимые интеграции.',
+          ['Каталог и фильтры', 'Корзина и оформление заказа', 'Онлайн-оплата', 'Интеграция с учётной системой', 'Личный кабинет', 'Аналитика продаж']],
+      ] },
+    { desc: 'Сайты жилых комплексов и девелоперов: планировки, инфраструктура, ход строительства и заявки покупателей.',
+      items: [
+        ['Лендинг для застройщика', 'от 50 000 ₽', 'Страница жилого комплекса с преимуществами, инфраструктурой, планировками и формами заявки.',
+          ['Презентация ЖК', 'Планировки и цены', 'Инфраструктура на карте', 'Ход строительства', 'Формы заявок', 'Аналитика рекламы']],
+        ['Корпоративный сайт застройщика', 'от 70 000 ₽', 'Сайт компании с объектами, карточками жилых комплексов, проектами и информацией для покупателей.',
+          ['Раздел объектов', 'Карточки ЖК', 'Подбор квартир', 'Новости и акции', 'Ипотека и способы покупки', 'SEO и аналитика']],
+      ] },
+  ];
+  const chevron = '<svg viewBox="0 0 24 24"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg>';
+  const priceDesc = document.getElementById('priceDesc');
+  const priceList = document.getElementById('priceList');
+  const tabs = [...document.querySelectorAll('.tab')];
+  function renderPrice(cat, animate) {
+    const c = PRICE[cat];
+    priceDesc.textContent = c.desc;
+    priceList.innerHTML = c.items.map(([name, price, text, incl], i) => `
+      <div class="tariff${i === 0 ? ' is-active' : ''}">
+        <div class="tariff__head">
+          <div><div class="tariff__name">${name}</div><div class="tariff__price">${price}</div></div>
+          <button class="tariff__toggle" aria-label="Что входит">${chevron}</button>
+        </div>
+        <div class="tariff__more"><div><p>${text}</p><ul>${incl.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
+      </div>`).join('');
+    priceList.scrollTop = 0;
+    if (animate) for (const el of [priceList, priceDesc]) { el.classList.remove('is-swap'); void el.offsetWidth; el.classList.add('is-swap'); }
+  }
+  tabs.forEach((t) => t.addEventListener('click', () => {
+    if (t.classList.contains('is-active')) return;
+    tabs.forEach((x) => x.classList.toggle('is-active', x === t));
+    renderPrice(+t.dataset.cat, true);
+  }));
+  priceList.addEventListener('click', (e) => {
+    const t = e.target.closest('.tariff');
+    if (!t) return;
+    for (const x of priceList.children) if (x !== t) x.classList.remove('is-open', 'is-active');
+    t.classList.add('is-active');
+    t.classList.toggle('is-open');
+  });
+  renderPrice(0, false);
+
+  /* ---------- этапы разработки ----------
+     Блок закрепляется. Шаг — только после «усилия» (накопленной прокрутки колесом),
+     а сама анимация шага доигрывает автоматически и не обрывается на середине:
+     фото листается по вертикали, текст проявляется снизу через прозрачность. */
+  const STEPS = [
+    ['Знакомимся и анализируем', 'Собираем требования, проводим брифинг, анализируем целевую аудиторию и конкурентов.'],
+    ['Проектируем', 'Продумываем структуру сайта, собираем прототипы и пользовательские сценарии.'],
+    ['Контент и дизайн', 'Готовим офферы и тексты, рисуем интерфейс и адаптируем его под мобильные.'],
+    ['Сборка и интеграции', 'Верстаем сайт, подключаем формы связи, настраиваем SEO и аналитику.'],
+    ['Тест и запуск', 'Тестируем сайт на разных устройствах и публикуем его на вашем домене.'],
+  ];
+  const STEP_PX = 700;            // = --steps-step в styles.css
+  const STEP_EFFORT = 220;        // сколько «докрутить» колесом, чтобы перейти на шаг
+  const STEP_MS = 900;            // длительность анимации шага
+  const stepsTrack = document.getElementById('stepsTrack');
+  const stepsSlides = document.getElementById('stepsSlides');
+  const stepsDots = document.getElementById('stepsDots');
+  const stepsNum = document.getElementById('stepsNum');
+  const stepsTitle = document.getElementById('stepsTitle');
+  const stepsText = document.getElementById('stepsText');
+  const SLIDE_BG = ['#c9cdd3', '#bfc6cf', '#cfc9c2', '#c3cbc4', '#cbc4cc'];
+  stepsSlides.innerHTML = STEPS.map((_, i) =>
+    `<div class="steps__slide" style="top:${i * 100}%;background-image:url(images/step-${i + 1}.jpg),linear-gradient(160deg,${SLIDE_BG[i]},#9aa1aa)"></div>`).join('');
+  stepsDots.innerHTML = STEPS.map(() => '<i></i>').join('');
+  let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0;
+
+  function setStep(i) {
+    if (i === stepCur) return;
+    const first = stepCur < 0;
+    stepCur = i;
+    stepsSlides.style.transform = `translate3d(0, ${-i * 100}%, 0)`;
+    [...stepsDots.children].forEach((d, k) => d.classList.toggle('is-on', k === i));
+    stepsNum.textContent = String(i + 1).padStart(2, '0');
+    stepsTitle.textContent = STEPS[i][0];
+    stepsText.textContent = STEPS[i][1];
+    if (!first && stepsTitle.animate) {
+      const from = { opacity: 0, transform: 'translateY(20px)' }, to = { opacity: 1, transform: 'translateY(0)' };
+      const opt = { duration: 700, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' };
+      stepsNum.animate([from, to], opt);
+      stepsTitle.animate([from, to], { ...opt, delay: 60 });
+      stepsText.animate([from, to], { ...opt, delay: 140 });
+    }
+  }
+  // где начинается закрепление и где конец (в px прокрутки)
+  function stepsZone() {
+    const t = stepsTrack.getBoundingClientRect();
+    const stick = (window.innerHeight - 800 * Z) / 2;
+    const start = t.top + window.scrollY - stick;
+    return { start, end: start + (STEPS.length - 1) * STEP_PX * Z, step: STEP_PX * Z };
+  }
+  function onSteps() {
+    if (stepBusy) return;
+    const { start, step } = stepsZone();
+    const i = Math.min(STEPS.length - 1, Math.max(0, Math.round((window.scrollY - start) / step)));
+    setStep(i);
+  }
+  window.addEventListener('wheel', (e) => {
+    const { start, end, step } = stepsZone();
+    const y = window.scrollY;
+    if (y < start - 2 || y > end + 2) return;                 // не в зоне этапов — обычный скролл
+    const dir = Math.sign(e.deltaY);
+    if (!dir) return;
+    if ((dir > 0 && stepCur >= STEPS.length - 1 && y >= end - 2) ||
+        (dir < 0 && stepCur <= 0 && y <= start + 2)) return;  // крайний шаг — отпускаем страницу
+    e.preventDefault();
+    if (stepBusy) return;                                     // анимация доигрывает сама
+    clearTimeout(stepAccT);
+    stepAccT = setTimeout(() => { stepAcc = 0; }, 260);       // пауза — «усилие» сбрасывается
+    const px = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+    stepAcc += px;
+    if (Math.abs(stepAcc) < STEP_EFFORT) return;
+    stepAcc = 0;
+    const target = Math.min(STEPS.length - 1, Math.max(0, stepCur + dir));
+    stepBusy = true;
+    setStep(target);
+    window.scrollTo(0, start + target * step);
+    setTimeout(() => { stepBusy = false; }, STEP_MS);
+  }, { passive: false });
+  setStep(0);
+
+  /* ---------- экономика проекта: лепестки крутятся ---------- */
+  const ECO = [
+    'быстрее формируем структуру',
+    'оперативнее готовим прототип',
+    'создаём больше вариантов подачи',
+    'меньше рутинных операций',
+    'быстрее вносим правки',
+    'специалисты контролируют каждый этап',
+    'раньше видим результат',
+    'точнее оцениваем бюджет',
+  ];
+  const ECO_R = 310, ECO_HOLD = 2200;
+  const ecoFlower = document.getElementById('ecoFlower');
+  const ecoPhrase = document.getElementById('ecoPhrase');
+  ecoFlower.innerHTML = ECO.map((_, i) => {
+    const a = i * 45;                                           // 0° — 12 часов, по часовой
+    const g = 196 - (i % 4) * 6;
+    return `<div class="petal" style="transform:rotate(${a}deg) translateY(-${ECO_R}px)">` +
+      `<i style="background-image:url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))"></i></div>`;
+  }).join('');
+  let ecoTurn = 0, ecoTimer = 0, ecoOn = false;
+  function ecoStep() {
+    ecoTurn++;
+    ecoFlower.style.transform = `rotate(${-ecoTurn * 45}deg)`;   // следующий лепесток встаёт на 12 часов
+    ecoPhrase.classList.add('is-out');
+    setTimeout(() => {
+      ecoPhrase.textContent = ECO[((ecoTurn % ECO.length) + ECO.length) % ECO.length];
+      ecoPhrase.classList.remove('is-out');
+    }, 700);
+    ecoTimer = setTimeout(ecoStep, ECO_HOLD);
+  }
+  new IntersectionObserver(([e]) => {
+    const on = e.isIntersecting && !document.hidden;
+    if (on === ecoOn) return;
+    ecoOn = on;
+    clearTimeout(ecoTimer);
+    if (on) ecoTimer = setTimeout(ecoStep, 1200);
+  }).observe(ecoFlower.parentElement);
+
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
   function buildTicker() {
     const track = document.getElementById('heroTags');
@@ -414,6 +610,7 @@
   onDuo();
  
   onTasks();
+  onWhite();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); });
 })();

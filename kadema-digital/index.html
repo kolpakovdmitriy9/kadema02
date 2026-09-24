@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=final-1">
+<link rel="stylesheet" href="styles.css?v=white-1">
 </head>
 <body>
 <div class="page" id="page">
@@ -235,8 +235,84 @@
     </div>
   </section>
 
-  <div class="after"></div>
+  <!-- ============ БЕЛАЯ ЧАСТЬ: выезжает из-под розового блока ============ -->
+  <div class="white" id="white">
+
+    <!-- ЦЕНЫ И ФОРМАТ -->
+    <section class="price" id="price">
+      <div class="price__intro" id="priceIntro">
+        <div class="cloud cloud--l" data-speed="-0.12">Объединяем скорость нейросетей в&nbsp;анализе, коде и&nbsp;контенте с&nbsp;экспертным контролем</div>
+        <div class="cloud cloud--r" data-speed="0.1">Создаем быстрые и&nbsp;адаптированные под ваш бизнес сайты вместо типовых шаблонов</div>
+        <p class="price__eyebrow">Цены и формат</p>
+        <h2 class="price__title">Выберите формат под задачу</h2>
+        <div class="price__tabs" role="tablist">
+          <button class="tab is-active" role="tab" data-cat="0">Быстрый запуск</button>
+          <button class="tab" role="tab" data-cat="1">Сайты для бизнеса</button>
+          <button class="tab" role="tab" data-cat="2">Для застройщиков</button>
+        </div>
+      </div>
+
+      <div class="price__labels"><span>Описание</span><span>Тариф</span></div>
+      <div class="price__table">
+        <div class="price__row">
+          <div class="price__side">
+            <p class="price__desc" id="priceDesc"></p>
+            <button class="btn-dark">Получить расчёт стоимости</button>
+          </div>
+          <div class="price__list" id="priceList"></div>
+        </div>
+        <div class="price__foot">
+          <p class="price__note">Цены являются предварительными ориентирами. Итоговая стоимость зависит от объёма работ.</p>
+          <div class="price__ask">
+            <span>Не нашли подходящий формат?</span>
+            <button class="chev-btn" aria-label="Написать нам"><svg viewBox="0 0 24 24"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЭТАПЫ РАЗРАБОТКИ: закрепляется, шаг — после усилия, анимация доигрывает сама -->
+    <section class="steps" id="steps">
+      <div class="steps__track" id="stepsTrack">
+        <div class="steps__stage" id="stepsStage">
+          <div class="steps__media">
+            <div class="steps__slides" id="stepsSlides"></div>
+            <div class="steps__pill"><i></i>Этапы разработки</div>
+            <div class="steps__dots" id="stepsDots"></div>
+          </div>
+          <div class="steps__info">
+            <div class="steps__head">
+              <div class="steps__badge">
+                <span class="steps__icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg></span>
+                <span class="steps__num" id="stepsNum">01</span>
+              </div>
+              <h3 class="steps__title" id="stepsTitle"></h3>
+            </div>
+            <p class="steps__text" id="stepsText"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЭКОНОМИКА ПРОЕКТА: лепестки крутятся, верхний меняет фразу справа -->
+    <section class="eco" id="eco">
+      <div class="eco__row">
+        <span class="eco__label">Экономика проекта</span>
+        <span class="eco__tag">
+          <svg class="eco__br eco__br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
+          <span class="eco__phrase" id="ecoPhrase">быстрее формируем структуру</span>
+          <svg class="eco__br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
+        </span>
+      </div>
+      <div class="eco__flower" id="ecoFlower" aria-hidden="true"></div>
+      <div class="eco__text">
+        <h3>Меньше ручных операций —<br>ниже стоимость разработки</h3>
+        <p>ИИ берёт на&nbsp;себя рутину: черновики, варианты и&nbsp;проверки. Команда тратит время на&nbsp;решения, поэтому проект стоит дешевле без потери качества.</p>
+      </div>
+    </section>
+
+  </div>
 </div>
-<script src="script.js?v=final-1"></script>
+<script src="script.js?v=white-1"></script>
 </body>
 </html>
