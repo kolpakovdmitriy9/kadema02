@@ -372,7 +372,8 @@ body {
   height: 29px;
   white-space: nowrap;
 }
-.duo__stage-name { font-weight: 500; font-size: 16px; line-height: 100%; text-align: center; }
+.duo__stage-name { font-weight: 500; font-size: 16px; line-height: 100%; text-align: center; transition: opacity .35s, transform .35s; }
+.duo__stage-name.is-out { opacity: 0; transform: translateY(8px); }   /* смена названия — как фраза в «Экономике» */
 .duo__br { display: block; width: 7px; height: 29px; flex: none; overflow: visible; }
 .duo__br--l { transform: rotate(180deg); }        /* левая — исходная скобка, развёрнутая на 180° */
 

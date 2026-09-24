@@ -197,7 +197,8 @@
   /* ---------- «Команда + ИИ»: этапы работы ----------
      Блок закрепляется по центру экрана, пункты переключаются скроллом —
      не сразу, а после заметной прокрутки (--duo-step в styles.css):
-     - название этапа в скобках и текст команды меняются сразу;
+     - название этапа в скобках меняется мягко (уходит и проявляется), текст команды — сразу;
+     - прокрутку блок не держит: ИИ допечатывает, пока страница едет;
      - ИИ сначала «обдумывает» (точки, мигающий маркер), потом печатает текст
        по буквам с живым неровным темпом;
      - прогресс-бар по центру встаёт в одно из 4 положений — видно, сколько осталось. */
@@ -225,15 +226,20 @@
   const duoAiDot = document.getElementById('duoAiDot');
   const duoBar = document.getElementById('duoBar');
   const BAR_H = 133;
-  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false, duoTyping = false;
+  let duoStep = -1, duoTimer = 0, duoRun = 0, duoSeen = false, duoTyping = false, duoStageT = 0;
 
   function duoShow(i) {
     duoStep = i;
     const run = ++duoRun;                       // отменяет недопечатанный пункт
     clearTimeout(duoTimer);
     const [stage, team, ai] = DUO_STEPS[i];
-    duoTyping = true;                           // пока ИИ не допишет — дальше не пускаем
-    duoStage.textContent = stage;
+    duoTyping = true;
+    // название этапа в скобках меняется мягко: уходит вниз и проявляется
+    if (duoStage.textContent !== stage) {
+      duoStage.classList.add('is-out');
+      clearTimeout(duoStageT);
+      duoStageT = setTimeout(() => { duoStage.textContent = stage; duoStage.classList.remove('is-out'); }, 300);
+    }
     duoTeam.textContent = team;                 // человек — сразу
     duoAi.innerHTML = '<span class="duo__thinking"><i></i><i></i><i></i></span>';
     duoAiDot.classList.add('is-thinking');
@@ -256,42 +262,18 @@
     }, DUO_THINK_MS);
   }
 
-  // Граница прокрутки: пока ИИ печатает, дальше конца текущего этапа не пускаем
-  let duoMaxY = Infinity;
+  // Блок закреплён, но прокрутку не держит: этап меняется по положению скролла
   function onDuo() {
     const t = duoTrack.getBoundingClientRect();
     const p = duoPin.getBoundingClientRect();
     const n = DUO_STEPS.length;
     const run = t.height - p.height;                          // путь закреплённого блока (px экрана)
-    const pinTop = window.innerHeight / 2 - 141 * Z;          // где блок закрепляется
-    const trackY = t.top + window.scrollY;
-    duoMaxY = duoStep >= 0 && duoTyping
-      ? trackY - pinTop + run * (duoStep + 1) / n - 2
-      : Infinity;
-    // возвращаем только небольшой перескок (колесо, тачпад, клавиши);
-    // дальний прыжок — ползунок, якорь, загрузка страницы ниже — не держим
-    if (window.scrollY > duoMaxY && window.scrollY - duoMaxY < 600) { window.scrollTo(0, duoMaxY); return; }
     if (t.bottom < 0 || t.top > window.innerHeight) return;   // блок вне экрана
     const q = Math.min(1, Math.max(0, (p.top - t.top) / run));
     const step = Math.min(n - 1, Math.floor(q * n));
     duoBar.style.height = (BAR_H * (step + 1) / n).toFixed(1) + 'px';   // 4 положения, переезд — CSS-переходом
     if (step !== duoStep || !duoSeen) { duoSeen = true; duoShow(step); }
   }
-  // Колесо и тачпад: пока ИИ печатает, прокрутку вниз сами доводим ровно
-  // до границы этапа и дальше не пускаем — без перескока и отката назад
-  window.addEventListener('wheel', (e) => {
-    if (!duoTyping || e.deltaY <= 0 || duoMaxY === Infinity) return;
-    const px = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
-    if (window.scrollY + px <= duoMaxY) return;               // до границы ещё далеко — обычный скролл
-    e.preventDefault();
-    if (window.scrollY < duoMaxY) window.scrollTo(0, duoMaxY);
-  }, { passive: false });
-  window.addEventListener('touchmove', (e) => {
-    if (duoTyping && window.scrollY >= duoMaxY - 4) e.preventDefault();
-  }, { passive: false });
-  window.addEventListener('keydown', (e) => {
-    if (duoTyping && window.scrollY >= duoMaxY - 4 && ['ArrowDown', 'PageDown', 'Space', 'End'].includes(e.code)) e.preventDefault();
-  });
 
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
@@ -697,8 +679,6 @@
     ecoPhraseT = setTimeout(() => { ecoPhrase.textContent = ECO[ecoIdx]; ecoPhrase.classList.remove('is-out'); }, 300);
   }
 
-  // Кубическая Безье по одной координате
-  const bez = (a, b, c, d, t) => { const m = 1 - t; return m * m * m * a + 3 * m * m * t * b + 3 * m * t * t * c + t * t * t * d; };
   // Поворот — пошаговый, как в этапах: шаг после «усилия» колесом,
   // сам поворот доигрывает по времени и останавливается на лепестке
   let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0;
@@ -735,6 +715,44 @@
     setTimeout(() => { ecoBusy = false; }, ECO_MS);
   }, { passive: false });
 
+  let flyF = -1, flyTarget = -1, flyRaf = 0;
+  function flyTick() {
+    // большой скачок (прыжок по странице) — сразу, небольшой — мягко догоняем
+    flyF = flyTarget < 0 || flyF < 0 || Math.abs(flyTarget - flyF) > 0.35
+      ? flyTarget : flyF + (flyTarget - flyF) * 0.2;
+    if (Math.abs(flyTarget - flyF) < 0.0005) flyF = flyTarget;
+    drawFlyer(flyF);
+    flyRaf = flyF === flyTarget ? 0 : requestAnimationFrame(flyTick);
+  }
+  function drawFlyer(f) {
+    const flying = f > 0 && f < 1;
+    petals[0].style.visibility = f < 1 ? 'hidden' : '';
+    ecoFlyer.style.visibility = flying ? 'visible' : 'hidden';
+    if (!flying) return;
+    const e = easeInOut(f);
+    // концы пути — неподвижные точки экрана: откуда фото стояло закреплённым
+    // в этапах и куда встанет верхний лепесток, когда цветок закрепится.
+    // Так путь не зависит от того, как едут блоки, — одна ровная дуга
+    const m = stepsMedia.getBoundingClientRect();
+    const a = { left: m.left, top: (window.innerHeight - m.height) / 2, width: m.width, height: m.height };
+    const pr = petals[0].getBoundingClientRect(), st = ecoStage.getBoundingClientRect();
+    const b = { left: pr.left, top: pr.top - st.top, width: pr.width, height: pr.height };
+    const o = eco.getBoundingClientRect();
+    // одна мягкая дуга: чуть в сторону и вниз от прямой, без лишних поворотов
+    const arc = Math.sin(Math.PI * e);
+    const cx = lerp(a.left + a.width / 2, b.left + b.width / 2, e) - 90 * Z * arc;
+    const cy = lerp(a.top + a.height / 2, b.top + b.height / 2, e) + 70 * Z * arc;
+    const w = lerp(a.width, b.width, e), h = lerp(a.height, b.height, e);
+    ecoFlyer.style.left = ((cx - w / 2 - o.left) / Z).toFixed(2) + 'px';
+    ecoFlyer.style.top = ((cy - h / 2 - o.top) / Z).toFixed(2) + 'px';
+    ecoFlyer.style.width = (w / Z).toFixed(2) + 'px';
+    ecoFlyer.style.height = (h / Z).toFixed(2) + 'px';
+    ecoFlyer.style.borderRadius = (61 * ecoS * easeOutCubic(Math.min(1, f / 0.3))).toFixed(2) + 'px';
+    // быстрый переворот на 180° в середине пути — подмена картинки
+    const flip = 180 * easeInOut(Math.min(1, Math.max(0, (f - 0.38) / 0.22)));
+    ecoFlyer.style.transform = `perspective(1600px) rotateY(${flip.toFixed(2)}deg)`;
+  }
+
   function onEco() {
     const vh = window.innerHeight;
     const top = ecoTrack.getBoundingClientRect().top;
@@ -769,33 +787,12 @@
     });
     ecoRow.style.opacity = Math.min(1, Math.max(0, (f - 0.7) / 0.3)).toFixed(3);
 
-    // верхний лепесток: фото перелетает по дуге (уходит влево и вниз, потом
-    // поднимается на место); скругление набирается в первой трети пути
-    const flying = u > 0 && f < 1;
+    // верхний лепесток: фото перелетает к своему месту; прогресс сглажен
+    // (догоняет скролл в rAF), поэтому полёт идёт ровно, без подёргиваний
     stepsMedia.classList.toggle('is-gone', u > 0);
     stepsInfo.classList.toggle('is-gone', u > 0);             // текст этапов уходит через прозрачность
-    petals[0].style.visibility = f < 1 ? 'hidden' : '';
-    ecoFlyer.style.visibility = flying ? 'visible' : 'hidden';
-    if (flying) {
-      const e = easeInOut(f);
-      const a = stepsMedia.getBoundingClientRect();
-      const b = petals[0].getBoundingClientRect();
-      const o = eco.getBoundingClientRect();
-      const ax = a.left + a.width / 2, ay = a.top + a.height / 2;
-      const bx = b.left + b.width / 2, by = b.top + b.height / 2;
-      const cx = bez(ax, ax - 260 * Z, bx - 520 * Z, bx, e);
-      const cy = bez(ay, ay + 420 * Z, by + 520 * Z, by, e);
-      const w = lerp(a.width, b.width, e), h = lerp(a.height, b.height, e);
-      ecoFlyer.style.left = ((cx - w / 2 - o.left) / Z).toFixed(1) + 'px';
-      ecoFlyer.style.top = ((cy - h / 2 - o.top) / Z).toFixed(1) + 'px';
-      ecoFlyer.style.width = (w / Z).toFixed(1) + 'px';
-      ecoFlyer.style.height = (h / Z).toFixed(1) + 'px';
-      ecoFlyer.style.borderRadius = (61 * ecoS * easeOutCubic(Math.min(1, f / 0.3))).toFixed(1) + 'px';
-      // быстрый переворот на 180° в середине пути (0.38–0.6), с перспективой
-      const flip = 180 * easeInOut(Math.min(1, Math.max(0, (f - 0.38) / 0.22)));
-      ecoFlyer.style.transform = `perspective(${(2.2 * Math.max(w, h) / Z).toFixed(0)}px) ` +
-        `rotate(${(-8 * Math.sin(Math.PI * e)).toFixed(2)}deg) rotateY(${flip.toFixed(2)}deg)`;
-    }
+    flyTarget = u > 0 ? f : -1;
+    if (!flyRaf) flyRaf = requestAnimationFrame(flyTick);
 
     // шаг поворота по положению скролла (полоса прокрутки, клавиши, свайп)
     if (!ecoBusy) setEcoStep(Math.min(ECO_STEPS, Math.max(0, Math.round((u - flyLen - ECO_BUILD * Z) / (ECO_TURN * Z)))));
