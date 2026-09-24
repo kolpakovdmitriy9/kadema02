@@ -270,18 +270,18 @@
 
   /* ---------- «Задачи, которые решает сайт»: сцена с фото ----------
      1) пока блок подъезжает, квадрат с фото по скроллу растёт до своего размера;
-     2) блок не останавливается; когда его верх подходит к верху экрана — полуавтоматически
+     2) верх блока закрепляется — и дальше, как с тёмной карточкой, полуавтоматически
         (по времени, изинг сильный ease-out) всё тёмное полотно — сцена, этапы и
         карточка выше — перекрашивается в #FFF4F8 (текст в чёрный), синхронно внутри фото проступает
         размытая маска — сначала тонкой рамкой по форме квадрата, потом вырез
         уменьшается и скругляется до круга 184px;
-     3) дальше по ходу скролла появляется значок «1», затем «1» уезжает вверх, «2» встаёт снизу. */
+     3) дальше по скроллу появляется значок «2». */
   const tasks = document.getElementById('tasks');
   const tasksTrack = document.getElementById('tasksTrack');
+  const tasksStage = document.getElementById('tasksStage');
   const tasksFrame = document.getElementById('tasksFrame');
   const tasksVeil = document.getElementById('tasksVeil');
   const tasksBadge = document.getElementById('tasksBadge');
-  const tasksNums = tasksBadge.querySelectorAll('.tasks__num');
   const TASKS_FROM = 0.6;                              // стартовый масштаб фото
   const FRAME = 230, FRAME_R = 56;
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
@@ -355,44 +355,21 @@
     if (!lpRaf) lpRaf = requestAnimationFrame(lpTick);
   }
 
-  // Значок: «1» уезжает вверх, «2» встаёт снизу (и обратно при скролле назад)
-  let badgeNum = 1;
-  function setBadgeNum(n) {
-    if (n === badgeNum) return;
-    const [one, two] = tasksNums;
-    const from = n === 2 ? one : two, to = n === 2 ? two : one;
-    // новая цифра заходит с той стороны, куда движемся: вперёд — снизу, назад — сверху
-    to.style.transition = 'none';
-    to.classList.remove('is-cur', 'is-up');
-    if (n === 1) to.classList.add('is-up');
-    void to.offsetWidth;
-    to.style.transition = '';
-    from.classList.remove('is-cur');
-    from.classList.toggle('is-up', n === 2);
-    to.classList.remove('is-up');
-    to.classList.add('is-cur');
-    badgeNum = n;
-  }
-
-  // Всё едет вместе со скроллом, без остановок; эффекты срабатывают, когда
-  // верх блока проезжает отметки на экране (в px макета от верха окна):
-  const T_LIGHT = 140;    // перекраска полотна и маска
-  const T_ONE = -40;      // значок «1»
-  const T_TWO = -150;     // «1» → «2» (фото ещё целиком на экране)
   function onTasks() {
     const r = tasksTrack.getBoundingClientRect();
     const vh = window.innerHeight;
     if (r.bottom < 0 || r.top > vh) return;
-    const top = r.top / Z;                               // верх блока, px макета
     // 1) заход: верх блока идёт от низа экрана к верху — фото растёт до 1
     const enter = 1 - Math.pow(1 - clamp01(1 - r.top / vh), 3);
     tasksFrame.style.setProperty('--tasks-scale', (TASKS_FROM + (1 - TASKS_FROM) * enter).toFixed(4));
-    // 2) перекраска и маска — по времени; при быстром скролле сразу в конец
-    if (top < T_TWO && lp < 1) setLight(1, true);
-    else setLight(top <= T_LIGHT ? 1 : 0);
-    // 3) значок
-    tasksBadge.classList.toggle('is-on', top <= T_ONE);
-    setBadgeNum(top <= T_TWO ? 2 : 1);
+    // 2) сцена на закреплённом блоке
+    const q = clamp01(-r.top / (r.height - tasksStage.getBoundingClientRect().height));
+    // перекраска и маска запускаются, как только блок закрепился; при быстром
+    // скролле (ушли дальше середины сцены) — сразу в конечное состояние
+    if (q > 0.5 && lp < 1) setLight(1, true);
+    else setLight(-r.top > 1 ? 1 : 0);
+    // 3) значок «2» — появляется с пружинкой
+    tasksBadge.classList.toggle('is-on', q >= 0.4);
   }
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
