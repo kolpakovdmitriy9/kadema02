@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=flow-1">
+<link rel="stylesheet" href="styles.css?v=flow-2">
 </head>
 <body>
 <div class="page" id="page">
@@ -143,9 +143,6 @@
     </div>
   </section>
 
-  <!-- «Как это работает» + этапы: общий контейнер, внутри которого карточка
-       «Как это работает» удерживается (sticky), пока идут этапы -->
-  <div class="hd">
 
   <!-- ============ КАК ЭТО РАБОТАЕТ (раскрывается на весь экран, когда встаёт по центру) ============ -->
   <section class="how" id="how">
@@ -164,7 +161,7 @@
 
   <!-- ============ КОМАНДА + ИИ: этапы работы (идёт сразу за раскрытой карточкой) ============ -->
   <section class="duo" id="duo">
-    <!-- дорожка скролла: блок закреплён по центру экрана, пока идут пункты -->
+    <!-- блок этапов: едет вместе со страницей -->
     <div class="duo__track" id="duoTrack"><div class="duo__pin" id="duoPin">
     <div class="duo__stage">
       <svg class="duo__br duo__br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
@@ -187,8 +184,6 @@
     </div></div>
 
   </section>
-
-  </div>
 
   <!-- ============ ЗАДАЧИ, КОТОРЫЕ РЕШАЕТ САЙТ ============
        Фото подъезжает и по скроллу растёт до своего размера; затем сцена закрепляется:
@@ -237,6 +232,6 @@
 
   <div class="after"></div>
 </div>
-<script src="script.js?v=flow-1"></script>
+<script src="script.js?v=flow-2"></script>
 </body>
 </html>
