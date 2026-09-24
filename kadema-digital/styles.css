@@ -748,8 +748,8 @@ body {
 .faq { width: 1320px; margin: 160px auto 0; }
 .faq__labels { display: grid; grid-template-columns: 358px 1fr; margin-bottom: 36px; font-weight: 500; font-size: 14px; line-height: 140%; color: rgba(255,255,255,.5); }
 .faq__table { display: flex; border-top: 1px solid rgba(255,255,255,.2); border-bottom: 1px solid rgba(255,255,255,.2); }
-.faq__side { width: 323px; flex: none; padding: 44px 24px 44px 0; display: flex; flex-direction: column; justify-content: space-between; gap: 44px; }
-.faq__side p { font-weight: 500; font-size: 16px; line-height: 140%; }
+.faq__side { width: 323px; flex: none; padding: 44px 24px 44px 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 44px; }   /* кнопка привязана к тексту */
+.faq__side p { padding-top: 24px; font-weight: 500; font-size: 16px; line-height: 140%; }
 .btn-pink {
   align-self: flex-start; display: inline-flex; padding: 16px; border: 0; border-radius: 16px; background: #F50F72; color: #fff;
   font: inherit; font-weight: 600; font-size: 14px; line-height: 140%; letter-spacing: -0.04em; cursor: pointer; transition: background .3s;
