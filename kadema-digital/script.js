@@ -529,9 +529,11 @@
     ['Тест и запуск', 'Тестируем сайт на разных устройствах и публикуем его на вашем домене.'],
   ];
   const STEP_PX = 700;            // = --steps-step в styles.css
+  const STEPS_INTRO = 520;        // = --steps-intro: прокрутка, за которую выезжает текст
   const STEP_EFFORT = 220;        // сколько «докрутить» колесом, чтобы перейти на шаг
   const STEP_MS = 900;            // длительность анимации шага
   const stepsTrack = document.getElementById('stepsTrack');
+  const stepsStage = document.getElementById('stepsStage');
   const stepsSlides = document.getElementById('stepsSlides');
   const stepsDots = document.getElementById('stepsDots');
   const stepsNum = document.getElementById('stepsNum');
@@ -564,12 +566,16 @@
   function stepsZone() {
     const t = stepsTrack.getBoundingClientRect();
     const stick = (window.innerHeight - 800 * Z) / 2;
-    const start = t.top + window.scrollY - stick;
-    return { start, end: start + (STEPS.length - 1) * STEP_PX * Z, step: STEP_PX * Z };
+    const pin = t.top + window.scrollY - stick;               // картинка закрепилась на весь экран по высоте
+    const intro = STEPS_INTRO * Z;                            // дальше справа выезжает текст
+    const start = pin + intro;
+    return { pin, intro, start, end: start + (STEPS.length - 1) * STEP_PX * Z, step: STEP_PX * Z };
   }
   function onSteps() {
+    const { pin, intro, start, step } = stepsZone();
+    const si = clamp01((window.scrollY - pin) / intro);
+    stepsStage.style.setProperty('--si', (si < 0.5 ? 4 * si * si * si : 1 - Math.pow(-2 * si + 2, 3) / 2).toFixed(4));
     if (stepBusy) return;
-    const { start, step } = stepsZone();
     const i = Math.min(STEPS.length - 1, Math.max(0, Math.round((window.scrollY - start) / step)));
     setStep(i);
   }
@@ -808,6 +814,7 @@
   }
 
   fit();
+  onSteps();
   fitEco();                      // масштаб цветка — только после того, как известен Z
   buildTicker();
   onHeader();

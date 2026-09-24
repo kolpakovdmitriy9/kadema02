@@ -595,9 +595,11 @@ body {
 
 /* ---------- Этапы разработки ---------- */
 .steps { margin-top: 169px; }
-.steps__track { --steps-n: 5; --steps-step: 700px; height: calc(800px + var(--steps-step) * (var(--steps-n) - 1)); }
-.steps__stage { position: sticky; top: calc((var(--vh) - 800px) / 2); height: 800px; display: flex; }
-.steps__media { position: relative; width: 937px; height: 800px; flex: none; overflow: hidden; background: #D9D9D9; }
+/* дорожка: выезд текста (--steps-intro) + шаги этапов */
+.steps__track { --steps-n: 5; --steps-step: 700px; --steps-intro: 520px; height: calc(800px + var(--steps-intro) + var(--steps-step) * (var(--steps-n) - 1)); }
+/* --si: 0 — только картинка на всю ширину, 1 — справа выехал блок с текстом (script.js) */
+.steps__stage { --si: 0; position: sticky; top: calc((var(--vh) - 800px) / 2); height: 800px; display: flex; overflow: hidden; }
+.steps__media { position: relative; width: calc(937px + 503px * (1 - var(--si))); height: 800px; flex: none; overflow: hidden; background: #D9D9D9; }
 .steps__slides { position: absolute; inset: 0; transition: transform .9s cubic-bezier(0.65, 0, 0.35, 1); }
 .steps__slide { position: absolute; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
 .steps__pill {
@@ -608,10 +610,10 @@ body {
 }
 .steps__pill i { width: 6px; height: 6px; border-radius: 100px; background: #000; }
 /* вертикальная пагинация */
-.steps__dots { position: absolute; left: 885px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.steps__dots { position: absolute; right: 46px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .steps__dots i { width: 6px; height: 6px; border-radius: 10px; background: rgba(255,255,255,.5); transition: width .4s, height .4s, border-radius .4s, background .4s; }
 .steps__dots i.is-on { width: 10px; height: 10px; border-radius: 2px; background: #fff; }
-.steps__info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 44px 0 60px 44px; }
+.steps__info { position: absolute; top: 0; right: 0; bottom: 0; width: 503px; transform: translateX(calc(100% * (1 - var(--si)))); display: flex; flex-direction: column; justify-content: space-between; padding: 44px 0 60px 44px; }
 .steps__head { display: flex; flex-direction: column; gap: 32px; }
 .steps__badge { display: flex; }
 .steps__icon, .steps__num { width: 68px; height: 44px; border-radius: 24px; display: grid; place-items: center; }
