@@ -575,13 +575,14 @@ body {
 .tariff.is-active .tariff__name, .tariff.is-active .tariff__price,
 .tariff:hover .tariff__name, .tariff:hover .tariff__price { color: #000; }
 .tariff__toggle {
-  flex: none; width: 68px; height: 44px; border-radius: 24px; border: 0;
+  flex: none; width: 68px; height: 44px; border-radius: 24px; border: 1px solid transparent;
   background: rgba(0,0,0,.1); display: grid; place-items: center; cursor: pointer;
-  transition: background .3s;
+  transition: background .3s, border-color .3s;
 }
 .tariff__toggle svg { width: 24px; height: 24px; fill: #000; }
 .tariff__toggle svg { transition: transform .4s cubic-bezier(0.22, 1, 0.36, 1); }
-.tariff.is-open .tariff__toggle svg { transform: rotate(180deg); }   /* поворачивается только стрелка */
+.tariff.is-open .tariff__toggle svg { transform: rotate(180deg); }
+.tariff.is-open .tariff__toggle { background: transparent; border-color: rgba(0,0,0,.2); }   /* раскрыт — только обводка, без заливки */   /* поворачивается только стрелка */
 /* что входит в тариф — раскрывается, пункты в 2–3 колонки */
 .tariff__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(0.22, 1, 0.36, 1); }
 .tariff.is-open .tariff__more { grid-template-rows: 1fr; }
@@ -677,10 +678,6 @@ body {
   background: linear-gradient(180deg, #111111 71.83%, #230A15 100%);
   color: #fff; letter-spacing: -0.04em;
 }
-.dark::after {   /* розовое свечение внизу, у футера */
-  content: ""; position: absolute; left: 50%; bottom: -160px; width: 760px; height: 420px; transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgba(245,15,114,.28), rgba(245,15,114,0)); pointer-events: none; z-index: -1;
-}
 .dark > section { position: relative; }
 
 /* --- три работы --- */
@@ -705,7 +702,7 @@ body {
 .work:hover .work__img { transform: scale(1.03); }
 .work__title { position: absolute; left: 44px; top: 50px; width: 476px; font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; }
 .work__logo { position: absolute; right: 44px; top: 44px; width: 72px; height: 72px; border-radius: 50%; background: #D9D9D9 center / cover; }
-.work__about { position: absolute; left: 44px; right: 44px; top: 400px; display: flex; flex-direction: column; gap: 24px; opacity: 0; transform: translateY(16px); transition: opacity .45s ease, transform .6s cubic-bezier(0.22, 1, 0.36, 1); }
+.work__about { position: absolute; left: 44px; right: 44px; top: 400px; padding-bottom: 44px; border-bottom: 1px solid rgba(255,255,255,.4); display: flex; flex-direction: column; gap: 24px; opacity: 0; transform: translateY(16px); transition: opacity .45s ease, transform .6s cubic-bezier(0.22, 1, 0.36, 1); }
 .work:hover .work__about, .work:focus-visible .work__about { opacity: 1; transform: none; transition-delay: .08s; }
 .work__about span { font-weight: 500; font-size: 16px; line-height: 100%; color: rgba(255,255,255,.5); }
 .work__about p { width: 354px; font-weight: 500; font-size: 24px; line-height: 140%; }
@@ -725,12 +722,15 @@ body {
 .svcs__head { padding-bottom: 44px; border-bottom: 1px solid rgba(255,255,255,.2); }
 .svcs__head h3 { width: 655px; font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; }
 .svcs__text { width: 434px; margin: 44px 0 0 auto; text-align: right; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(255,255,255,.5); }
-.svcs__run {
-  margin-top: 50px; overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 151px, #000 calc(100% - 151px), transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 151px, #000 calc(100% - 151px), transparent 100%);
+.svcs__run { position: relative; margin-top: 50px; overflow: hidden; }
+/* затемнённые края — градиент в цвет фона поверх ленты (как в макете) */
+.svcs__run::before, .svcs__run::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 151px; z-index: 1; pointer-events: none;
+  background: linear-gradient(270deg, rgba(17,17,17,0) 0%, #111111 83.77%);
 }
-.svcs__track { display: flex; gap: 10px; width: max-content; animation: svc-run 42s linear infinite; }
+.svcs__run::before { left: 0; }
+.svcs__run::after { right: 0; transform: scaleX(-1); }
+.svcs__track { display: flex; gap: 10px; width: max-content; animation: svc-run 42s linear infinite; will-change: transform; backface-visibility: hidden; }
 .svcs__run:hover .svcs__track { animation-play-state: paused; }
 @keyframes svc-run { to { transform: translateX(calc(-50% - 5px)); } }
 .svc { width: 220px; height: 220px; flex: none; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; border-radius: 32px; background: #252525; }
