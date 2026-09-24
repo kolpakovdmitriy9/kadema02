@@ -766,8 +766,6 @@ body {
 /* ховер: вопрос подсвечивается — видно, что его можно открыть */
 .qa__head span { color: rgba(255,255,255,.6); transition: color .3s; }
 .qa__head:hover span, .qa.is-open .qa__head span { color: #fff; }
-.qa__head:hover .qa__btn { background: rgba(255,255,255,.2); }
-.qa.is-open .qa__head:hover .qa__btn { background: rgba(255,255,255,.06); }
 .qa__btn { flex: none; width: 68px; height: 44px; display: grid; place-items: center; border-radius: 24px; border: 1px solid transparent; background: rgba(255,255,255,.1); transition: background .3s, border-color .3s; }
 .qa__btn svg { width: 24px; height: 24px; fill: #fff; transition: transform .4s cubic-bezier(0.22, 1, 0.36, 1); }
 .qa.is-open .qa__btn { background: transparent; border-color: rgba(255,255,255,.2); }
