@@ -651,15 +651,16 @@
   ecoFlyer.children[0].style.backgroundImage = lastSlide;      // через style: в url есть кавычки
   ecoFlyer.children[1].style.backgroundImage = ecoTop;
   // Откуда прилетает лепесток — вразнобой со всех сторон:
-  // [dx, dy] в px макета, поворот и масштаб в начале полёта, задержка (доля сборки)
+  // [dx, dy] в px макета, поворот и масштаб в начале полёта, задержка (доля сборки),
+  // наклон в объёме на середине пути [rotateX, rotateY] — у каждого свой
   const ECO_FROM = [null,
-    [980, -620, 38, 1.25, 0.30],
-    [1250, 240, -22, 0.8, 0.12],
-    [620, 980, 30, 1.15, 0.42],
-    [-240, 1100, -40, 0.9, 0.22],
-    [-1150, 760, 26, 1.3, 0.36],
-    [-1300, -60, -30, 0.85, 0.05],
-    [-700, -900, 44, 1.1, 0.46]];
+    [980, -620, 38, 1.25, 0.30, [34, -40]],
+    [1250, 240, -22, 0.8, 0.16, [-28, 52]],
+    [1300, 760, 30, 1.15, 0.02, [-62, 18]],     // стартует первым, заваливается назад
+    [-240, 1100, -40, 0.9, 0.24, [48, 30]],
+    [-1150, 760, 26, 1.3, 0.38, [-36, -44]],
+    [-1300, -60, -30, 0.85, 0.10, [22, 58]],
+    [-160, -1050, 50, 1.1, 0.50, [58, -64]]];   // последним, падает сверху с переворотом
   ecoFlower.innerHTML = ECO.map((_, i) => {
     const g = 196 - (i % 4) * 6;
     const bg = i === 0 ? '' : `url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))`;
@@ -758,7 +759,7 @@
         // в полёте лепесток крутится (дополнительные пол-оборота гаснут к месту)
         // и покачивается в объёме
         const spin = r * q + Math.sign(r) * 180 * q * q;
-        const tiltX = 38 * arc * side, tiltY = -46 * arc * Math.sign(r);
+        const tiltX = ECO_FROM[i][5][0] * arc, tiltY = ECO_FROM[i][5][1] * arc;
         tr = `translate(${(dx * q + bx).toFixed(1)}px, ${(dy * q + by).toFixed(1)}px) ${tr} ` +
           `perspective(900px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) ` +
           `rotate(${spin.toFixed(2)}deg) scale(${(1 + (sc - 1) * q).toFixed(3)})`;
@@ -789,8 +790,8 @@
       ecoFlyer.style.width = (w / Z).toFixed(1) + 'px';
       ecoFlyer.style.height = (h / Z).toFixed(1) + 'px';
       ecoFlyer.style.borderRadius = (61 * ecoS * easeOutCubic(Math.min(1, f / 0.3))).toFixed(1) + 'px';
-      // переворот на 180° на большей части пути (0.2–0.85), с перспективой
-      const flip = 180 * easeInOut(Math.min(1, Math.max(0, (f - 0.2) / 0.65)));
+      // быстрый переворот на 180° в середине пути (0.38–0.6), с перспективой
+      const flip = 180 * easeInOut(Math.min(1, Math.max(0, (f - 0.38) / 0.22)));
       ecoFlyer.style.transform = `perspective(${(2.2 * Math.max(w, h) / Z).toFixed(0)}px) ` +
         `rotate(${(-8 * Math.sin(Math.PI * e)).toFixed(2)}deg) rotateY(${flip.toFixed(2)}deg)`;
     }
