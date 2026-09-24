@@ -623,8 +623,8 @@ body {
 /* ---------- Экономика проекта ---------- */
 .eco { position: relative; margin-top: 48px; padding-bottom: 160px; }
 /* цветок закреплён; --eco-s — масштаб, --eco-y — центр цветка, --eco-gap — пустота под ним (script.js).
-   Дорожка: догон фото (160px) + сборка (240px) + 7 шагов по 520px + пауза в конце */
-.eco__track { height: calc(var(--vh) + 160px + 240px + 7 * 520px + 200px); }
+   Дорожка: догон фото (160px) + досборка (60px) + 7 шагов по 520px + пауза в конце */
+.eco__track { height: calc(var(--vh) + 160px + 60px + 7 * 520px + 200px); }
 .eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow-x: clip; overflow-y: visible; }
 .eco__row {
   position: absolute; left: 60px; right: 60px; z-index: 2;
