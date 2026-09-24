@@ -486,7 +486,7 @@
     const from = priceRow.offsetHeight;
     priceDesc.textContent = c.desc;
     priceItems.innerHTML = c.items.map(([name, price, text, incl], i) => `
-      <div class="tariff${i === 0 ? ' is-active' : ''}">
+      <div class="tariff${i === 0 ? ' is-active is-open' : ''}">
         <div class="tariff__head">
           <div><div class="tariff__name">${name}</div><div class="tariff__price">${price}</div></div>
           <button class="tariff__toggle" aria-label="Что входит">${chevron}</button>
