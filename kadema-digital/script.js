@@ -628,8 +628,11 @@
   ];
   const ECO_R = 310;
   const ECO_CATCH = 160;          // px (в макете): фото догоняет место уже после закрепления
-  const ECO_BUILD = 720;          // px: остальные лепестки подлетают по очереди
-  const ECO_TURN = 440;           // px прокрутки на один поворот (= styles.css)
+  const ECO_BUILD = 240;          // px: остальные лепестки долетают после фото
+  const ECO_TURN = 520;           // px прокрутки на один шаг поворота (= styles.css)
+  const ECO_STEPS = 7;            // 8 лепестков — 7 шагов, с первого до восьмого
+  const ECO_EFFORT = 220;         // сколько «докрутить» колесом, чтобы повернуть
+  const ECO_MS = 1300;            // длительность поворота (= transition в styles.css)
   const eco = document.getElementById('eco');
   const ecoTrack = eco.querySelector('.eco__track');
   const ecoStage = document.getElementById('ecoStage');
@@ -638,16 +641,20 @@
   const ecoPhrase = document.getElementById('ecoPhrase');
   const ecoFlyer = document.getElementById('ecoFlyer');
   const stepsMedia = stepsTrack.querySelector('.steps__media');
+  const stepsInfo = stepsTrack.querySelector('.steps__info');
   // Фото верхнего лепестка — последнее фото этапов: оно и перелетает
   const lastSlide = stepsSlides.lastElementChild.style.backgroundImage;
   ecoFlyer.style.backgroundImage = lastSlide;
-  // Откуда прилетает лепесток: справа (1–3), снизу (4), слева (5–7).
-  // [dx, dy] в px макета, поворот в полёте, задержка в доле сборки
-  // Задержки идут по кругу от верхнего лепестка: соседи встают первыми
+  // Откуда прилетает лепесток — вразнобой со всех сторон:
+  // [dx, dy] в px макета, поворот и масштаб в начале полёта, задержка (доля сборки)
   const ECO_FROM = [null,
-    [1150, -140, 24, 0.00], [1100, 60, 18, 0.16], [1050, 380, 30, 0.32],
-    [0, 1000, -16, 0.45],
-    [-1050, 380, -30, 0.38], [-1100, 60, -18, 0.22], [-1150, -140, -24, 0.06]];
+    [980, -620, 38, 1.25, 0.30],
+    [1250, 240, -22, 0.8, 0.12],
+    [620, 980, 30, 1.15, 0.42],
+    [-240, 1100, -40, 0.9, 0.22],
+    [-1150, 760, 26, 1.3, 0.36],
+    [-1300, -60, -30, 0.85, 0.05],
+    [-700, -900, 44, 1.1, 0.46]];
   ecoFlower.innerHTML = ECO.map((_, i) => {
     const g = 196 - (i % 4) * 6;
     const bg = i === 0 ? '' : `url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))`;
@@ -685,15 +692,41 @@
 
   // Кубическая Безье по одной координате
   const bez = (a, b, c, d, t) => { const m = 1 - t; return m * m * m * a + 3 * m * m * t * b + 3 * m * t * t * c + t * t * t * d; };
-  let ecoAngle = 0, ecoTarget = 0, ecoRaf = 0;
-  // Поворот цветка догоняет положение скролла мягко (без ступенек колеса)
-  function spin() {
-    ecoAngle += (ecoTarget - ecoAngle) * 0.07;
-    if (Math.abs(ecoTarget - ecoAngle) < 0.02) ecoAngle = ecoTarget;
-    ecoFlower.style.transform = ecoAngle ? `rotate(${ecoAngle.toFixed(3)}deg)` : '';
-    setPhrase((8 - Math.round(ecoAngle / 45) % 8) % 8);       // по часовой: на 12 часов встаёт лепесток слева
-    ecoRaf = ecoAngle === ecoTarget ? 0 : requestAnimationFrame(spin);
+  // Поворот — пошаговый, как в этапах: шаг после «усилия» колесом,
+  // сам поворот доигрывает по времени и останавливается на лепестке
+  let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0;
+  function setEcoStep(i) {
+    if (i === ecoCur) return;
+    ecoCur = i;
+    ecoFlower.style.transform = i ? `rotate(${i * 45}deg)` : '';
+    setPhrase((8 - i) % 8);                                   // по часовой: на 12 часов встаёт лепесток слева
   }
+  function ecoZone() {
+    // скролл, при котором собран цветок: фото село (закрепление + ECO_CATCH) и прошла сборка
+    const s0 = ecoTrack.getBoundingClientRect().top + window.scrollY + (ECO_CATCH + ECO_BUILD) * Z;
+    return { start: s0, end: s0 + ECO_STEPS * ECO_TURN * Z, step: ECO_TURN * Z };
+  }
+  window.addEventListener('wheel', (e) => {
+    const { start, end, step } = ecoZone();
+    const y = window.scrollY;
+    if (y < start - 2 || y > end + 2) return;
+    const dir = Math.sign(e.deltaY);
+    if (!dir) return;
+    if ((dir > 0 && ecoCur >= ECO_STEPS && y >= end - 2) ||
+        (dir < 0 && ecoCur <= 0 && y <= start + 2)) return;   // крайний лепесток — отпускаем страницу
+    e.preventDefault();
+    if (ecoBusy) return;
+    clearTimeout(ecoAccT);
+    ecoAccT = setTimeout(() => { ecoAcc = 0; }, 260);
+    ecoAcc += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+    if (Math.abs(ecoAcc) < ECO_EFFORT) return;
+    ecoAcc = 0;
+    const target = Math.min(ECO_STEPS, Math.max(0, ecoCur + dir));
+    ecoBusy = true;
+    setEcoStep(target);
+    window.scrollTo(0, start + target * step);
+    setTimeout(() => { ecoBusy = false; }, ECO_MS);
+  }, { passive: false });
 
   function onEco() {
     const vh = window.innerHeight;
@@ -705,15 +738,16 @@
     const u = start - top;                                    // px с начала перелёта
     const flyLen = start + ECO_CATCH * Z;
     const f = Math.min(1, Math.max(0, u / flyLen));
-    const g = Math.min(1, Math.max(0, (u - flyLen) / (ECO_BUILD * Z)));
+    // остальные стартуют уже на трети перелёта фото и долетают сразу после него
+    const g0 = flyLen * 0.3, g = Math.min(1, Math.max(0, (u - g0) / (flyLen - g0 + ECO_BUILD * Z)));
 
     petals.forEach((el, i) => {
       let tr = `rotate(${i * 45}deg) translateY(-${ECO_R}px)`;
       if (i > 0) {
-        const [dx, dy, r, d] = ECO_FROM[i];
-        const k = easeOutCubic(Math.min(1, Math.max(0, (g - d) / 0.55)));
+        const [dx, dy, r, sc, d] = ECO_FROM[i];
+        const k = easeOutCubic(Math.min(1, Math.max(0, (g - d) / 0.5)));
         const q = 1 - k;
-        tr = `translate(${(dx * q).toFixed(1)}px, ${(dy * q).toFixed(1)}px) ${tr} rotate(${(r * q).toFixed(2)}deg)`;
+        tr = `translate(${(dx * q).toFixed(1)}px, ${(dy * q).toFixed(1)}px) ${tr} rotate(${(r * q).toFixed(2)}deg) scale(${(1 + (sc - 1) * q).toFixed(3)})`;
       }
       el.style.transform = tr;
     });
@@ -723,6 +757,7 @@
     // поднимается на место); скругление набирается в первой трети пути
     const flying = u > 0 && f < 1;
     stepsMedia.classList.toggle('is-gone', u > 0);
+    stepsInfo.classList.toggle('is-gone', u > 0);             // текст этапов уходит через прозрачность
     petals[0].style.visibility = f < 1 ? 'hidden' : '';
     ecoFlyer.style.visibility = flying ? 'visible' : 'hidden';
     if (flying) {
@@ -743,10 +778,8 @@
       ecoFlyer.style.transform = `rotate(${(-8 * Math.sin(Math.PI * e)).toFixed(2)}deg)`;
     }
 
-    // 8 поворотов по 45° — непрерывно, без остановок
-    const t = Math.min(8, Math.max(0, (u - flyLen - ECO_BUILD * Z) / (ECO_TURN * Z)));
-    ecoTarget = t * 45;
-    if (!ecoRaf && ecoTarget !== ecoAngle) ecoRaf = requestAnimationFrame(spin);
+    // шаг поворота по положению скролла (полоса прокрутки, клавиши, свайп)
+    if (!ecoBusy) setEcoStep(Math.min(ECO_STEPS, Math.max(0, Math.round((u - flyLen - ECO_BUILD * Z) / (ECO_TURN * Z)))));
   }
   onEco();
 

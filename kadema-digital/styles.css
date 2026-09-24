@@ -623,8 +623,8 @@ body {
 /* ---------- Экономика проекта ---------- */
 .eco { position: relative; margin-top: 48px; padding-bottom: 160px; }
 /* цветок закреплён; --eco-s — масштаб, --eco-y — центр цветка, --eco-gap — пустота под ним (script.js).
-   Дорожка: догон фото (160px) + сборка (720px) + 8 поворотов по 440px + пауза в конце */
-.eco__track { height: calc(var(--vh) + 160px + 720px + 8 * 440px + 160px); }
+   Дорожка: догон фото (160px) + сборка (240px) + 7 шагов по 520px + пауза в конце */
+.eco__track { height: calc(var(--vh) + 160px + 240px + 7 * 520px + 200px); }
 .eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow-x: clip; overflow-y: visible; }
 .eco__row {
   position: absolute; left: 60px; right: 60px; z-index: 2;
@@ -640,11 +640,13 @@ body {
 .eco__phrase.is-out { opacity: 0; transform: translateY(8px); }
 /* цветок: 8 лепестков по кругу, колесо вращается целиком */
 .eco__flower { position: absolute; left: 50%; top: var(--eco-y); width: 0; height: 0; transform: scale(var(--eco-s)); }
-.eco__wheel { position: absolute; left: 0; top: 0; }
+.eco__wheel { position: absolute; left: 0; top: 0; transition: transform 1.3s cubic-bezier(0.65, 0, 0.35, 1); }   /* шаг поворота доигрывает сам */
 .eco__flyer { position: absolute; left: 0; top: 0; z-index: 3; visibility: hidden; overflow: hidden; background-size: cover; background-position: center; pointer-events: none; }
 .steps__media > * { transition: opacity .3s; }
 .steps__media.is-gone { background: transparent; }
 .steps__media.is-gone > * { opacity: 0; }
+.steps__info { transition: opacity .5s ease; }
+.steps__info.is-gone { opacity: 0; }
 .petal {
   position: absolute; left: -96px; top: -113px;
   width: 192px; height: 225px; border-radius: 61px;
