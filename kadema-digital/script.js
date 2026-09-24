@@ -811,6 +811,61 @@
   }
   onEco();
 
+  /* ---------- тёмный блок: услуги, вопросы, логотип с видео, окно с формой ---------- */
+  // лента услуг бесконечная: копия набора карточек встык, CSS сдвигает на половину
+  const svcTrack = document.getElementById('svcTrack');
+  svcTrack.append(...[...svcTrack.children].map((el) => { const c = el.cloneNode(true); c.setAttribute('aria-hidden', 'true'); return c; }));
+
+  // вопросы: открыт один, как тарифы
+  document.getElementById('faqList').addEventListener('click', (e) => {
+    const head = e.target.closest('.qa__head');
+    if (!head) return;
+    const qa = head.parentElement;
+    const open = !qa.classList.contains('is-open');
+    for (const x of qa.parentElement.children) x.classList.remove('is-open');
+    qa.classList.toggle('is-open', open);
+  });
+
+  // видео в логотипе крутится без кнопок; вне экрана — на паузе
+  const brandVideo = document.querySelector('.brand__logo video');
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) brandVideo.play().catch(() => {});
+    else brandVideo.pause();
+  }).observe(brandVideo);
+
+  // форм на странице нет — любая кнопка заявки открывает окно поверх
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const MODAL_TITLES = { calc: 'Получить расчёт стоимости', question: 'Задать вопрос' };
+  function openModal(kind) {
+    modalTitle.textContent = MODAL_TITLES[kind] || 'Оставить заявку';
+    modal.classList.remove('is-done');
+    modal.classList.add('is-open');
+    document.documentElement.style.overflow = 'hidden';     // страница под окном не листается
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => modal.querySelector('input').focus({ preventScroll: true }), 150);
+  }
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.documentElement.style.overflow = '';
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-modal]');
+    if (!b) return;
+    e.preventDefault();
+    openModal(b.dataset.modal);
+  });
+  modal.addEventListener('click', (e) => { if (e.target === modal || e.target.closest('.modal__close')) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal(); });
+  document.getElementById('modalForm').addEventListener('submit', (e) => {
+    e.preventDefault();                                       // прототип: заявка никуда не уходит
+    modal.classList.add('is-done');
+    e.target.reset();
+  });
+  // пока окно открыто, колесо не листает страницу (и не крутит цветок/этапы)
+  window.addEventListener('wheel', (e) => { if (modal.classList.contains('is-open')) e.stopImmediatePropagation(); }, { capture: true });
+
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
   function buildTicker() {
     const track = document.getElementById('heroTags');

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=white-18">
+<link rel="stylesheet" href="styles.css?v=dark-1">
 </head>
 <body>
 <div class="page" id="page">
@@ -37,7 +37,7 @@
     <div class="header__cta" id="headerCta">
       <div class="cta-row">
         <a href="#" class="cta-row__link">Обратный звонок</a>
-        <a href="#" class="btn-black">Обсудить проект</a>
+        <a href="#" class="btn-black" data-modal>Обсудить проект</a>
       </div>
       <a href="#" class="calc-row">
         <span class="calc-row__left">
@@ -258,7 +258,7 @@
           <div class="price__side">
             <p class="price__desc" id="priceDesc"></p>
             <div class="price__cta">
-              <button class="btn-dark">Получить расчёт стоимости</button>
+              <button class="btn-dark" type="button" data-modal="calc">Получить расчёт стоимости</button>
               <p class="price__note">Цены — ориентир для старта. Итоговую смету фиксируем до&nbsp;начала работ</p>
             </div>
           </div>
@@ -315,7 +315,145 @@
     </section>
 
   </div>
+
+  <!-- ============ ТЁМНЫЙ БЛОК: работы, услуги, вопросы, логотип и футер ============ -->
+  <div class="dark" id="dark">
+    <section class="works" id="works">
+      <h2 class="works__title">Уникальные решения для вашего бизнеса</h2>
+      <p class="works__eyebrow">Наши работы</p>
+      <div class="works__list">
+        <article class="work" tabindex="0">
+          <div class="work__img" style="--wimg:url(images/work-1.jpg)"></div>
+          <div class="work__shade"></div>
+          <div class="work__blur"></div>
+          <h3 class="work__title">Лендинг для застройщика</h3>
+          
+          <div class="work__about"><span>Описание</span><p>Прототип и дизайн готовы, сейчас собираем сайт — запуск через две недели</p></div>
+          <span class="work__status"><i style="background:#FFC300"></i>progress</span>
+          <div class="work__tags"><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Анализ</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Дизайн</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span></div>
+        </article>
+        <article class="work" tabindex="0">
+          <div class="work__img" style="--wimg:url(images/work-2.jpg)"></div>
+          <div class="work__shade"></div>
+          <div class="work__blur"></div>
+          <h3 class="work__title">Корпоративный сайт производителя</h3>
+          <span class="work__logo" aria-hidden="true"></span>
+          <div class="work__about"><span>Описание</span><p>Запуск за 3 недели, 120+ заявок в первый месяц</p></div>
+          <span class="work__status"><i style="background:#1FBC0A"></i>done</span>
+          <div class="work__tags"><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Анализ</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Дизайн</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Разработка</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span></div>
+        </article>
+        <article class="work" tabindex="0">
+          <div class="work__img" style="--wimg:url(images/work-3.jpg)"></div>
+          <div class="work__shade"></div>
+          <div class="work__blur"></div>
+          <h3 class="work__title">Интернет-магазин мебели</h3>
+          
+          <div class="work__about"><span>Описание</span><p>Новая структура каталога и визуальный язык — концепция редизайна</p></div>
+          <span class="work__status"><i style="background:#209EE9"></i>concept</span>
+          <div class="work__tags"><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Анализ</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Дизайн</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span><span class="btag"><svg class="br br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg><span>Разработка</span><svg class="br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg></span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="svcs">
+      <div class="svcs__head">
+        <h3>Поможем привлечь клиентов после запуска сайта</h3>
+      </div>
+      <p class="svcs__text">Сайт — часть маркетинговой системы. После запуска можем подключить продвижение и развитие проекта</p>
+      <!-- бесконечная лента услуг: не выходит за сетку, края затемнены -->
+      <div class="svcs__run"><div class="svcs__track" id="svcTrack"><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z"/></svg><span>Настройка Яндекс Директа</span></div><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>SEO-продвижение</span></div><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.99 8.99 0 0 0 13 3.06V1h-2v2.06A8.99 8.99 0 0 0 3.06 11H1v2h2.06A8.99 8.99 0 0 0 11 20.94V23h2v-2.06A8.99 8.99 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg><span>Таргетированная реклама</span></div><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/></svg><span>Подключение аналитики и целей</span></div><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>Техническая поддержка</span></div><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg><span>Развитие и доработка сайта</span></div><div class="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><span>Наполнение каталога</span></div></div></div>
+      <button class="cta-big" type="button" data-modal>Оставить заявку</button>
+    </section>
+
+    <section class="faq">
+      <div class="faq__labels"><span>Вопросы и ответы</span><span>Вопрос</span></div>
+      <div class="faq__table">
+        <div class="faq__side">
+          <p>Собрали ответы на&nbsp;вопросы, которые нам задают чаще всего. Не&nbsp;нашли свой — спросите напрямую</p>
+          <button class="btn-pink" type="button" data-modal="question">Задать вопрос</button>
+        </div>
+        <div class="faq__list" id="faqList">
+            <div class="qa is-open">
+              <button class="qa__head" type="button"><span>Заменяет ли ИИ дизайнеров и разработчиков?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Нет. ИИ ускоряет отдельные этапы: анализ, черновики, варианты структуры. Стратегию, дизайн, содержание и качество контролируют специалисты.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Сколько стоит разработка сайта?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Зависит от формата и объёма: ориентиры есть в разделе «Цены и формат». Точную смету фиксируем после брифа — до начала работ.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Сколько времени занимает разработка?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Лендинг — от двух недель, корпоративный сайт — от четырёх. Сроки фиксируем в плане работ и держим их.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Что нужно от нас для старта?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Короткий бриф и час на созвон. Остальное — анализ, структуру и тексты — готовим сами и согласовываем с вами по этапам.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Можно ли вносить правки по ходу работы?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Да. На каждом этапе показываем результат и собираем правки, поэтому итог не становится сюрпризом.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Кто будет владельцем сайта?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Вы. Сайт, домен и все доступы оформляем на вашу компанию и передаём после запуска.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Поможете с продвижением после запуска?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Да: настроим рекламу, SEO и аналитику, а также возьмём сайт на поддержку и развитие.</p></div></div>
+            </div>
+            <div class="qa">
+              <button class="qa__head" type="button"><span>Даёте ли гарантию на работу?</span><i class="qa__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></i></button>
+              <div class="qa__body"><div><p>Да. После запуска бесплатно исправляем ошибки в течение трёх месяцев.</p></div></div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- логотип: внутри бесконечно крутится видео из офиса, буква «К» вырезана маской -->
+    <section class="brand">
+      <div class="brand__logo">
+        <video poster="media/office.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="media/office.mp4" type="video/mp4"><source src="media/office.webm" type="video/webm"></video>
+      </div>
+      <h2 class="brand__name">Kadema Digital</h2>
+      <p class="brand__text">Агентство полного цикла: более 10&nbsp;лет помогаем бизнесу привлекать клиентов через сайты и&nbsp;digital-маркетинг</p>
+      <a class="btn-pink" href="#">Узнать о компании больше</a>
+      <nav class="brand__nav">
+        <b>Разработка сайтов</b><a href="#">Промо-сайты и лендинги</a><a href="#">Корпоративные сайты</a><a href="#">Интернет-магазины и каталоги</a>
+      </nav>
+      <div class="brand__contacts">
+        <a href="mailto:rop@marketing-na100.ru">rop@marketing-na100.ru</a>
+        <div><span>пн–пт с&nbsp;9:00 до&nbsp;18:00</span><span>г. Пенза, ул. Ставского, д.&nbsp;13, офис 104</span></div>
+        <a href="tel:+78412254720">+7 (8412) 25-47-20</a>
+      </div>
+      <div class="brand__bottom">
+        <span>© Kadema Digital, 2014–2026</span>
+        <div class="brand__social">
+          <a href="#" aria-label="ВКонтакте" class="soc soc--vk"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0077FF"/><path fill="#fff" d="M17.03 22.6c-6.2 0-9.73-4.25-9.88-11.32h3.1c.1 5.19 2.39 7.39 4.2 7.84v-7.84h2.93v4.48c1.79-.19 3.67-2.23 4.3-4.48h2.92a8.64 8.64 0 0 1-3.97 5.64 8.95 8.95 0 0 1 4.65 5.68h-3.22c-.7-2.16-2.42-3.83-4.68-4.06v4.06h-.35z"/></svg></a>
+          <a href="#" aria-label="MAX" class="soc"><svg viewBox="0 0 32 32"><defs><linearGradient id="maxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A2BFF"/><stop offset="1" stop-color="#9B2BFF"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#maxg)"/><path fill="#fff" d="M16.2 7.5a8.4 8.4 0 0 0-8.5 8.6c0 1.9.5 3.5 1.2 4.7l-.6 3.4 3.3-.7a8.4 8.4 0 1 0 4.6-16zm0 13.4a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg></a>
+          <a href="#" aria-label="Telegram" class="soc"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#27A6E5"/><path fill="#fff" d="M7.2 15.6l14.6-5.7c.7-.25 1.3.17 1.07 1.2l-2.48 11.7c-.18.83-.68 1.03-1.38.64l-3.8-2.8-1.84 1.77c-.2.2-.37.37-.76.37l.27-3.87 7.04-6.36c.3-.27-.07-.42-.47-.16l-8.7 5.48-3.75-1.17c-.81-.25-.83-.81.2-1.2z"/></svg></a>
+        </div>
+        <a href="#">Политика обработки персональных данных</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- окно с формой: формы на странице не показываем, открываем поверх -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" type="button" aria-label="Закрыть">×</button>
+      <form class="modal__form" id="modalForm">
+        <h3 id="modalTitle">Оставить заявку</h3>
+        <p class="modal__sub">Перезвоним в&nbsp;течение рабочего дня и&nbsp;ответим на&nbsp;вопросы</p>
+        <input name="name" placeholder="Имя" required autocomplete="name">
+        <input name="phone" placeholder="Телефон" required inputmode="tel" autocomplete="tel">
+        <textarea name="msg" placeholder="Коротко о задаче" rows="3"></textarea>
+        <button class="btn-pink modal__send" type="submit">Отправить</button>
+        <p class="modal__note">Нажимая «Отправить», вы соглашаетесь с&nbsp;политикой обработки персональных данных</p>
+      </form>
+      <div class="modal__done"><h3>Спасибо!</h3><p>Заявка отправлена — скоро свяжемся с&nbsp;вами</p></div>
+    </div>
+  </div>
 </div>
-<script src="script.js?v=white-18"></script>
+<script src="script.js?v=dark-1"></script>
 </body>
 </html>
