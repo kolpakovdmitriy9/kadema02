@@ -529,7 +529,7 @@
     ['Тест и запуск', 'Тестируем сайт на разных устройствах и публикуем его на вашем домене.'],
   ];
   const STEP_PX = 700;            // = --steps-step в styles.css
-  const STEPS_INTRO = 520;        // = --steps-intro: прокрутка, за которую выезжает текст
+  const STEPS_INTRO = 1000;       // = --steps-intro: прокрутка, за которую выезжает текст (несколько прокруток)
   const STEP_EFFORT = 220;        // сколько «докрутить» колесом, чтобы перейти на шаг
   const STEP_MS = 900;            // длительность анимации шага
   const stepsTrack = document.getElementById('stepsTrack');
@@ -571,10 +571,19 @@
     const start = pin + intro;
     return { pin, intro, start, end: start + (STEPS.length - 1) * STEP_PX * Z, step: STEP_PX * Z };
   }
+  // выезд текста плавно догоняет скролл — без скачков за каждым щелчком колеса
+  let siCur = 0, siTarget = 0, siRaf = 0;
+  function siTick() {
+    siCur += (siTarget - siCur) * 0.12;
+    if (Math.abs(siTarget - siCur) < 0.0005) siCur = siTarget;
+    const e = siCur < 0.5 ? 2 * siCur * siCur : 1 - Math.pow(-2 * siCur + 2, 2) / 2;
+    stepsStage.style.setProperty('--si', e.toFixed(4));
+    siRaf = siCur === siTarget ? 0 : requestAnimationFrame(siTick);
+  }
   function onSteps() {
     const { pin, intro, start, step } = stepsZone();
-    const si = clamp01((window.scrollY - pin) / intro);
-    stepsStage.style.setProperty('--si', (si < 0.5 ? 4 * si * si * si : 1 - Math.pow(-2 * si + 2, 3) / 2).toFixed(4));
+    siTarget = clamp01((window.scrollY - pin) / intro);
+    if (!siRaf) siRaf = requestAnimationFrame(siTick);
     if (stepBusy) return;
     const i = Math.min(STEPS.length - 1, Math.max(0, Math.round((window.scrollY - start) / step)));
     setStep(i);

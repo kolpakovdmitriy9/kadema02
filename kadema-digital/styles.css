@@ -596,7 +596,7 @@ body {
 /* ---------- Этапы разработки ---------- */
 .steps { margin-top: 169px; }
 /* дорожка: выезд текста (--steps-intro) + шаги этапов */
-.steps__track { --steps-h: min(800px, var(--vh)); --steps-n: 5; --steps-step: 700px; --steps-intro: 520px; height: calc(var(--steps-h) + var(--steps-intro) + var(--steps-step) * (var(--steps-n) - 1)); }
+.steps__track { --steps-h: min(800px, var(--vh)); --steps-n: 5; --steps-step: 700px; --steps-intro: 1000px; height: calc(var(--steps-h) + var(--steps-intro) + var(--steps-step) * (var(--steps-n) - 1)); }
 /* --si: 0 — только картинка на всю ширину, 1 — справа выехал блок с текстом (script.js) */
 .steps__stage { --si: 0; position: sticky; top: max(0px, calc((var(--vh) - 800px) / 2)); height: var(--steps-h); display: flex; overflow: hidden; }   /* на низком экране — по высоте окна, от верхнего края */
 .steps__media { position: relative; width: calc(937px + 503px * (1 - var(--si))); height: 100%; flex: none; overflow: hidden; background: #D9D9D9; }
