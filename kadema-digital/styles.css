@@ -431,16 +431,9 @@ body {
   padding-bottom: 172px;
   letter-spacing: -0.04em;
 }
-/* дорожка: верхняя часть блока закреплена, пока идёт сцена с фото */
-.tasks__track {
-  --tasks-scene: 1100px;          /* прокрутка на сцену: смена фона идёт по времени, дальше — значок */
-  height: calc(max(800px, var(--vh)) + var(--tasks-scene));
-  background: var(--canvas);
-}
-.tasks__stage {
-  position: sticky; top: 0;
-  height: max(800px, var(--vh));
-}
+/* верх блока: фото, значок, заголовок, подпись — едут вместе со страницей, без остановок */
+.tasks__track { background: var(--canvas); }
+.tasks__stage { position: relative; height: 800px; }
 .tasks__frame {
   position: absolute; left: calc(50% - 115px); top: 218px;
   width: 230px; height: 230px;
