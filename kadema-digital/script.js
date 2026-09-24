@@ -528,6 +528,13 @@
     ['Сборка и интеграции', 'Верстаем сайт, подключаем формы связи, настраиваем SEO и аналитику.'],
     ['Тест и запуск', 'Тестируем сайт на разных устройствах и публикуем его на вашем домене.'],
   ];
+  const STEP_ICONS = [
+    '<path d="M22 11C22 15.97 17.52 20 12 20C10.73 20 9.51 19.78 8.40 19.39L3.61 20.59C2.88 20.77 2.22 20.11 2.40 19.38L3.36 15.54C2.49 14.20 2 12.65 2 11C2 6.020 6.47 2 12 2C17.52 2 22 6.02 22 11Z"/>', // message-circle
+    '<path d="M21 5C21 3.89 20.10 3 19 3H5C3.89 3 3 3.89 3 5V9H21V5Z"/><path d="M5 21C3.89 21 3 20.10 3 19V11H9V21H5Z"/><path d="M21 19C21 20.10 20.10 21 19 21H11V11H21V19Z"/>', // layout
+    '<path d="M21.92 2.99C22.00 2.44 21.54 1.99 21.00 2.08C17.69 2.66 13.40 5.88 10.68 9.53C12.42 10.25 13.80 11.65 14.50 13.41C18.16 10.76 21.38 6.54 21.92 2.99Z"/><path d="M3.00 16C3.00 13.23 5.23 11 8.00 11C10.76 11 13 13.23 13 16C13 18.76 10.76 21 8.00 21H2.69C2.35 21 2.11 20.66 2.21 20.34L2.69 18.92C2.89 18.31 3.00 17.67 3.00 17.02V16Z"/>', // brush
+    '<path d="M13.21 16.32L20.41 10.84C21.46 10.04 21.46 8.45 20.41 7.65L13.21 2.17C12.49 1.62 11.50 1.62 10.78 2.17L3.58 7.65C2.53 8.45 2.53 10.04 3.58 10.84L10.78 16.32C11.50 16.87 12.49 16.87 13.21 16.32Z"/><path d="M19.76 14.33C20.11 14.06 20.61 14.06 20.96 14.33C21.48 14.73 21.48 15.51 20.96 15.91L13.21 21.82C12.49 22.37 11.50 22.37 10.78 21.82L3.03 15.91C2.51 15.51 2.51 14.73 3.03 14.33C3.07 14.30 3.12 14.27 3.17 14.24C3.51 14.06 3.92 14.09 4.23 14.33L11.99 20.25L19.76 14.33Z"/>', // layers
+    '<path fill-rule="evenodd" clip-rule="evenodd" d="M3 6.29C3 5.50 3.46 4.79 4.18 4.47L11.18 1.36C11.70 1.13 12.29 1.13 12.81 1.36L19.81 4.47C20.53 4.79 21 5.50 21 6.29V13C21 18.87 14.65 21.93 12.62 22.76C12.22 22.92 11.77 22.92 11.37 22.76C9.34 21.93 3 18.87 3 13V6.29ZM16.5 8.49C16.89 8.89 16.89 9.52 16.5 9.91L11.70 14.70C11.31 15.09 10.68 15.09 10.29 14.70L8 12.41C7.60 12.02 7.60 11.39 8 11C8.39 10.60 9.02 10.60 9.41 11L11 12.58L15.08 8.49C15.47 8.10 16.10 8.10 16.5 8.49Z"/>', // shield-check
+  ];
   const STEP_PX = 700;            // = --steps-step в styles.css
   const STEPS_INTRO = 200;        // = --steps-intro: запас прокрутки перед первым шагом (текст выезжает сам)
   const STEP_EFFORT = 220;        // сколько «докрутить» колесом, чтобы перейти на шаг
@@ -537,6 +544,7 @@
   const stepsSlides = document.getElementById('stepsSlides');
   const stepsDots = document.getElementById('stepsDots');
   const stepsNum = document.getElementById('stepsNum');
+  const stepsIcon = document.getElementById('stepsIcon');
   const stepsTitle = document.getElementById('stepsTitle');
   const stepsText = document.getElementById('stepsText');
   const SLIDE_BG = ['#c9cdd3', '#bfc6cf', '#cfc9c2', '#c3cbc4', '#cbc4cc'];
@@ -552,12 +560,14 @@
     stepsSlides.style.transform = `translate3d(0, ${-i * 100}%, 0)`;
     [...stepsDots.children].forEach((d, k) => d.classList.toggle('is-on', k === i));
     stepsNum.textContent = String(i + 1).padStart(2, '0');
+    stepsIcon.innerHTML = STEP_ICONS[i];
     stepsTitle.textContent = STEPS[i][0];
     stepsText.textContent = STEPS[i][1];
     if (!first && stepsTitle.animate) {
       const from = { opacity: 0, transform: 'translateY(20px)' }, to = { opacity: 1, transform: 'translateY(0)' };
       const opt = { duration: 700, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' };
       stepsNum.animate([from, to], opt);
+      stepsIcon.animate([{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1)' }], opt);
       stepsTitle.animate([from, to], { ...opt, delay: 60 });
       stepsText.animate([from, to], { ...opt, delay: 140 });
     }
