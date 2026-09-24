@@ -724,13 +724,13 @@ body {
 .svcs__head h3 { width: 655px; font-weight: 500; font-size: 46px; line-height: 100%; letter-spacing: -0.04em; }
 .svcs__text { width: 434px; margin: 44px 0 0 auto; text-align: right; font-weight: 500; font-size: 16px; line-height: 140%; color: rgba(255,255,255,.5); }
 .svcs__run { position: relative; margin-top: 50px; overflow: hidden; }
-/* затемнённые края — градиент в цвет фона поверх ленты (как в макете) */
+/* затемнённые края: плавный градиент в цвет фона (много точек по кривой — без ступенек и полос),
+   каждая сторона своим слоем с нахлёстом в 1px — без щелей при дробном масштабе */
 .svcs__run::before, .svcs__run::after {
-  content: ""; position: absolute; top: 0; bottom: 0; width: 151px; z-index: 1; pointer-events: none;
-  background: linear-gradient(270deg, rgba(17,17,17,0) 0%, #111111 83.77%);
+  content: ""; position: absolute; top: -1px; bottom: -1px; width: 200px; z-index: 1; pointer-events: none;
 }
-.svcs__run::before { left: 0; }
-.svcs__run::after { right: 0; transform: scaleX(-1); }
+.svcs__run::before { left: -1px; background: linear-gradient(90deg, rgba(17,17,17,1.000) 0.0%, rgba(17,17,17,0.998) 6.2%, rgba(17,17,17,0.984) 12.5%, rgba(17,17,17,0.951) 18.8%, rgba(17,17,17,0.896) 25.0%, rgba(17,17,17,0.820) 31.2%, rgba(17,17,17,0.725) 37.5%, rgba(17,17,17,0.616) 43.8%, rgba(17,17,17,0.500) 50.0%, rgba(17,17,17,0.384) 56.2%, rgba(17,17,17,0.275) 62.5%, rgba(17,17,17,0.180) 68.8%, rgba(17,17,17,0.104) 75.0%, rgba(17,17,17,0.049) 81.2%, rgba(17,17,17,0.016) 87.5%, rgba(17,17,17,0.002) 93.8%, rgba(17,17,17,0.000) 100.0%); }
+.svcs__run::after { right: -1px; background: linear-gradient(270deg, rgba(17,17,17,1.000) 0.0%, rgba(17,17,17,0.998) 6.2%, rgba(17,17,17,0.984) 12.5%, rgba(17,17,17,0.951) 18.8%, rgba(17,17,17,0.896) 25.0%, rgba(17,17,17,0.820) 31.2%, rgba(17,17,17,0.725) 37.5%, rgba(17,17,17,0.616) 43.8%, rgba(17,17,17,0.500) 50.0%, rgba(17,17,17,0.384) 56.2%, rgba(17,17,17,0.275) 62.5%, rgba(17,17,17,0.180) 68.8%, rgba(17,17,17,0.104) 75.0%, rgba(17,17,17,0.049) 81.2%, rgba(17,17,17,0.016) 87.5%, rgba(17,17,17,0.002) 93.8%, rgba(17,17,17,0.000) 100.0%); }
 .svcs__track { display: flex; gap: 10px; width: max-content; animation: svc-run 42s linear infinite; will-change: transform; backface-visibility: hidden; }
 .svcs__run:hover .svcs__track { animation-play-state: paused; }
 @keyframes svc-run { to { transform: translateX(calc(-50% - 5px)); } }
