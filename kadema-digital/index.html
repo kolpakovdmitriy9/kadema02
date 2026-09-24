@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=white-2">
+<link rel="stylesheet" href="styles.css?v=white-3">
 </head>
 <body>
 <div class="page" id="page">
@@ -254,15 +254,15 @@
 
       <div class="price__labels"><span>Описание</span><span>Тариф</span></div>
       <div class="price__table">
-        <div class="price__row">
+        <div class="price__row" id="priceRow">
           <div class="price__side">
             <p class="price__desc" id="priceDesc"></p>
-            <button class="btn-dark">Получить расчёт стоимости</button>
+            <div class="price__cta">
+              <button class="btn-dark">Получить расчёт стоимости</button>
+              <p class="price__note">Цены — ориентир для старта. Итоговую смету фиксируем до&nbsp;начала работ</p>
+            </div>
           </div>
           <div class="price__list" id="priceList"><div class="price__items" id="priceItems"></div></div>
-        </div>
-        <div class="price__foot">
-          <p class="price__note">Цены являются предварительными ориентирами. Итоговая стоимость зависит от объёма работ.</p>
         </div>
       </div>
     </section>
@@ -306,6 +306,8 @@
           <div class="eco__flower" aria-hidden="true"><div class="eco__wheel" id="ecoFlower"></div></div>
         </div>
       </div>
+      <!-- последнее фото этапов перелетает в верхний лепесток -->
+      <div class="eco__flyer" id="ecoFlyer" aria-hidden="true"></div>
       <div class="eco__text">
         <h3>Меньше ручных операций —<br>ниже стоимость разработки</h3>
         <p>ИИ берёт на&nbsp;себя рутину: черновики, варианты и&nbsp;проверки. Команда тратит время на&nbsp;решения, поэтому проект стоит дешевле без потери качества.</p>
@@ -314,6 +316,6 @@
 
   </div>
 </div>
-<script src="script.js?v=white-2"></script>
+<script src="script.js?v=white-3"></script>
 </body>
 </html>

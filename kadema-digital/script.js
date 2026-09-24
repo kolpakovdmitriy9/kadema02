@@ -191,7 +191,7 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); onPriceList(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); onEco(); ticking = false; });
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
@@ -444,24 +444,30 @@
           ['Раздел объектов', 'Карточки ЖК', 'Подбор квартир', 'Новости и акции', 'Ипотека и способы покупки', 'SEO и аналитика']],
       ] },
   ];
-  const chevron = '<svg viewBox="0 0 24 24"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg>';
   const priceDesc = document.getElementById('priceDesc');
+  const priceRow = document.getElementById('priceRow');
   const priceList = document.getElementById('priceList');
   const priceItems = document.getElementById('priceItems');
   const tabs = [...document.querySelectorAll('.tab')];
+  // Список тарифов показывается целиком: при смене таба ряд плавно
+  // растягивается (или сжимается) под новое количество тарифов
   function renderPrice(cat, animate) {
     const c = PRICE[cat];
+    const from = priceRow.offsetHeight;
     priceDesc.textContent = c.desc;
-    priceItems.innerHTML = c.items.map(([name, price, text, incl], i) => `
+    priceItems.innerHTML = c.items.map(([name, price], i) => `
       <div class="tariff${i === 0 ? ' is-active' : ''}">
-        <div class="tariff__head">
-          <div><div class="tariff__name">${name}</div><div class="tariff__price">${price}</div></div>
-          <button class="tariff__toggle" aria-label="Что входит">${chevron}</button>
-        </div>
-        <div class="tariff__more"><div><p>${text}</p><ul>${incl.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
+        <div class="tariff__name">${name}</div><div class="tariff__price">${price}</div>
       </div>`).join('');
-    onPriceList();
-    if (animate) for (const el of [priceList, priceDesc]) { el.classList.remove('is-swap'); void el.offsetWidth; el.classList.add('is-swap'); }
+    if (!animate) return;
+    priceRow.style.height = 'auto';
+    const to = priceRow.offsetHeight;
+    priceRow.style.height = from + 'px';
+    void priceRow.offsetHeight;
+    priceRow.style.height = to + 'px';
+    const done = (e) => { if (e.target !== priceRow) return; priceRow.style.height = ''; priceRow.removeEventListener('transitionend', done); };
+    priceRow.addEventListener('transitionend', done);
+    for (const el of [priceList, priceDesc]) { el.classList.remove('is-swap'); void el.offsetWidth; el.classList.add('is-swap'); }
   }
   tabs.forEach((t) => t.addEventListener('click', () => {
     if (t.classList.contains('is-active')) return;
@@ -471,20 +477,8 @@
   priceList.addEventListener('click', (e) => {
     const t = e.target.closest('.tariff');
     if (!t) return;
-    for (const x of priceItems.children) if (x !== t) x.classList.remove('is-open', 'is-active');
-    t.classList.add('is-active');
-    t.classList.toggle('is-open');
+    for (const x of priceItems.children) x.classList.toggle('is-active', x === t);
   });
-  // Список без своей прокрутки: если тарифы не помещаются в 400px, он плавно
-  // подъезжает вверх, пока ряд тарифов проходит экран (от 75% до 25% высоты окна)
-  function onPriceList() {
-    const r = priceList.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const over = Math.max(0, priceItems.scrollHeight - priceList.clientHeight);
-    const p = clamp01((vh * 0.75 - r.top) / (vh * 0.5));
-    priceItems.style.transform = over ? `translate3d(0, ${(-over * p).toFixed(1)}px, 0)` : '';
-  }
-  priceList.addEventListener('transitionend', onPriceList);   // тариф раскрылся — пересчитать
   renderPrice(0, false);
 
   /* ---------- этапы разработки ----------
@@ -578,40 +572,112 @@
     'раньше видим результат',
     'точнее оцениваем бюджет',
   ];
-  const ECO_R = 310, ECO_HOLD = 2200;
+  const ECO_R = 310;
+  const ECO_BUILD = 400;          // px (в макете) закреплённой сборки после перелёта
+  const ECO_TURN = 360;           // px прокрутки на один поворот (= styles.css)
+  const eco = document.getElementById('eco');
+  const ecoTrack = eco.querySelector('.eco__track');
+  const ecoStage = document.getElementById('ecoStage');
+  const ecoRow = ecoStage.querySelector('.eco__row');
   const ecoFlower = document.getElementById('ecoFlower');
   const ecoPhrase = document.getElementById('ecoPhrase');
+  const ecoFlyer = document.getElementById('ecoFlyer');
+  const stepsMedia = stepsTrack.querySelector('.steps__media');
+  // Фото верхнего лепестка — последнее фото этапов: оно и перелетает
+  const lastSlide = stepsSlides.lastElementChild.style.backgroundImage;
+  ecoFlyer.style.backgroundImage = lastSlide;
+  // Откуда прилетает лепесток: справа (1–3), снизу (4), слева (5–7).
+  // [dx, dy] в px макета, поворот в полёте, задержка в доле сборки
+  const ECO_FROM = [null,
+    [1150, -140, 24, 0.10], [1100, 60, 18, 0.22], [1050, 380, 30, 0.34],
+    [0, 1000, -16, 0.40],
+    [-1050, 380, -30, 0.28], [-1100, 60, -18, 0.16], [-1150, -140, -24, 0.04]];
   ecoFlower.innerHTML = ECO.map((_, i) => {
-    const a = i * 45;                                           // 0° — 12 часов, по часовой
     const g = 196 - (i % 4) * 6;
-    return `<div class="petal" style="transform:rotate(${a}deg) translateY(-${ECO_R}px)">` +
-      `<i style="background-image:url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))"></i></div>`;
+    const bg = i === 0 ? '' : `url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))`;
+    return `<div class="petal"><i style="background-image:${bg}"></i></div>`;
   }).join('');
-  // цветок целиком помещается в экран: уменьшаем, если окно низкое
-  const ecoStage = document.getElementById('ecoStage');
+  const petals = [...ecoFlower.children];
+  petals[0].firstElementChild.style.backgroundImage = lastSlide;
+
+  // Цветок крупный: не мельче 0.88 от макета; если экран низкий — центр
+  // опускается так, чтобы верхний лепесток (с фразой) был целиком виден,
+  // а нижний может немного уходить за край
+  let ecoS = 1, ecoY = 0, ecoH = 0;
   function fitEco() {
-    const s = Math.min(1, (window.innerHeight / Z - 140) / 846);
-    ecoStage.style.setProperty('--eco-s', s.toFixed(3));
+    ecoH = window.innerHeight / Z;
+    ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 846));
+    ecoY = Math.max(ecoH / 2, 30 + 423 * ecoS);
+    ecoStage.style.setProperty('--eco-s', ecoS.toFixed(3));
+    ecoStage.style.setProperty('--eco-y', ecoY.toFixed(1) + 'px');
+    // пустота под цветком — текст ниже подтягивается к нему
+    eco.style.setProperty('--eco-gap', Math.max(0, ecoH - ecoY - 423 * ecoS).toFixed(1) + 'px');
   }
   fitEco();
-  let ecoTurn = 0, ecoTimer = 0, ecoOn = false;
-  function ecoStep() {
-    ecoTurn++;
-    ecoFlower.style.transform = `rotate(${ecoTurn * 45}deg)`;    // по часовой: на 12 часов встаёт лепесток слева
+
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  let ecoIdx = 0, ecoPhraseT = 0;
+  function setPhrase(i) {
+    if (i === ecoIdx) return;
+    ecoIdx = i;
     ecoPhrase.classList.add('is-out');
-    setTimeout(() => {
-      ecoPhrase.textContent = ECO[(ECO.length - (ecoTurn % ECO.length)) % ECO.length];
-      ecoPhrase.classList.remove('is-out');
-    }, 700);
-    ecoTimer = setTimeout(ecoStep, ECO_HOLD);
+    clearTimeout(ecoPhraseT);
+    ecoPhraseT = setTimeout(() => { ecoPhrase.textContent = ECO[ecoIdx]; ecoPhrase.classList.remove('is-out'); }, 300);
   }
-  new IntersectionObserver(([e]) => {
-    const on = e.isIntersecting && !document.hidden;
-    if (on === ecoOn) return;
-    ecoOn = on;
-    clearTimeout(ecoTimer);
-    if (on) ecoTimer = setTimeout(ecoStep, 1200);
-  }).observe(ecoStage);
+
+  function onEco() {
+    const vh = window.innerHeight;
+    const top = ecoTrack.getBoundingClientRect().top;
+    // перелёт начинается, как только отпускает блок этапов, и заканчивается,
+    // когда цветок закрепился и прошла сборка
+    const start = (vh + 800 * Z) / 2 + 48 * Z;
+    const u = start - top;                                    // px с начала перелёта
+    const fly = start + ECO_BUILD * Z;
+    const f = Math.min(1, Math.max(0, u / fly));
+
+    // остальные лепестки подлетают со своих сторон
+    petals.forEach((el, i) => {
+      let base = `rotate(${i * 45}deg) translateY(-${ECO_R}px)`;
+      if (i > 0) {
+        const [dx, dy, r, d] = ECO_FROM[i];
+        const k = easeOutCubic(Math.min(1, Math.max(0, (f - d) / 0.55)));
+        const q = 1 - k;
+        base = `translate(${(dx * q).toFixed(1)}px, ${(dy * q).toFixed(1)}px) ${base} rotate(${(r * q).toFixed(2)}deg)`;
+      }
+      el.style.transform = base;
+    });
+    ecoRow.style.opacity = Math.min(1, Math.max(0, (f - 0.6) / 0.4)).toFixed(3);
+
+    // верхний лепесток: фото перелетает из блока этапов
+    const flying = u > 0 && f < 1;
+    stepsMedia.classList.toggle('is-gone', u > 0);
+    petals[0].style.visibility = f < 1 ? 'hidden' : '';
+    ecoFlyer.style.visibility = flying ? 'visible' : 'hidden';
+    if (flying) {
+      const e = easeInOut(f);
+      const a = stepsMedia.getBoundingClientRect();
+      const b = petals[0].getBoundingClientRect();
+      const o = eco.getBoundingClientRect();
+      const x = lerp(a.left, b.left, e), y = lerp(a.top, b.top, e);
+      ecoFlyer.style.left = ((x - o.left) / Z).toFixed(1) + 'px';
+      ecoFlyer.style.top = ((y - o.top) / Z).toFixed(1) + 'px';
+      ecoFlyer.style.width = (lerp(a.width, b.width, e) / Z).toFixed(1) + 'px';
+      ecoFlyer.style.height = (lerp(a.height, b.height, e) / Z).toFixed(1) + 'px';
+      ecoFlyer.style.borderRadius = (61 * ecoS * e).toFixed(1) + 'px';
+    }
+
+    // после сборки — 8 поворотов по 45°; между поворотами лепесток
+    // задерживается на 12 часах, пока меняется фраза
+    const t = Math.min(8, Math.max(0, (u - fly) / (ECO_TURN * Z)));
+    const k = Math.floor(t), fr = t - k;
+    const turn = k + easeInOut(Math.min(1, Math.max(0, (fr - 0.2) / 0.6)));
+    ecoFlower.style.transform = turn ? `rotate(${(turn * 45).toFixed(2)}deg)` : '';
+    const n = Math.round(turn) % 8;
+    setPhrase((8 - n) % 8);                                   // по часовой: на 12 часов встаёт лепесток слева
+  }
+  onEco();
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
   function buildTicker() {
@@ -630,5 +696,5 @@
   onTasks();
   onWhite();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); onPriceList(); fitEco(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); fitEco(); onEco(); });
 })();
