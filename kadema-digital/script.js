@@ -751,8 +751,17 @@
       if (i > 0) {
         const [dx, dy, r, sc, d] = ECO_FROM[i];
         const k = easeOutCubic(Math.min(1, Math.max(0, (g - d) / 0.5)));
-        const q = 1 - k;
-        tr = `translate(${(dx * q).toFixed(1)}px, ${(dy * q).toFixed(1)}px) ${tr} rotate(${(r * q).toFixed(2)}deg) scale(${(1 + (sc - 1) * q).toFixed(3)})`;
+        const q = 1 - k, arc = Math.sin(Math.PI * k);          // arc: 0 на старте и на месте, 1 — середина пути
+        // путь — дуга: сдвиг поперёк направления полёта (в разные стороны у соседей)
+        const side = i % 2 ? 1 : -1, len = Math.hypot(dx, dy) || 1;
+        const bx = -dy / len * side * 0.32 * len * arc, by = dx / len * side * 0.32 * len * arc;
+        // в полёте лепесток крутится (дополнительные пол-оборота гаснут к месту)
+        // и покачивается в объёме
+        const spin = r * q + Math.sign(r) * 180 * q * q;
+        const tiltX = 38 * arc * side, tiltY = -46 * arc * Math.sign(r);
+        tr = `translate(${(dx * q + bx).toFixed(1)}px, ${(dy * q + by).toFixed(1)}px) ${tr} ` +
+          `perspective(900px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) ` +
+          `rotate(${spin.toFixed(2)}deg) scale(${(1 + (sc - 1) * q).toFixed(3)})`;
       }
       el.style.transform = tr;
     });
