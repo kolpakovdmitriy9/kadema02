@@ -529,7 +529,7 @@
     ['Тест и запуск', 'Тестируем сайт на разных устройствах и публикуем его на вашем домене.'],
   ];
   const STEP_PX = 700;            // = --steps-step в styles.css
-  const STEPS_INTRO = 1000;       // = --steps-intro: прокрутка, за которую выезжает текст (несколько прокруток)
+  const STEPS_INTRO = 200;        // = --steps-intro: запас прокрутки перед первым шагом (текст выезжает сам)
   const STEP_EFFORT = 220;        // сколько «докрутить» колесом, чтобы перейти на шаг
   const STEP_MS = 900;            // длительность анимации шага
   const stepsTrack = document.getElementById('stepsTrack');
@@ -571,19 +571,11 @@
     const start = pin + intro;
     return { pin, intro, start, end: start + (STEPS.length - 1) * STEP_PX * Z, step: STEP_PX * Z };
   }
-  // выезд текста плавно догоняет скролл — без скачков за каждым щелчком колеса
-  let siCur = 0, siTarget = 0, siRaf = 0;
-  function siTick() {
-    siCur += (siTarget - siCur) * 0.12;
-    if (Math.abs(siTarget - siCur) < 0.0005) siCur = siTarget;
-    const e = siCur < 0.5 ? 2 * siCur * siCur : 1 - Math.pow(-2 * siCur + 2, 2) / 2;
-    stepsStage.style.setProperty('--si', e.toFixed(4));
-    siRaf = siCur === siTarget ? 0 : requestAnimationFrame(siTick);
-  }
   function onSteps() {
     const { pin, intro, start, step } = stepsZone();
-    siTarget = clamp01((window.scrollY - pin) / intro);
-    if (!siRaf) siRaf = requestAnimationFrame(siTick);
+    // картинка закрепилась на весь экран — блок с текстом выезжает справа сам,
+    // целиком, по времени (CSS-переход); прокрутили выше — уезжает обратно
+    stepsStage.classList.toggle('is-in', window.scrollY >= pin - 2);
     if (stepBusy) return;
     const i = Math.min(STEPS.length - 1, Math.max(0, Math.round((window.scrollY - start) / step)));
     setStep(i);
@@ -659,7 +651,7 @@
     [-200, 1100, -40, 0.9, 0.30, [44, 28], 0.3],
     [-1150, 700, 26, 1.25, 0.18, [-34, -42], 0.28],
     [-1300, -120, -30, 0.85, 0.35, [22, 52], -0.3],
-    [-800, -950, 44, 1.1, 0.0, [48, -50], 0.35]];
+    [-1350, -520, 40, 1.1, 0.27, [40, -46], 0.42]];   // широкой дугой слева, садится чуть раньше фото
   ecoFlower.innerHTML = ECO.map((_, i) => {
     const g = 196 - (i % 4) * 6;
     const bg = i === 0 ? '' : `url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))`;

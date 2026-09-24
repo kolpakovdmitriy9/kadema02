@@ -243,6 +243,7 @@ body {
 /* --p анимируется переходом: 0 — карточка 576px по центру, 1 — на весь экран */
 @property --p { syntax: '<number>'; inherits: true; initial-value: 0; }
 @property --e { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --si { syntax: '<number>'; inherits: true; initial-value: 0; }
 
 /* Высота секции = сколько экранов блок держится закреплённым */
 .how {
@@ -596,9 +597,10 @@ body {
 /* ---------- Этапы разработки ---------- */
 .steps { margin-top: 169px; }
 /* дорожка: выезд текста (--steps-intro) + шаги этапов */
-.steps__track { --steps-h: min(800px, var(--vh)); --steps-n: 5; --steps-step: 700px; --steps-intro: 1000px; height: calc(var(--steps-h) + var(--steps-intro) + var(--steps-step) * (var(--steps-n) - 1)); }
-/* --si: 0 — только картинка на всю ширину, 1 — справа выехал блок с текстом (script.js) */
-.steps__stage { --si: 0; position: sticky; top: max(0px, calc((var(--vh) - 800px) / 2)); height: var(--steps-h); display: flex; overflow: hidden; }   /* на низком экране — по высоте окна, от верхнего края */
+.steps__track { --steps-h: min(800px, var(--vh)); --steps-n: 5; --steps-step: 700px; --steps-intro: 200px; height: calc(var(--steps-h) + var(--steps-intro) + var(--steps-step) * (var(--steps-n) - 1)); }
+/* --si: 0 — только картинка на всю ширину, 1 — справа выехал блок с текстом; выезд — сам, по времени */
+.steps__stage.is-in { --si: 1; }
+.steps__stage { --si: 0; transition: --si 1.1s cubic-bezier(0.65, 0, 0.35, 1); position: sticky; top: max(0px, calc((var(--vh) - 800px) / 2)); height: var(--steps-h); display: flex; overflow: hidden; }   /* на низком экране — по высоте окна, от верхнего края */
 .steps__media { position: relative; width: calc(937px + 503px * (1 - var(--si))); height: 100%; flex: none; overflow: hidden; background: #D9D9D9; }
 .steps__slides { position: absolute; inset: 0; transition: transform .9s cubic-bezier(0.65, 0, 0.35, 1); }
 .steps__slide { position: absolute; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
