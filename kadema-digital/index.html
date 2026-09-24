@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=white-1">
+<link rel="stylesheet" href="styles.css?v=white-2">
 </head>
 <body>
 <div class="page" id="page">
@@ -259,14 +259,10 @@
             <p class="price__desc" id="priceDesc"></p>
             <button class="btn-dark">Получить расчёт стоимости</button>
           </div>
-          <div class="price__list" id="priceList"></div>
+          <div class="price__list" id="priceList"><div class="price__items" id="priceItems"></div></div>
         </div>
         <div class="price__foot">
           <p class="price__note">Цены являются предварительными ориентирами. Итоговая стоимость зависит от объёма работ.</p>
-          <div class="price__ask">
-            <span>Не нашли подходящий формат?</span>
-            <button class="chev-btn" aria-label="Написать нам"><svg viewBox="0 0 24 24"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg></button>
-          </div>
         </div>
       </div>
     </section>
@@ -296,15 +292,20 @@
 
     <!-- ЭКОНОМИКА ПРОЕКТА: лепестки крутятся, верхний меняет фразу справа -->
     <section class="eco" id="eco">
-      <div class="eco__row">
-        <span class="eco__label">Экономика проекта</span>
-        <span class="eco__tag">
-          <svg class="eco__br eco__br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
-          <span class="eco__phrase" id="ecoPhrase">быстрее формируем структуру</span>
-          <svg class="eco__br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
-        </span>
+      <!-- дорожка: цветок закреплён по центру экрана, пока его прокручивают -->
+      <div class="eco__track">
+        <div class="eco__stage" id="ecoStage">
+          <div class="eco__row">
+            <span class="eco__label">Экономика проекта</span>
+            <span class="eco__tag">
+              <svg class="eco__br eco__br--l" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
+              <span class="eco__phrase" id="ecoPhrase">быстрее формируем структуру</span>
+              <svg class="eco__br" width="7" height="29" viewBox="0 0 7 29" fill="none" aria-hidden="true"><path d="M6 6.5V3.5C6 1.84315 4.65685 0.5 3 0.5H0" stroke="currentColor"/><path d="M0 28.5L3 28.5C4.65685 28.5 6 27.1569 6 25.5L6 22.5" stroke="currentColor"/></svg>
+            </span>
+          </div>
+          <div class="eco__flower" aria-hidden="true"><div class="eco__wheel" id="ecoFlower"></div></div>
+        </div>
       </div>
-      <div class="eco__flower" id="ecoFlower" aria-hidden="true"></div>
       <div class="eco__text">
         <h3>Меньше ручных операций —<br>ниже стоимость разработки</h3>
         <p>ИИ берёт на&nbsp;себя рутину: черновики, варианты и&nbsp;проверки. Команда тратит время на&nbsp;решения, поэтому проект стоит дешевле без потери качества.</p>
@@ -313,6 +314,6 @@
 
   </div>
 </div>
-<script src="script.js?v=white-1"></script>
+<script src="script.js?v=white-2"></script>
 </body>
 </html>

@@ -191,7 +191,7 @@
   function onScroll() {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); ticking = false; });
+    requestAnimationFrame(() => { onHeader(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); onPriceList(); ticking = false; });
   }
 
   /* ---------- «Команда + ИИ»: этапы работы ----------
@@ -447,11 +447,12 @@
   const chevron = '<svg viewBox="0 0 24 24"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg>';
   const priceDesc = document.getElementById('priceDesc');
   const priceList = document.getElementById('priceList');
+  const priceItems = document.getElementById('priceItems');
   const tabs = [...document.querySelectorAll('.tab')];
   function renderPrice(cat, animate) {
     const c = PRICE[cat];
     priceDesc.textContent = c.desc;
-    priceList.innerHTML = c.items.map(([name, price, text, incl], i) => `
+    priceItems.innerHTML = c.items.map(([name, price, text, incl], i) => `
       <div class="tariff${i === 0 ? ' is-active' : ''}">
         <div class="tariff__head">
           <div><div class="tariff__name">${name}</div><div class="tariff__price">${price}</div></div>
@@ -459,7 +460,7 @@
         </div>
         <div class="tariff__more"><div><p>${text}</p><ul>${incl.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
       </div>`).join('');
-    priceList.scrollTop = 0;
+    onPriceList();
     if (animate) for (const el of [priceList, priceDesc]) { el.classList.remove('is-swap'); void el.offsetWidth; el.classList.add('is-swap'); }
   }
   tabs.forEach((t) => t.addEventListener('click', () => {
@@ -470,10 +471,20 @@
   priceList.addEventListener('click', (e) => {
     const t = e.target.closest('.tariff');
     if (!t) return;
-    for (const x of priceList.children) if (x !== t) x.classList.remove('is-open', 'is-active');
+    for (const x of priceItems.children) if (x !== t) x.classList.remove('is-open', 'is-active');
     t.classList.add('is-active');
     t.classList.toggle('is-open');
   });
+  // Список без своей прокрутки: если тарифы не помещаются в 400px, он плавно
+  // подъезжает вверх, пока ряд тарифов проходит экран (от 75% до 25% высоты окна)
+  function onPriceList() {
+    const r = priceList.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const over = Math.max(0, priceItems.scrollHeight - priceList.clientHeight);
+    const p = clamp01((vh * 0.75 - r.top) / (vh * 0.5));
+    priceItems.style.transform = over ? `translate3d(0, ${(-over * p).toFixed(1)}px, 0)` : '';
+  }
+  priceList.addEventListener('transitionend', onPriceList);   // тариф раскрылся — пересчитать
   renderPrice(0, false);
 
   /* ---------- этапы разработки ----------
@@ -576,13 +587,20 @@
     return `<div class="petal" style="transform:rotate(${a}deg) translateY(-${ECO_R}px)">` +
       `<i style="background-image:url(images/eco-${i + 1}.jpg),linear-gradient(160deg,rgb(${g},${g},${g}),rgb(${g - 30},${g - 30},${g - 28}))"></i></div>`;
   }).join('');
+  // цветок целиком помещается в экран: уменьшаем, если окно низкое
+  const ecoStage = document.getElementById('ecoStage');
+  function fitEco() {
+    const s = Math.min(1, (window.innerHeight / Z - 140) / 846);
+    ecoStage.style.setProperty('--eco-s', s.toFixed(3));
+  }
+  fitEco();
   let ecoTurn = 0, ecoTimer = 0, ecoOn = false;
   function ecoStep() {
     ecoTurn++;
-    ecoFlower.style.transform = `rotate(${-ecoTurn * 45}deg)`;   // следующий лепесток встаёт на 12 часов
+    ecoFlower.style.transform = `rotate(${ecoTurn * 45}deg)`;    // по часовой: на 12 часов встаёт лепесток слева
     ecoPhrase.classList.add('is-out');
     setTimeout(() => {
-      ecoPhrase.textContent = ECO[((ecoTurn % ECO.length) + ECO.length) % ECO.length];
+      ecoPhrase.textContent = ECO[(ECO.length - (ecoTurn % ECO.length)) % ECO.length];
       ecoPhrase.classList.remove('is-out');
     }, 700);
     ecoTimer = setTimeout(ecoStep, ECO_HOLD);
@@ -593,7 +611,7 @@
     ecoOn = on;
     clearTimeout(ecoTimer);
     if (on) ecoTimer = setTimeout(ecoStep, 1200);
-  }).observe(ecoFlower.parentElement);
+  }).observe(ecoStage);
 
   /* ---------- бегущая строка в hero: копия группы для бесшовного цикла ---------- */
   function buildTicker() {
@@ -612,5 +630,5 @@
   onTasks();
   onWhite();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); });
+  window.addEventListener('resize', () => { fit(); onHow(); onDuo(); onTasks(); onWhite(); onSteps(); onPriceList(); fitEco(); });
 })();
