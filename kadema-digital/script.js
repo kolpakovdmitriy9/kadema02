@@ -522,7 +522,7 @@
      а сама анимация шага доигрывает автоматически и не обрывается на середине:
      фото листается по вертикали, текст проявляется снизу через прозрачность. */
   const STEPS = [
-    ['Знакомимся и анализируем', 'Собираем требования, проводим брифинг, анализируем целевую аудиторию и конкурентов.'],
+    ['Знакомимся и анализируем', 'Определяем задачи сайта, целевую аудиторию, услуги и необходимый функционал'],
     ['Проектируем', 'Продумываем структуру сайта, собираем прототипы и пользовательские сценарии.'],
     ['Контент и дизайн', 'Готовим офферы и тексты, рисуем интерфейс и адаптируем его под мобильные.'],
     ['Сборка и интеграции', 'Верстаем сайт, подключаем формы связи, настраиваем SEO и аналитику.'],
@@ -565,7 +565,7 @@
   // где начинается закрепление и где конец (в px прокрутки)
   function stepsZone() {
     const t = stepsTrack.getBoundingClientRect();
-    const stick = (window.innerHeight - 800 * Z) / 2;
+    const stick = Math.max(0, (window.innerHeight - 800 * Z) / 2);
     const pin = t.top + window.scrollY - stick;               // картинка закрепилась на весь экран по высоте
     const intro = STEPS_INTRO * Z;                            // дальше справа выезжает текст
     const start = pin + intro;
@@ -736,13 +736,12 @@
     ecoFlyer.style.visibility = flying ? 'visible' : 'hidden';
     if (!flying) return;
     const e = easeInOut(f);
-    // концы пути — неподвижные точки экрана: откуда фото стояло закреплённым
-    // в этапах и куда встанет верхний лепесток, когда цветок закрепится.
-    // Так путь не зависит от того, как едут блоки, — одна ровная дуга
+    // старт — неподвижная точка экрана (где фото стояло закреплённым в этапах),
+    // финиш — настоящее место верхнего лепестка: карточка садится ровно в кольцо,
+    // даже пока цветок ещё доезжает до закрепления
     const m = stepsMedia.getBoundingClientRect();
-    const a = { left: m.left, top: (window.innerHeight - m.height) / 2, width: m.width, height: m.height };
-    const pr = petals[0].getBoundingClientRect(), st = ecoStage.getBoundingClientRect();
-    const b = { left: pr.left, top: pr.top - st.top, width: pr.width, height: pr.height };
+    const a = { left: m.left, top: Math.max(0, (window.innerHeight - m.height) / 2), width: m.width, height: m.height };
+    const b = petals[0].getBoundingClientRect();
     const o = eco.getBoundingClientRect();
     // одна мягкая дуга: чуть в сторону и вниз от прямой, без лишних поворотов
     const arc = Math.sin(Math.PI * e);
@@ -765,10 +764,16 @@
     // 1) фото летит, как только отпускает блок этапов, и встаёт на 12 часов
     //    чуть позже закрепления цветка; 2) затем по очереди подлетают остальные;
     //    3) затем 8 плавных поворотов
-    const start = (vh + 800 * Z) / 2 + 48 * Z;
+    const sh = stepsStage.offsetHeight * Z;                  // высота блока этапов (≤ 800, на низком экране — окно)
+    const start = Math.max(0, (vh - sh) / 2) + sh + 48 * Z;
     const u = start - top;                                    // px с начала перелёта
     const flyLen = start + ECO_CATCH * Z;
     const f = Math.min(1, Math.max(0, u / flyLen));
+    // пока идёт сборка, цветок уже стоит там, где встанет после закрепления:
+    // сцена ещё подъезжает снизу — компенсируем её сдвиг. Лепестки в этот момент
+    // за краями экрана, поэтому включение компенсации не видно
+    const lift = u > 0 ? Math.max(0, top) : 0;
+    ecoStage.style.transform = lift ? `translate3d(0, ${(-lift / Z).toFixed(2)}px, 0)` : '';
     // остальные стартуют почти вместе с фото и долетают вместе с ним
     const g0 = flyLen * 0.12, g = Math.min(1, Math.max(0, (u - g0) / (flyLen - g0 + ECO_BUILD * Z)));
 
