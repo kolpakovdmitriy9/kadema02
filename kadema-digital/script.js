@@ -422,6 +422,33 @@
   const white = document.getElementById('white');
   const priceIntro = document.getElementById('priceIntro');
   const clouds = [...document.querySelectorAll('.cloud')];
+  // Смещение облака = подъём по скроллу + мягкий сдвиг за курсором.
+  // Курсор в блоке задаёт цель (до ±CLOUD_PULL px, облака в разные стороны —
+  // как на разной глубине), сдвиг плавно догоняет её
+  const CLOUD_PULL = 18;
+  let cloudRise = 1, mx = 0, my = 0, tx = 0, ty = 0, cloudRaf = 0;
+  function moveClouds() {
+    clouds.forEach((c, i) => {
+      const k = i ? -0.7 : 1;                           // правое — ближе/дальше, в другую сторону
+      const x = mx * CLOUD_PULL * k, y = my * CLOUD_PULL * k + cloudRise * parseFloat(c.dataset.rise);
+      c.style.transform = x || y ? `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)` : '';
+    });
+  }
+  function cloudTick() {
+    mx += (tx - mx) * 0.045; my += (ty - my) * 0.045;
+    if (Math.abs(tx - mx) < 0.001 && Math.abs(ty - my) < 0.001) { mx = tx; my = ty; cloudRaf = 0; }
+    else cloudRaf = requestAnimationFrame(cloudTick);
+    moveClouds();
+  }
+  const cloudZone = document.getElementById('price');
+  cloudZone.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const r = cloudZone.querySelector('.price__intro').getBoundingClientRect();
+    tx = Math.max(-1, Math.min(1, (e.clientX - r.left) / r.width * 2 - 1));
+    ty = Math.max(-1, Math.min(1, (e.clientY - r.top) / r.height * 2 - 1));
+    if (!cloudRaf) cloudRaf = requestAnimationFrame(cloudTick);
+  });
+  cloudZone.addEventListener('pointerleave', () => { tx = 0; ty = 0; if (!cloudRaf) cloudRaf = requestAnimationFrame(cloudTick); });
   function onWhite() {
     const r = white.getBoundingClientRect();
     const vh = window.innerHeight;
@@ -429,10 +456,11 @@
     // пока верх белого блока идёт от низа экрана к трети — содержимое догоняет (было выше, под розовым)
     const e = clamp01(1 - (r.top - vh * 0.25) / (vh * 0.75));
     priceIntro.style.transform = `translate3d(0, ${(-(1 - e) * 180).toFixed(1)}px, 0)`;
-    // облака всплывают снизу (быстрее текста) и встают на место из макета
-    // вместе с блоком; дальше не двигаются
-    const q = 1 - easeOut(e);
-    for (const c of clouds) c.style.transform = q ? `translate3d(0, ${(q * parseFloat(c.dataset.rise)).toFixed(1)}px, 0)` : '';
+    // облака всплывают снизу (быстрее текста) — всё время, пока блок
+    // заезжает в экран, — и встают на место из макета; дальше не двигаются
+    const c = clamp01((vh - r.top) / (vh * 0.9));
+    cloudRise = Math.pow(1 - c, 1.6);
+    moveClouds();
   }
 
   /* ---------- тарифы: табы по категориям, раскрытие «что входит» ---------- */
