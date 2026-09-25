@@ -576,7 +576,8 @@
   stepsSlides.innerHTML = STEPS.map((_, i) =>
     `<div class="steps__slide" style="top:${i * 100}%;background-image:url(images/step-${i + 1}.jpg),linear-gradient(160deg,${SLIDE_BG[i]},#9aa1aa)"></div>`).join('');
   stepsDots.innerHTML = STEPS.map(() => '<i></i>').join('');
-  let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0, numT = 0, iconT = 0;
+  let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0, numT = 0, iconT = 0, stepsHoldUntil = 0;
+  const STEPS_IN_MS = 1100;       // = transition --si в styles.css: пока выезжает текст, дальше не листаем
 
   function setStep(i) {
     if (i === stepCur) return;
@@ -635,14 +636,26 @@
     const { pin, intro, start, step } = stepsZone();
     // картинка закрепилась на весь экран — блок с текстом выезжает справа сам,
     // целиком, по времени (CSS-переход); прокрутили выше — уезжает обратно
-    stepsStage.classList.toggle('is-in', window.scrollY >= pin - 2);
+    const inNow = window.scrollY >= pin - 2;
+    // текст начал выезжать (скроллим вниз) — пока он выезжает, дальше не листаем:
+    // первый шаг показывается целиком, быстрый скролл не проскакивает на 2–3 шаг
+    if (inNow && !stepsStage.classList.contains('is-in')) { stepsHoldUntil = performance.now() + STEPS_IN_MS; stepAcc = 0; }
+    stepsStage.classList.toggle('is-in', inNow);
     if (stepBusy) return;
     const i = Math.min(STEPS.length - 1, Math.max(0, Math.round((window.scrollY - start) / step)));
     setStep(i);
   }
   window.addEventListener('wheel', (e) => {
-    const { start, end, step } = stepsZone();
+    const { pin, start, end, step } = stepsZone();
     const y = window.scrollY;
+    // от закрепления до первого шага: пока текст выезжает — стоим, потом колесо
+    // доводит ровно до шага 01 (не пролетает дальше по инерции)
+    if (e.deltaY > 0 && y >= pin - 2 && y < start - 2) {
+      e.preventDefault();
+      if (performance.now() >= stepsHoldUntil) { stepAcc = 0; window.scrollTo(0, start); }
+      return;
+    }
+    if (e.deltaY > 0 && performance.now() < stepsHoldUntil) { e.preventDefault(); return; }
     if (y < start - 2 || y > end + 2) return;                 // не в зоне этапов — обычный скролл
     const dir = Math.sign(e.deltaY);
     if (!dir) return;
