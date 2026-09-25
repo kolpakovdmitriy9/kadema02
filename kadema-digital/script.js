@@ -581,6 +581,8 @@
     const t = document.getElementById('scene' + (i + 1));
     if (t) sl.appendChild(t.content.cloneNode(true));
   });
+  // перелив скелетона идёт волной: у каждого блока своя небольшая задержка
+  stepsSlides.querySelectorAll('.sx-sk').forEach((el, k) => el.style.setProperty('--d', k));
   stepsDots.innerHTML = STEPS.map(() => '<i></i>').join('');
   let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0, numT = 0, iconT = 0, stepsHoldUntil = 0;
   const STEPS_IN_MS = 1100;       // = transition --si в styles.css: пока выезжает текст, дальше не листаем
@@ -777,7 +779,7 @@
     }, () => { clearTimeout(at); ai = 1; aa.style.fontWeight = 500; name.textContent = 'Vela Sans Medium'; });
   })();
 
-  // 4. Сборка: строки кода подсвечиваются по очереди, узлы усиливают поток, сборка перезапускается
+  // 4. Сборка: строки кода подсвечиваются по очереди, узлы усиливают поток, в консоли печатается сборка
   (() => {
     const sc = sceneOf(4); if (!sc) return;
     const lns = [...sc.querySelectorAll('.sx-ln')];
@@ -792,16 +794,33 @@
     const paths = [...sc.querySelectorAll('.sx-pulse path')];
     sc.querySelectorAll('.sx-node').forEach((n) => hover(n,
       () => paths[+n.dataset.p]?.classList.add('is-hot'), () => paths[+n.dataset.p]?.classList.remove('is-hot')));
-    const build = sc.querySelector('.sx-build'), status = sc.querySelector('.sx-status'), vals = [...build.querySelectorAll('.sx-val')];
-    let bt = 0;
+    // сборка: в консоли печатается команда, затем построчно — вывод
+    const build = sc.querySelector('.sx-build'), status = sc.querySelector('.sx-status');
+    const cmd = build.querySelector('.sx-cmd'), outs = [...build.querySelectorAll('.sx-out')];
+    const CMD = cmd.textContent, OUTS = outs.map((o) => o.innerHTML);
+    const SPIN = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+    let ct = [];
+    const setStatus = (run) => { status.classList.toggle('is-run', run); status.classList.toggle('is-ok', !run); status.textContent = run ? '◌ running' : '● passed'; };
+    const reset = () => { ct.forEach(clearTimeout); ct.forEach(clearInterval); ct = []; };
     hover(build, () => {
-      status.textContent = '◌ running'; status.style.background = 'rgba(255,190,40,.15)'; status.style.color = '#ffc23d';
-      vals.forEach((v) => { v.textContent = '0'; });
-      bt = setTimeout(() => {
-        status.textContent = '● passed'; status.style.background = ''; status.style.color = '';
-        vals.forEach((v) => countTo(v, +v.dataset.v, 700));
-      }, 900);
-    }, () => { clearTimeout(bt); status.textContent = '● passed'; status.style.background = ''; status.style.color = ''; vals.forEach((v) => { v.textContent = v.dataset.v; }); });
+      reset(); setStatus(true);
+      cmd.textContent = ''; cmd.classList.add('is-typing');
+      outs.forEach((o) => { o.innerHTML = ''; o.classList.remove('is-caret'); });
+      let t = 250;
+      for (let k = 1; k <= CMD.length; k++) ct.push(setTimeout(() => { cmd.textContent = CMD.slice(0, k); }, t + k * 60));
+      t += CMD.length * 60 + 250;
+      ct.push(setTimeout(() => {
+        cmd.classList.remove('is-typing');
+        let i = 0;
+        const sp = setInterval(() => { outs[0].innerHTML = `<span class="sx-pink">${SPIN[i++ % SPIN.length]}</span> собираем страницы…`; }, 80);
+        ct.push(sp);
+        ct.push(setTimeout(() => {
+          clearInterval(sp);
+          OUTS.forEach((h, j) => ct.push(setTimeout(() => { outs[j].innerHTML = h; }, j * 320)));
+          ct.push(setTimeout(() => setStatus(false), OUTS.length * 320 - 200));
+        }, 900));
+      }, t));
+    }, () => { reset(); setStatus(false); cmd.classList.remove('is-typing'); cmd.textContent = CMD; outs.forEach((o, j) => { o.innerHTML = OUTS[j]; }); });
   })();
 
   // 5. Запуск: кольцо скорости набирается, тесты перепроходят, заголовок на устройствах меняется
@@ -841,7 +860,8 @@
     'раньше видим результат',
     'точнее оцениваем бюджет',
   ];
-  const ECO_R = 310;
+  // орбита — овал под пропорции карточки (192×225): зазоры между соседями одинаковые
+  const ECO_RX = 300, ECO_RY = 350, ECO_K = ECO_RY / ECO_RX;
   const ECO_CATCH = 160;          // px (в макете): фото догоняет место уже после закрепления
   const ECO_BUILD = 60;           // px: последние лепестки долетают чуть позже фото
   const ECO_TURN = 520;           // px прокрутки на один шаг поворота (= styles.css)
@@ -894,12 +914,12 @@
   const ecoPull = () => parseFloat(eco.style.getPropertyValue('--eco-pull')) || 0;
   function fitEco() {
     ecoH = window.innerHeight / Z;
-    ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 846));
-    ecoY = Math.max(ecoH / 2, 30 + 423 * ecoS);
+    ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 926));
+    ecoY = Math.max(ecoH / 2, 30 + 463 * ecoS);
     ecoStage.style.setProperty('--eco-s', ecoS.toFixed(3));
     ecoStage.style.setProperty('--eco-y', ecoY.toFixed(1) + 'px');
     // пустота под цветком — текст ниже подтягивается к нему
-    eco.style.setProperty('--eco-gap', (ecoH - ecoY - 423 * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
+    eco.style.setProperty('--eco-gap', (ecoH - ecoY - 463 * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
     // где низ закреплённого блока этапов (px макета от верха экрана) — на столько подтягиваем экономику
     const sh = stepsStage.offsetHeight;
     eco.style.setProperty('--eco-pull', (Math.max(0, (ecoH - sh) / 2) + sh).toFixed(1) + 'px');
@@ -923,7 +943,7 @@
   let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0, ecoTurnT = 0;
   // место лепестка на круге: угол сдвигается на 45° с каждым шагом, а сам лепесток
   // поворачивается обратно — стоит вертикально (содержимое всегда ровно)
-  const petalBase = (k) => { const a = (k + ecoCur) * 45; return `rotate(${a}deg) translateY(-${ECO_R}px) rotate(${-a}deg)`; };
+  const petalBase = (k) => { const a = (k + ecoCur) * 45; return `scaleY(${ECO_K}) rotate(${a}deg) translateY(-${ECO_RX}px) rotate(${-a}deg) scaleY(${1 / ECO_K})`; };
   function setEcoStep(i) {
     if (i === ecoCur) return;
     ecoCur = i;
