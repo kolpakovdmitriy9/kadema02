@@ -593,6 +593,8 @@
     stepCur = i;
     stepsSlides.style.transform = `translate3d(0, ${-i * 100}%, 0)`;
     [...stepsDots.children].forEach((d, k) => d.classList.toggle('is-on', k === i));
+    // растягивается/сужается только текущая сцена, остальные сразу в своём размере
+    [...stepsSlides.children].forEach((sl, k) => sl.classList.toggle('is-cur', k === i));
     const num = String(i + 1).padStart(2, '0');
     if (first || !stepsNum.animate) stepsNum.textContent = num;
     if (first || !stepsNum.animate) stepsIcon.innerHTML = STEP_ICONS[i];
@@ -647,6 +649,13 @@
     // первый шаг показывается целиком, быстрый скролл не проскакивает на 2–3 шаг
     if (inNow && !stepsStage.classList.contains('is-in')) { stepsHoldUntil = performance.now() + STEPS_IN_MS; stepAcc = 0; }
     stepsStage.classList.toggle('is-in', inNow);
+    // стоппер: пока текст выезжает (или ещё не выехал) — только первая сцена;
+    // прокрутку дальше первого шага (клавиши, полоса, тачпад) возвращаем назад
+    if (!inNow || performance.now() < stepsHoldUntil) {
+      if (inNow && window.scrollY > start + 2) window.scrollTo(0, start);
+      setStep(0);
+      return;
+    }
     if (stepBusy) return;
     const i = Math.min(STEPS.length - 1, Math.max(0, Math.round((window.scrollY - start) / step)));
     setStep(i);
