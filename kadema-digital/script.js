@@ -907,14 +907,14 @@
   petals[0].firstElementChild.style.backgroundImage = ecoTop;
 
 
-  // Цветок крупный: не мельче 0.88 от макета; если экран низкий — центр
+  // Цветок всегда в размере макета (не уменьшается); если экран низкий — центр
   // опускается так, чтобы верхний лепесток (с фразой) был целиком виден,
-  // а нижний может немного уходить за край
+  // а нижние уходят за край — при повороте они всё равно поднимаются наверх
   let ecoS = 1, ecoY = 0, ecoH = 0;
   const ecoPull = () => parseFloat(eco.style.getPropertyValue('--eco-pull')) || 0;
   function fitEco() {
     ecoH = window.innerHeight / Z;
-    ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 970));
+    ecoS = 1;
     ecoY = Math.max(ecoH / 2, 30 + 485 * ecoS);
     ecoStage.style.setProperty('--eco-s', ecoS.toFixed(3));
     ecoStage.style.setProperty('--eco-y', ecoY.toFixed(1) + 'px');
