@@ -647,7 +647,8 @@ body {
 .eco__phrase.is-out { opacity: 0; transform: translateY(8px); }
 /* цветок: 8 лепестков по кругу, колесо вращается целиком */
 .eco__flower { position: absolute; left: 50%; top: var(--eco-y); width: 0; height: 0; transform: scale(var(--eco-s)); }
-.eco__wheel { position: absolute; left: 0; top: 0; transition: transform 1.3s cubic-bezier(0.65, 0, 0.35, 1); }   /* шаг поворота доигрывает сам */
+.eco__wheel { position: absolute; left: 0; top: 0; }
+.eco__wheel.is-turning .petal { transition: transform 1.3s cubic-bezier(0.65, 0, 0.35, 1); }   /* шаг: лепестки едут по кругу, оставаясь вертикальными */
 .eco__flyer { position: absolute; left: 0; top: 0; z-index: 3; visibility: hidden; transform-style: preserve-3d; pointer-events: none; }
 /* две стороны летящей карточки */
 .eco__face { position: absolute; inset: 0; border-radius: inherit; background-size: cover; background-position: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; }

@@ -754,11 +754,19 @@
 
   // Поворот — пошаговый, как в этапах: шаг после «усилия» колесом,
   // сам поворот доигрывает по времени и останавливается на лепестке
-  let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0;
+  let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0, ecoTurnT = 0;
+  // место лепестка на круге: угол сдвигается на 45° с каждым шагом, а сам лепесток
+  // поворачивается обратно — стоит вертикально (содержимое всегда ровно)
+  const petalBase = (k) => { const a = (k + ecoCur) * 45; return `rotate(${a}deg) translateY(-${ECO_R}px) rotate(${-a}deg)`; };
   function setEcoStep(i) {
     if (i === ecoCur) return;
     ecoCur = i;
-    ecoFlower.style.transform = i ? `rotate(${i * 45}deg)` : '';
+    // лепестки едут по кругу на следующее место, но сами не поворачиваются —
+    // все стоят вертикально, как верхний; переезд — CSS-переходом (.is-turning)
+    ecoFlower.classList.add('is-turning');
+    clearTimeout(ecoTurnT);
+    ecoTurnT = setTimeout(() => ecoFlower.classList.remove('is-turning'), ECO_MS + 50);
+    petals.forEach((el) => { if (el._rest) el.style.transform = petalBase(el._k); });
     setPhrase((8 - i) % 8);                                   // по часовой: на 12 часов встаёт лепесток слева
   }
   function ecoZone() {
@@ -839,11 +847,14 @@
     const g0 = flyLen * 0.12, g = Math.min(1, Math.max(0, (u - g0) / (flyLen - g0 + ECO_BUILD * Z)));
 
     petals.forEach((el, i) => {
-      let tr = `rotate(${i * 45}deg) translateY(-${ECO_R}px)`;
+      el._k = i;
+      let tr = petalBase(i);
+      el._rest = true;
       if (i > 0) {
         const [dx, dy, r, sc, d] = ECO_FROM[i];
         const k = easeOutCubic(Math.min(1, Math.max(0, (g - d) / 0.6)));
         const q = 1 - k, arc = Math.sin(Math.PI * k);          // arc: 0 на старте и на месте, 1 — середина пути
+        if (q > 0) {
         // путь — дуга: сдвиг поперёк направления полёта (в разные стороны у соседей)
         const bend = ECO_FROM[i][6], len = Math.hypot(dx, dy) || 1;
         const bx = -dy / len * bend * len * arc, by = dx / len * bend * len * arc;
@@ -854,8 +865,10 @@
         tr = `translate(${(dx * q + bx).toFixed(1)}px, ${(dy * q + by).toFixed(1)}px) ${tr} ` +
           `perspective(900px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) ` +
           `rotate(${spin.toFixed(2)}deg) scale(${(1 + (sc - 1) * q).toFixed(3)})`;
+        el._rest = false;
+        }
       }
-      el.style.transform = tr;
+      if (!ecoFlower.classList.contains('is-turning') || !el._rest) el.style.transform = tr;
     });
     ecoRow.style.opacity = Math.min(1, Math.max(0, (f - 0.7) / 0.3)).toFixed(3);
 
