@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kadema Digital — прототип</title>
-<link rel="stylesheet" href="styles.css?v=img-9">
+<link rel="stylesheet" href="styles.css?v=scenes-1">
 </head>
 <body>
 <div class="page" id="page">
@@ -454,6 +454,158 @@
     </div>
   </div>
 </div>
-<script src="script.js?v=img-9"></script>
+
+  <!-- живые сцены этапов: script.js вставляет их в слайды, интерактив — при наведении -->
+  <template id="scene1"><div class="sx-sc" data-scene="1" style="background:radial-gradient(90% 80% at 20% 10%,#f6f3ef,#e4ded6 70%)">
+  <div class="sx-grid"></div>
+  <div class="sx-card sx-brief" style="left:86px;top:120px;width:380px;height:470px;transform:rotate(-3deg)">
+    <div class="sx-lbl">Бриф проекта</div><div class="sx-h">Сайт для производителя окон</div>
+    <div style="margin-top:22px;display:flex;flex-direction:column;gap:16px;font-size:15px">
+      <div class="sx-row"><span class="sx-check"></span>Цель — заявки с&nbsp;сайта</div>
+      <div class="sx-row"><span class="sx-check"></span>Регион — Пенза и&nbsp;область</div>
+      <div class="sx-row"><span class="sx-check"></span>Бюджет и&nbsp;сроки согласованы</div>
+      <div class="sx-row"><span class="sx-box"></span>Фото производства</div>
+      <div class="sx-row"><span class="sx-box"></span>Отзывы клиентов</div>
+    </div>
+    <div class="sx-lbl" style="margin-top:26px">Ключевые запросы</div>
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px"><span class="sx-chip">окна пвх</span><span class="sx-chip">остекление балкона</span><span class="sx-chip">замер бесплатно</span><span class="sx-chip">рассрочка</span></div>
+  </div>
+  <div class="sx-card sx-aud" style="left:500px;top:84px;width:350px;height:250px;transform:rotate(2deg)">
+    <div class="sx-lbl">Целевая аудитория</div>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+      <div class="sx-row"><i class="sx-av" style="background:linear-gradient(135deg,#ffb38a,#f5733c)"></i><div><b style="font-weight:500">Семьи 30–45</b><div class="sx-lbl" style="font-size:12px">новостройки, ремонт</div></div><span class="sx-chip" style="margin-left:auto;background:#ffe9f1;color:#F50F72">58%</span></div>
+      <div class="sx-row"><i class="sx-av" style="background:linear-gradient(135deg,#9bc4ff,#3f7cf0)"></i><div><b style="font-weight:500">Застройщики</b><div class="sx-lbl" style="font-size:12px">оптовые заказы</div></div><span class="sx-chip" style="margin-left:auto">27%</span></div>
+      <div class="sx-row"><i class="sx-av" style="background:linear-gradient(135deg,#b7e3a3,#4aa35a)"></i><div><b style="font-weight:500">Дачники</b><div class="sx-lbl" style="font-size:12px">сезонный спрос</div></div><span class="sx-chip" style="margin-left:auto">15%</span></div>
+    </div>
+  </div>
+  <div class="sx-card sx-comp" style="left:470px;top:380px;width:390px;height:300px;transform:rotate(-1.5deg)">
+    <div class="sx-lbl">Конкуренты: заявки в месяц</div>
+    <div style="margin-top:22px;display:flex;flex-direction:column;gap:16px;font-size:14px">
+      <div><div class="sx-row" style="justify-content:space-between"><span>Конкурент А</span><b style="font-weight:500" class="sx-val" data-v="320">320</b></div><div class="sx-bar" style="margin-top:7px"><div class="sx-bar sx-fill" data-w="72" style="width:72%;background:#c9c9d2"></div></div></div>
+      <div><div class="sx-row" style="justify-content:space-between"><span>Конкурент Б</span><b style="font-weight:500" class="sx-val" data-v="210">210</b></div><div class="sx-bar" style="margin-top:7px"><div class="sx-bar sx-fill" data-w="48" style="width:48%;background:#c9c9d2"></div></div></div>
+      <div><div class="sx-row" style="justify-content:space-between"><span class="sx-pink" style="font-weight:600">Наш прогноз</span><b class="sx-pink sx-val" style="font-weight:600" data-v="440">440</b></div><div class="sx-bar" style="margin-top:7px"><div class="sx-bar sx-fill" data-w="96" style="width:96%;background:#F50F72"></div></div></div>
+    </div>
+  </div>
+  <div class="sx-sticky" style="left:330px;top:560px;width:170px;background:#ffe36e;transform:rotate(6deg)">Боль: долго ждать замерщика</div>
+  <div class="sx-sticky" style="left:600px;top:690px;width:190px;background:#ffc2da;transform:rotate(-4deg)">Оффер: замер завтра — бесплатно</div>
+</div></template>
+  <template id="scene2"><div class="sx-sc" data-scene="2" style="background:radial-gradient(90% 80% at 80% 0%,#eef2f8,#d9e0ea 75%)">
+  <div class="sx-grid"></div>
+  <svg class="sx-flow" style="position:absolute;inset:0" width="937" height="800"><path d="M300 250 C360 250 360 200 420 200" stroke="#F50F72" stroke-width="2.5" fill="none" stroke-dasharray="6 6"/><path d="M660 330 C700 390 640 430 690 470" stroke="#F50F72" stroke-width="2.5" fill="none" stroke-dasharray="6 6"/><circle cx="420" cy="200" r="5" fill="#F50F72"/><circle cx="690" cy="470" r="5" fill="#F50F72"/></svg>
+  <div class="sx-card" style="left:60px;top:110px;width:250px;height:330px;padding:16px">
+    <div class="sx-lbl">01 · Главная</div>
+    <div style="margin-top:12px;height:14px;width:60%;background:#dfe3ea;border-radius:4px" class="sx-sk"></div>
+    <div style="margin-top:14px;height:26px;width:90%;background:#c7ceda;border-radius:5px" class="sx-sk"></div>
+    <div style="margin-top:8px;height:26px;width:70%;background:#c7ceda;border-radius:5px" class="sx-sk"></div>
+    <div style="margin-top:14px;height:30px;width:44%;background:#F50F72;border-radius:8px"></div>
+    <div style="margin-top:16px;height:110px;border-radius:10px;background:repeating-linear-gradient(45deg,#eef1f5 0 10px,#e3e7ee 10px 20px)" class="sx-sk"></div>
+  </div>
+  <div class="sx-card" style="left:420px;top:80px;width:300px;height:250px;padding:16px">
+    <div class="sx-lbl">02 · Каталог услуг</div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="height:80px;border-radius:10px;background:#e3e7ee" class="sx-sk"></div><div style="height:80px;border-radius:10px;background:#e3e7ee" class="sx-sk"></div>
+      <div style="height:80px;border-radius:10px;background:#e3e7ee" class="sx-sk"></div><div style="height:80px;border-radius:10px;background:#e3e7ee" class="sx-sk"></div></div>
+    <div style="margin-top:10px;height:12px;width:50%;background:#dfe3ea;border-radius:4px" class="sx-sk"></div>
+  </div>
+  <div class="sx-card sx-form" style="left:560px;top:470px;width:300px;height:230px;padding:16px">
+    <div class="sx-lbl">03 · Заявка</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+      <div class="sx-in" data-t="Анна"></div><div class="sx-in" data-t="+7 900 123-45-67"></div>
+      <div style="height:38px;border-radius:9px;background:#F50F72;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:600">Вызвать замерщика</div></div>
+  </div>
+  <div class="sx-card sx-flowcard" style="left:90px;top:500px;width:400px;height:210px">
+    <div class="sx-lbl">Сценарий пользователя</div>
+    <div style="margin-top:20px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500">
+      <span class="sx-chip">Реклама</span>→<span class="sx-chip">Главная</span>→<span class="sx-chip">Услуга</span>→<span class="sx-chip" style="background:#F50F72;color:#fff">Заявка</span></div>
+    <div class="sx-row" style="margin-top:22px;font-size:13px"><span class="sx-lbl" style="font-size:13px">Экранов в прототипе</span><b style="margin-left:auto;font-size:22px;font-weight:500">14</b></div>
+  </div>
+  <div class="sx-cursor sx-follow" style="left:380px;top:300px"><svg viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#3f7cf0" stroke="#fff" stroke-width="1.5"/></svg><span style="background:#3f7cf0">Проектировщик</span></div>
+</div></template>
+  <template id="scene3"><div class="sx-sc" data-scene="3" style="background:radial-gradient(100% 90% at 10% 100%,#ffd9e8,#f4eef7 55%,#ece9f5)">
+  <div class="sx-card" style="left:70px;top:90px;width:470px;height:420px;padding:0;overflow:hidden">
+    <div class="sx-hero" style="height:260px;padding:26px;color:#fff">
+      <div class="sx-row" style="justify-content:space-between;font-size:12px;font-weight:600"><span>ОКНА·ПРО</span><span style="opacity:.8">Каталог&nbsp;&nbsp;Цены&nbsp;&nbsp;Контакты</span></div>
+      <div style="margin-top:40px;font-size:40px;line-height:.95;font-weight:500;width:330px">Тёплые окна за&nbsp;3&nbsp;дня</div>
+      <span style="display:inline-block;margin-top:18px;padding:10px 16px;border-radius:12px;background:#fff;color:#F50F72;font-size:13px;font-weight:600">Замер бесплатно</span>
+    </div>
+    <div style="padding:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="height:100px;border-radius:12px;background:#f4f1f6"></div><div style="height:100px;border-radius:12px;background:#f4f1f6"></div><div style="height:100px;border-radius:12px;background:#f4f1f6"></div></div>
+  </div>
+  <div class="sx-card" style="left:570px;top:70px;width:290px;height:250px">
+    <div class="sx-lbl">Типографика</div>
+    <div class="sx-aa" style="font-size:110px;line-height:1;font-weight:500;letter-spacing:-.06em;margin-top:6px">Aa</div>
+    <div class="sx-row" style="justify-content:space-between;font-size:13px;margin-top:8px"><span class="sx-aaname">Vela Sans Medium</span><span class="sx-lbl" style="font-size:13px">46 / 100%</span></div>
+  </div>
+  <div class="sx-card" style="left:570px;top:350px;width:290px;height:150px">
+    <div class="sx-lbl">Палитра</div>
+    <div class="sx-row" style="margin-top:18px;gap:12px"><i class="sx-sw" data-c="#F50F72" style="width:44px;height:44px;border-radius:12px;background:#F50F72"></i><i class="sx-sw" data-c="#111" style="width:44px;height:44px;border-radius:12px;background:#111"></i><i class="sx-sw" data-c="#FFF4F8" style="width:44px;height:44px;border-radius:12px;background:#FFF4F8;border:1px solid #eee"></i><i class="sx-sw" data-c="#9b8cff" style="width:44px;height:44px;border-radius:12px;background:#9b8cff"></i><i class="sx-sw" data-c="#ffd166" style="width:44px;height:44px;border-radius:12px;background:#ffd166"></i></div>
+  </div>
+  <div class="sx-card" style="left:120px;top:545px;width:420px;height:190px">
+    <div class="sx-lbl">Варианты оффера</div>
+    <div style="margin-top:14px;font-size:16px;line-height:1.5">
+      <div style="text-decoration:line-through;opacity:.35">Качественные окна от производителя</div>
+      <div style="text-decoration:line-through;opacity:.35">Окна по доступным ценам</div>
+      <div class="sx-row"><span class="sx-check"></span><b style="font-weight:500">Тёплые окна за 3 дня — замер бесплатно</b></div></div>
+  </div>
+  <div class="sx-card sx-btns" style="left:590px;top:530px;width:250px;height:200px;padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div class="sx-lbl">Компоненты</div>
+    <div style="height:40px;border-radius:12px;background:#111;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:600">Обсудить проект</div>
+    <div style="height:40px;border-radius:12px;background:#F50F72;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:600">Оставить заявку</div>
+    <div style="height:40px;border-radius:40px;border:1.5px solid #ddd;display:grid;place-items:center;font-size:13px;font-weight:500">Быстрый запуск</div>
+  </div>
+  <div class="sx-cursor sx-follow" style="left:470px;top:330px"><svg viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="#F50F72" stroke="#fff" stroke-width="1.5"/></svg><span style="background:#F50F72">Дизайнер</span></div>
+</div></template>
+  <template id="scene4"><div class="sx-sc sx-dark" data-scene="4" style="background:radial-gradient(90% 80% at 80% 10%,#2a1030,#14151b 60%,#0e0f13)">
+  <div class="sx-card sx-code" style="left:60px;top:90px;width:500px;height:430px;padding:0;overflow:hidden">
+    <div class="sx-row" style="height:40px;padding:0 16px;background:#16181f;gap:7px"><i style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></i><i style="width:11px;height:11px;border-radius:50%;background:#febc2e"></i><i style="width:11px;height:11px;border-radius:50%;background:#28c840"></i><span style="margin-left:12px;font-size:12px;opacity:.5">form.js</span></div>
+    <pre style="padding:20px 22px;font:500 14px/1.75 'DejaVu Sans Mono',monospace;letter-spacing:0;color:#c9ccd6;white-space:pre"><span class="sx-ln"><span style="color:#6b7080">// заявка с сайта → CRM и Telegram</span>
+</span><span class="sx-ln"><span style="color:#ff79c6">async function</span> <span style="color:#8be9fd">sendLead</span>(form) {
+</span><span class="sx-ln">  <span style="color:#ff79c6">const</span> lead = <span style="color:#8be9fd">collect</span>(form);
+</span><span class="sx-ln">  <span style="color:#ff79c6">await</span> crm.<span style="color:#8be9fd">create</span>(lead);
+</span><span class="sx-ln">  <span style="color:#ff79c6">await</span> telegram.<span style="color:#8be9fd">notify</span>(<span style="color:#f1fa8c">'Новая заявка'</span>);
+</span><span class="sx-ln">  metrika.<span style="color:#8be9fd">goal</span>(<span style="color:#f1fa8c">'lead'</span>);
+</span><span class="sx-ln">  <span style="color:#ff79c6">return</span> { ok: <span style="color:#bd93f9">true</span> };
+</span><span class="sx-ln">}
+</span></pre>
+  </div>
+  <svg style="position:absolute;inset:0" width="937" height="800"><defs><filter id="gl"><feGaussianBlur stdDeviation="3"/></filter></defs>
+    <g class="sx-pulse" stroke="#F50F72" stroke-width="2.5" fill="none"><path d="M560 250 C620 250 620 150 680 150"/><path d="M560 300 C630 300 630 330 680 330"/><path d="M560 350 C620 350 620 510 680 510"/></g>
+    <g stroke="#F50F72" stroke-width="7" fill="none" opacity=".35" filter="url(#gl)"><path d="M560 250 C620 250 620 150 680 150"/><path d="M560 300 C630 300 630 330 680 330"/><path d="M560 350 C620 350 620 510 680 510"/></g></svg>
+  <div class="sx-card sx-node" data-p="0" style="left:680px;top:105px;width:200px;height:92px;padding:18px"><div class="sx-lbl">CRM</div><div class="sx-h" style="font-size:18px">Сделка создана</div></div>
+  <div class="sx-card sx-node" data-p="1" style="left:680px;top:285px;width:200px;height:92px;padding:18px"><div class="sx-lbl">Telegram</div><div class="sx-h" style="font-size:18px">Уведомление</div></div>
+  <div class="sx-card sx-node" data-p="2" style="left:680px;top:465px;width:200px;height:92px;padding:18px"><div class="sx-lbl">Метрика</div><div class="sx-h" style="font-size:18px">Цель «lead»</div></div>
+  <div class="sx-card sx-build" style="left:60px;top:560px;width:500px;height:150px">
+    <div class="sx-row" style="justify-content:space-between"><span class="sx-lbl">Сборка</span><span class="sx-chip sx-status" style="background:rgba(40,200,64,.15);color:#3ddc6a">● passed</span></div>
+    <div class="sx-row" style="margin-top:18px;gap:26px;font-size:14px"><div><div class="sx-lbl">Страниц</div><b style="font-size:26px;font-weight:500" class="sx-val" data-v="14">14</b></div><div><div class="sx-lbl">Форм</div><b style="font-size:26px;font-weight:500" class="sx-val" data-v="3">3</b></div><div><div class="sx-lbl">Интеграций</div><b style="font-size:26px;font-weight:500" class="sx-val" data-v="5">5</b></div><div><div class="sx-lbl">SEO</div><b style="font-size:26px;font-weight:500" class="sx-pink">ok</b></div></div>
+  </div>
+</div></template>
+  <template id="scene5"><div class="sx-sc" data-scene="5" style="background:radial-gradient(90% 80% at 50% 0%,#f3f4f7,#dfe2e8 70%)">
+  <div class="sx-grid"></div>
+  <div class="sx-dev" style="position:absolute;left:90px;top:120px;width:560px;height:370px;border-radius:22px;background:#15161b;padding:14px;box-shadow:0 30px 70px rgba(20,20,40,.25)">
+    <div style="width:100%;height:100%;border-radius:12px;overflow:hidden;background:#fff">
+      <div class="sx-row" style="height:34px;padding:0 12px;background:#eceef1;gap:6px"><i style="width:9px;height:9px;border-radius:50%;background:#ff5f57"></i><i style="width:9px;height:9px;border-radius:50%;background:#febc2e"></i><i style="width:9px;height:9px;border-radius:50%;background:#28c840"></i><span style="margin-left:12px;padding:4px 14px;border-radius:8px;background:#fff;font-size:11px;font-weight:500"><span style="color:#28a745">🔒</span> okna-pro.ru</span></div>
+      <div style="height:190px;background:radial-gradient(80% 90% at 70% 20%,#ff8fbf,#F50F72 45%,#6c0b3a);padding:22px;color:#fff"><div class="sx-head" style="font-size:32px;line-height:.95;font-weight:500;width:260px">Тёплые окна за&nbsp;3&nbsp;дня</div><span style="display:inline-block;margin-top:14px;padding:8px 14px;border-radius:10px;background:#fff;color:#F50F72;font-size:12px;font-weight:600">Замер бесплатно</span></div>
+      <div style="padding:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><div style="height:70px;border-radius:10px;background:#f4f1f6"></div><div style="height:70px;border-radius:10px;background:#f4f1f6"></div><div style="height:70px;border-radius:10px;background:#f4f1f6"></div></div>
+    </div></div>
+  <div class="sx-dev" style="position:absolute;left:600px;top:250px;width:170px;height:340px;border-radius:30px;background:#15161b;padding:9px;box-shadow:0 30px 60px rgba(20,20,40,.3)">
+    <div style="width:100%;height:100%;border-radius:22px;overflow:hidden;background:#fff">
+      <div style="height:190px;background:radial-gradient(80% 90% at 70% 20%,#ff8fbf,#F50F72 45%,#6c0b3a);padding:16px;color:#fff"><div class="sx-head" style="margin-top:30px;font-size:24px;line-height:.95;font-weight:500">Тёплые окна за&nbsp;3&nbsp;дня</div></div>
+      <div style="padding:12px;display:flex;flex-direction:column;gap:8px"><div style="height:36px;border-radius:9px;background:#f4f1f6"></div><div style="height:36px;border-radius:9px;background:#F50F72"></div></div></div></div>
+  <div class="sx-card sx-tests" style="left:90px;top:540px;width:360px;height:190px">
+    <div class="sx-row" style="justify-content:space-between"><span class="sx-lbl">Тесты</span><b style="font-weight:600;color:#1aa35b" class="sx-tcount">24 / 24</b></div>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;font-size:14px">
+      <div class="sx-row"><span class="sx-check sx-t" style="background:#1aa35b"></span>Формы отправляют заявки</div>
+      <div class="sx-row"><span class="sx-check sx-t" style="background:#1aa35b"></span>Адаптив: 12 устройств</div>
+      <div class="sx-row"><span class="sx-check sx-t" style="background:#1aa35b"></span>Цели Метрики срабатывают</div></div>
+  </div>
+  <div class="sx-card sx-speed" style="left:690px;top:90px;width:190px;height:130px;padding:18px">
+    <div class="sx-lbl">Скорость</div>
+    <div class="sx-row" style="margin-top:10px"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" stroke="#e8f6ee" stroke-width="7" fill="none"/><circle cx="32" cy="32" r="27" stroke="#1aa35b" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="166 170" transform="rotate(-90 32 32)" class="sx-ring"/><text x="32" y="38" text-anchor="middle" font-size="17" font-weight="600" fill="#1aa35b" font-family="Vela Sans" class="sx-ringv">98</text></svg><span style="font-size:13px;line-height:1.3">из 100<br><span class="sx-lbl" style="font-size:12px">PageSpeed</span></span></div>
+  </div>
+  <div class="sx-card" style="left:500px;top:640px;width:330px;height:90px;padding:18px">
+    <div class="sx-row"><i class="sx-live" style="width:12px;height:12px;border-radius:50%;background:#1aa35b"></i><div><b style="font-weight:500">Опубликовано</b><div class="sx-lbl" style="font-size:12px">okna-pro.ru · сегодня, 12:00</div></div><span class="sx-chip" style="margin-left:auto;background:#F50F72;color:#fff">Live</span></div>
+  </div>
+</div></template>
+<script src="script.js?v=scenes-1"></script>
 </body>
 </html>

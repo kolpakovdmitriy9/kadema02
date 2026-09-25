@@ -830,3 +830,80 @@ body {
 .modal.is-done .modal__form { display: none; }
 .modal.is-done .modal__done { display: block; }
 .modal__done p { margin-top: 14px; font-size: 16px; line-height: 140%; color: rgba(0,0,0,.55); }
+
+/* ============ ЖИВЫЕ СЦЕНЫ ЭТАПОВ (вместо картинок) ============ */
+/* сцена 937×800 по центру слайда; пока текст не выехал (--si < 1), растянута на всю ширину — как было с картинкой */
+.sx-sc {
+  position: absolute; left: 50%; top: 50%; width: 937px; height: 800px; overflow: hidden;
+  transform: translate(-50%, -50%) scale(calc(1 + 0.5368 * (1 - var(--si))));
+  letter-spacing: -0.03em; color: #15151a;
+}
+.sx-sc.is-follow { cursor: none; }
+.sx-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.045) 1px, transparent 1px); background-size: 40px 40px; }
+.sx-card {
+  position: absolute; background: #fff; border-radius: 22px; padding: 24px; color: #15151a;
+  box-shadow: 0 1px 2px rgba(20,20,40,.06), 0 18px 50px rgba(20,20,40,.14);
+  transition: translate .5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow .5s;
+}
+.sx-card:hover { translate: 0 -6px; box-shadow: 0 1px 2px rgba(20,20,40,.06), 0 28px 60px rgba(20,20,40,.2); }
+.sx-dark .sx-card { background: #1d2029; color: #e9ebf2; box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 24px 60px rgba(0,0,0,.45); }
+.sx-lbl { font-size: 13px; font-weight: 500; opacity: .5; }
+.sx-h { font-size: 22px; font-weight: 500; margin-top: 6px; }
+.sx-row { display: flex; align-items: center; gap: 10px; }
+.sx-chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 30px; font-size: 13px; font-weight: 500; background: #f2f2f4; transition: background .3s, color .3s; }
+.sx-bar { height: 10px; border-radius: 6px; background: #ececf0; }
+.sx-pink { color: #F50F72; }
+.sx-av { width: 34px; height: 34px; border-radius: 50%; flex: none; }
+.sx-check, .sx-box { width: 20px; height: 20px; border-radius: 6px; flex: none; display: grid; place-items: center; transition: background .25s, border-color .25s; }
+.sx-check { background: #F50F72; }
+.sx-box { border: 2px solid #d6d6dc; }
+.sx-check::after, .sx-box.is-on::after { content: ""; width: 9px; height: 5px; border-left: 2.4px solid #fff; border-bottom: 2.4px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+.sx-box.is-on { background: #F50F72; border-color: #F50F72; }
+.sx-cursor { position: absolute; width: 0; height: 0; z-index: 5; pointer-events: none; }
+.sx-cursor svg { position: absolute; left: 0; top: 0; width: 22px; height: 22px; }
+.sx-cursor span { position: absolute; left: 18px; top: 18px; padding: 5px 10px; border-radius: 8px 14px 14px 14px; font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; }
+.sx-sticky { position: absolute; padding: 18px; border-radius: 6px; font-size: 16px; font-weight: 500; line-height: 1.2; box-shadow: 0 14px 30px rgba(0,0,0,.14); transition: translate .45s cubic-bezier(0.22, 1, 0.36, 1), scale .45s cubic-bezier(0.22, 1, 0.36, 1); }
+.sx-sticky:hover { translate: 0 -10px; scale: 1.05; }
+/* 1: бары конкурентов переезжают, строки аудитории подсвечиваются */
+.sx-fill { transition: width .9s cubic-bezier(0.22, 1, 0.36, 1); }
+.sx-aud .sx-row { transition: translate .35s cubic-bezier(0.22, 1, 0.36, 1); }
+.sx-aud .sx-row:hover { translate: 6px 0; }
+.sx-aud .sx-row:hover .sx-chip { background: #F50F72; color: #fff; }
+/* 2: скелетон-прелоадер, пунктир течёт, форма заполняется */
+.sx-card:hover .sx-sk {
+  background: linear-gradient(90deg, #e1e5ec 0%, #f6f8fb 45%, #e1e5ec 90%) !important; background-size: 220% 100% !important;
+  animation: sx-shim 1.1s linear infinite;
+}
+@keyframes sx-shim { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+.sx-flow path[stroke-dasharray] { animation: sx-dash 1s linear infinite; }
+@keyframes sx-dash { to { stroke-dashoffset: -24; } }
+.sx-in { height: 34px; border-radius: 9px; border: 2px solid #dfe3ea; padding: 0 10px; display: flex; align-items: center; font-size: 13px; font-weight: 500; transition: border-color .3s; }
+.sx-form:hover .sx-in { border-color: #c9cfda; }
+.sx-in.is-typing::after { content: ""; width: 1.5px; height: 15px; margin-left: 1px; background: #F50F72; animation: sx-caret .7s steps(1) infinite; }
+@keyframes sx-caret { 50% { opacity: 0; } }
+.sx-flowcard:hover .sx-chip { animation: sx-chip .5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.sx-flowcard:hover span.sx-chip:nth-of-type(2) { animation-delay: .15s; }
+.sx-flowcard:hover span.sx-chip:nth-of-type(3) { animation-delay: .3s; }
+.sx-flowcard:hover span.sx-chip:nth-of-type(4) { animation-delay: .45s; }
+@keyframes sx-chip { 0% { transform: translateY(0); } 40% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+/* 3: палитра перекрашивает первый экран, кнопки реагируют */
+.sx-hero {
+  background: radial-gradient(80% 90% at 70% 20%, rgba(255,255,255,.35), rgba(255,255,255,0) 55%), linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.35));
+  background-color: var(--hc, #F50F72); transition: background-color .5s ease, color .5s ease;
+}
+.sx-sw { cursor: pointer; transition: transform .3s cubic-bezier(0.22, 1, 0.36, 1); }
+.sx-sw:hover { transform: scale(1.18) translateY(-3px); }
+.sx-btns > div { transition: transform .3s cubic-bezier(0.22, 1, 0.36, 1), filter .3s; }
+.sx-btns > div:hover { transform: scale(1.04); filter: brightness(1.08); }
+/* 4: строки кода подсвечиваются, по связям бегут импульсы */
+.sx-ln { display: block; margin: 0 -22px; padding: 0 22px; transition: background .3s; }
+.sx-ln.is-hl { background: rgba(245,15,114,.14); }
+.sx-pulse path { stroke-dasharray: 18 16; animation: sx-flowpulse 1.3s linear infinite; transition: stroke-width .3s; }
+.sx-pulse path.is-hot { stroke-width: 4.5; animation-duration: .6s; }
+@keyframes sx-flowpulse { to { stroke-dashoffset: -68; } }
+/* 5: пульс «Live», кольцо скорости */
+.sx-live { animation: sx-live 1.6s ease-out infinite; }
+@keyframes sx-live { 0% { box-shadow: 0 0 0 0 rgba(26,163,91,.45); } 100% { box-shadow: 0 0 0 12px rgba(26,163,91,0); } }
+.sx-ring { transition: stroke-dasharray 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
+.sx-head { transition: opacity .25s, transform .35s cubic-bezier(0.22, 1, 0.36, 1); }
+.sx-head.is-out { opacity: 0; transform: translateY(8px); }

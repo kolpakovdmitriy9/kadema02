@@ -573,8 +573,14 @@
   const stepsTitle = document.getElementById('stepsTitle');
   const stepsText = document.getElementById('stepsText');
   const SLIDE_BG = ['#c9cdd3', '#bfc6cf', '#cfc9c2', '#c3cbc4', '#cbc4cc'];
+  // слайды — живые сцены из <template id="sceneN"> (с интерактивом); картинка step-5.jpg
+  // остаётся только для перелёта в цветок
   stepsSlides.innerHTML = STEPS.map((_, i) =>
-    `<div class="steps__slide" style="top:${i * 100}%;background-image:url(images/step-${i + 1}.jpg),linear-gradient(160deg,${SLIDE_BG[i]},#9aa1aa)"></div>`).join('');
+    `<div class="steps__slide" style="top:${i * 100}%;background:${SLIDE_BG[i]}"></div>`).join('');
+  [...stepsSlides.children].forEach((sl, i) => {
+    const t = document.getElementById('scene' + (i + 1));
+    if (t) sl.appendChild(t.content.cloneNode(true));
+  });
   stepsDots.innerHTML = STEPS.map(() => '<i></i>').join('');
   let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0, numT = 0, iconT = 0, stepsHoldUntil = 0;
   const STEPS_IN_MS = 1100;       // = transition --si в styles.css: пока выезжает текст, дальше не листаем
@@ -677,6 +683,155 @@
   }, { passive: false });
   setStep(0);
 
+  /* ---------- интерактив в сценах этапов (при наведении) ---------- */
+  const OUTX = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  // плавный пересчёт числа к целевому значению
+  function countTo(el, to, ms = 800) {
+    const from = parseFloat(el.textContent) || 0, t0 = performance.now();
+    cancelAnimationFrame(el._c);
+    const tick = (now) => {
+      const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(from + (to - from) * e);
+      if (k < 1) el._c = requestAnimationFrame(tick);
+    };
+    el._c = requestAnimationFrame(tick);
+  }
+  const sceneOf = (n) => stepsSlides.querySelector(`[data-scene="${n}"]`);
+  const hover = (el, on, off) => { if (!el) return; el.addEventListener('mouseenter', on); el.addEventListener('mouseleave', off); };
+
+  // курсор «Проектировщик» / «Дизайнер» заменяет настоящий и ведётся за мышью
+  document.querySelectorAll('.sx-follow').forEach((cur) => {
+    const sc = cur.closest('.sx-sc');
+    const home = { x: parseFloat(cur.style.left), y: parseFloat(cur.style.top) };
+    let x = home.x, y = home.y, tx = x, ty = y, raf = 0;
+    const tick = () => {
+      x += (tx - x) * 0.35; y += (ty - y) * 0.35;
+      cur.style.left = x.toFixed(1) + 'px'; cur.style.top = y.toFixed(1) + 'px';
+      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(tick) : 0;
+    };
+    sc.addEventListener('pointermove', (e) => {
+      const r = sc.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width * 937; ty = (e.clientY - r.top) / r.height * 800;
+      sc.classList.add('is-follow');
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    sc.addEventListener('pointerleave', () => { sc.classList.remove('is-follow'); tx = home.x; ty = home.y; if (!raf) raf = requestAnimationFrame(tick); });
+  });
+
+  // 1. Анализ: бары конкурентов переезжают, цифры — под длину бара; бриф дозаполняется
+  (() => {
+    const sc = sceneOf(1); if (!sc) return;
+    const comp = sc.querySelector('.sx-comp');
+    const fills = [...comp.querySelectorAll('.sx-fill')], vals = [...comp.querySelectorAll('.sx-val')];
+    let tm = 0;
+    const shuffle = () => {
+      fills.forEach((f, i) => {
+        const w = i === 2 ? 70 + Math.random() * 28 : 20 + Math.random() * 60;
+        f.style.width = w.toFixed(1) + '%';
+        countTo(vals[i], Math.round(w * 4.6));
+      });
+      tm = setTimeout(shuffle, 1400);
+    };
+    hover(comp, shuffle, () => {
+      clearTimeout(tm);
+      fills.forEach((f, i) => { f.style.width = f.dataset.w + '%'; countTo(vals[i], +vals[i].dataset.v); });
+    });
+    const boxes = [...sc.querySelectorAll('.sx-brief .sx-box')];
+    let bt = [];
+    hover(sc.querySelector('.sx-brief'),
+      () => { bt = boxes.map((b, i) => setTimeout(() => b.classList.add('is-on'), 250 + i * 280)); },
+      () => { bt.forEach(clearTimeout); boxes.forEach((b) => b.classList.remove('is-on')); });
+  })();
+
+  // 2. Прототип: форма заполняется сама
+  (() => {
+    const sc = sceneOf(2); if (!sc) return;
+    const ins = [...sc.querySelectorAll('.sx-in')];
+    let tt = [];
+    hover(sc.querySelector('.sx-form'), () => {
+      let delay = 200;
+      ins.forEach((el) => {
+        const text = el.dataset.t;
+        tt.push(setTimeout(() => el.classList.add('is-typing'), delay));
+        for (let k = 1; k <= text.length; k++) { tt.push(setTimeout(() => { el.textContent = text.slice(0, k); }, delay + k * 55)); }
+        delay += text.length * 55 + 200;
+        tt.push(setTimeout(() => el.classList.remove('is-typing'), delay - 100));
+      });
+    }, () => { tt.forEach(clearTimeout); tt = []; ins.forEach((el) => { el.textContent = ''; el.classList.remove('is-typing'); }); });
+  })();
+
+  // 3. Дизайн: палитра перекрашивает первый экран, «Aa» перебирает начертания
+  (() => {
+    const sc = sceneOf(3); if (!sc) return;
+    const hero = sc.querySelector('.sx-hero');
+    const LIGHT = ['#FFF4F8', '#ffd166'];
+    sc.querySelectorAll('.sx-sw').forEach((sw) => sw.addEventListener('mouseenter', () => {
+      hero.style.setProperty('--hc', sw.dataset.c);
+      hero.style.color = LIGHT.includes(sw.dataset.c) ? '#15151a' : '#fff';
+    }));
+    const aa = sc.querySelector('.sx-aa'), name = sc.querySelector('.sx-aaname');
+    const W = [[400, 'Regular'], [500, 'Medium'], [600, 'SemiBold']];
+    let ai = 1, at = 0;
+    hover(aa.parentElement, () => {
+      const step = () => { ai = (ai + 1) % 3; aa.style.fontWeight = W[ai][0]; name.textContent = 'Vela Sans ' + W[ai][1];
+        aa.animate([{ transform: 'scale(.94)' }, { transform: 'scale(1)' }], { duration: 300, easing: OUTX }); at = setTimeout(step, 520); };
+      step();
+    }, () => { clearTimeout(at); ai = 1; aa.style.fontWeight = 500; name.textContent = 'Vela Sans Medium'; });
+  })();
+
+  // 4. Сборка: строки кода подсвечиваются по очереди, узлы усиливают поток, сборка перезапускается
+  (() => {
+    const sc = sceneOf(4); if (!sc) return;
+    const lns = [...sc.querySelectorAll('.sx-ln')];
+    let lt = [];
+    hover(sc.querySelector('.sx-code'), () => {
+      const run = () => {
+        lns.forEach((l, i) => lt.push(setTimeout(() => { lns.forEach((x) => x.classList.remove('is-hl')); l.classList.add('is-hl'); }, i * 160)));
+        lt.push(setTimeout(run, lns.length * 160 + 500));
+      };
+      run();
+    }, () => { lt.forEach(clearTimeout); lt = []; lns.forEach((x) => x.classList.remove('is-hl')); });
+    const paths = [...sc.querySelectorAll('.sx-pulse path')];
+    sc.querySelectorAll('.sx-node').forEach((n) => hover(n,
+      () => paths[+n.dataset.p]?.classList.add('is-hot'), () => paths[+n.dataset.p]?.classList.remove('is-hot')));
+    const build = sc.querySelector('.sx-build'), status = sc.querySelector('.sx-status'), vals = [...build.querySelectorAll('.sx-val')];
+    let bt = 0;
+    hover(build, () => {
+      status.textContent = '◌ running'; status.style.background = 'rgba(255,190,40,.15)'; status.style.color = '#ffc23d';
+      vals.forEach((v) => { v.textContent = '0'; });
+      bt = setTimeout(() => {
+        status.textContent = '● passed'; status.style.background = ''; status.style.color = '';
+        vals.forEach((v) => countTo(v, +v.dataset.v, 700));
+      }, 900);
+    }, () => { clearTimeout(bt); status.textContent = '● passed'; status.style.background = ''; status.style.color = ''; vals.forEach((v) => { v.textContent = v.dataset.v; }); });
+  })();
+
+  // 5. Запуск: кольцо скорости набирается, тесты перепроходят, заголовок на устройствах меняется
+  (() => {
+    const sc = sceneOf(5); if (!sc) return;
+    const ring = sc.querySelector('.sx-ring'), rv = sc.querySelector('.sx-ringv');
+    hover(sc.querySelector('.sx-speed'), () => {
+      ring.style.transition = 'none'; ring.setAttribute('stroke-dasharray', '0 170'); rv.textContent = '0';
+      void ring.getBoundingClientRect(); ring.style.transition = '';
+      requestAnimationFrame(() => { ring.setAttribute('stroke-dasharray', '166 170'); countTo(rv, 98, 1100); });
+    }, () => {});
+    const checks = [...sc.querySelectorAll('.sx-tests .sx-check')], cnt = sc.querySelector('.sx-tcount');
+    let tt = [];
+    hover(sc.querySelector('.sx-tests'), () => {
+      checks.forEach((c) => { c.style.background = '#d6d6dc'; });
+      cnt.textContent = '0 / 24';
+      checks.forEach((c, i) => tt.push(setTimeout(() => { c.style.background = '#1aa35b'; cnt.textContent = `${8 * (i + 1)} / 24`; }, 300 + i * 350)));
+    }, () => { tt.forEach(clearTimeout); tt = []; checks.forEach((c) => { c.style.background = '#1aa35b'; }); cnt.textContent = '24 / 24'; });
+    const heads = [...sc.querySelectorAll('.sx-head')];
+    const H = ['Тёплые окна за 3 дня', 'Замер завтра — бесплатно', 'Рассрочка 0% на 12 мес'];
+    let hi = 0, ht = 0;
+    const swap = (to) => { heads.forEach((h) => h.classList.add('is-out')); setTimeout(() => { heads.forEach((h) => { h.textContent = H[to]; h.classList.remove('is-out'); }); }, 250); };
+    sc.querySelectorAll('.sx-dev').forEach((d) => hover(d, () => {
+      const loop = () => { hi = (hi + 1) % H.length; swap(hi); ht = setTimeout(loop, 1500); };
+      loop();
+    }, () => { clearTimeout(ht); if (hi) { hi = 0; swap(0); } }));
+  })();
+
   /* ---------- экономика проекта: лепестки крутятся ---------- */
   const ECO = [
     'быстрее формируем структуру',
@@ -706,7 +861,7 @@
   const stepsMedia = stepsTrack.querySelector('.steps__media');
   const stepsInfo = stepsTrack.querySelector('.steps__info');
   // Фото верхнего лепестка — последнее фото этапов: оно и перелетает
-  const lastSlide = stepsSlides.lastElementChild.style.backgroundImage;
+  const lastSlide = 'url(images/step-5.jpg)';
   // Карточка в полёте переворачивается: спереди фото этапов, сзади —
   // картинка верхнего лепестка, она и встаёт на место
   const ecoTop = 'url(images/eco-1.jpg),linear-gradient(160deg,#8d939c,#5d636c)';
