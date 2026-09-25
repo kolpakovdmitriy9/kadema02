@@ -861,7 +861,7 @@
     'точнее оцениваем бюджет',
   ];
   // орбита — овал под пропорции карточки (192×225): зазоры между соседями одинаковые
-  const ECO_RX = 300, ECO_RY = 350, ECO_K = ECO_RY / ECO_RX;
+  const ECO_RX = 315, ECO_RY = 372, ECO_K = ECO_RY / ECO_RX;
   const ECO_CATCH = 160;          // px (в макете): фото догоняет место уже после закрепления
   const ECO_BUILD = 60;           // px: последние лепестки долетают чуть позже фото
   const ECO_TURN = 520;           // px прокрутки на один шаг поворота (= styles.css)
@@ -914,12 +914,12 @@
   const ecoPull = () => parseFloat(eco.style.getPropertyValue('--eco-pull')) || 0;
   function fitEco() {
     ecoH = window.innerHeight / Z;
-    ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 926));
-    ecoY = Math.max(ecoH / 2, 30 + 463 * ecoS);
+    ecoS = Math.min(1, Math.max(0.88, (ecoH - 60) / 970));
+    ecoY = Math.max(ecoH / 2, 30 + 485 * ecoS);
     ecoStage.style.setProperty('--eco-s', ecoS.toFixed(3));
     ecoStage.style.setProperty('--eco-y', ecoY.toFixed(1) + 'px');
     // пустота под цветком — текст ниже подтягивается к нему
-    eco.style.setProperty('--eco-gap', (ecoH - ecoY - 463 * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
+    eco.style.setProperty('--eco-gap', (ecoH - ecoY - 485 * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
     // где низ закреплённого блока этапов (px макета от верха экрана) — на столько подтягиваем экономику
     const sh = stepsStage.offsetHeight;
     eco.style.setProperty('--eco-pull', (Math.max(0, (ecoH - sh) / 2) + sh).toFixed(1) + 'px');

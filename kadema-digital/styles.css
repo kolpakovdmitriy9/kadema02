@@ -635,7 +635,7 @@ body {
 .eco__stage { --eco-s: 1; --eco-y: 50%; position: sticky; top: 0; height: var(--vh); overflow-x: clip; overflow-y: visible; pointer-events: none; }
 .eco__row {
   position: absolute; left: 60px; right: 60px; z-index: 2;
-  top: calc(var(--eco-y) - 350px * var(--eco-s));          /* на уровне верхнего лепестка */
+  top: calc(var(--eco-y) - 372px * var(--eco-s));          /* на уровне верхнего лепестка */
   transform: translateY(-50%);
   display: flex; align-items: center; justify-content: space-between;
 }
