@@ -576,7 +576,7 @@
   stepsSlides.innerHTML = STEPS.map((_, i) =>
     `<div class="steps__slide" style="top:${i * 100}%;background-image:url(images/step-${i + 1}.jpg),linear-gradient(160deg,${SLIDE_BG[i]},#9aa1aa)"></div>`).join('');
   stepsDots.innerHTML = STEPS.map(() => '<i></i>').join('');
-  let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0;
+  let stepCur = -1, stepBusy = false, stepAcc = 0, stepAccT = 0, numT = 0;
 
   function setStep(i) {
     if (i === stepCur) return;
@@ -584,14 +584,28 @@
     stepCur = i;
     stepsSlides.style.transform = `translate3d(0, ${-i * 100}%, 0)`;
     [...stepsDots.children].forEach((d, k) => d.classList.toggle('is-on', k === i));
-    stepsNum.textContent = String(i + 1).padStart(2, '0');
+    const num = String(i + 1).padStart(2, '0');
+    if (first || !stepsNum.animate) stepsNum.textContent = num;
     stepsIcon.innerHTML = STEP_ICONS[i];
     stepsTitle.textContent = STEPS[i][0];
     stepsText.textContent = STEPS[i][1];
     if (!first && stepsTitle.animate) {
       const from = { opacity: 0, transform: 'translateY(20px)' }, to = { opacity: 1, transform: 'translateY(0)' };
       const opt = { duration: 700, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' };
-      stepsNum.animate([from, to], opt);
+      // номер: цифра гаснет → пустая капсула уезжает под иконку →
+      // выезжает обратно уже с новой цифрой
+      clearTimeout(numT);
+      stepsNum.getAnimations().forEach((a) => a.cancel());
+      const ink = '#F50F72', none = 'rgba(245,15,114,0)', hide = 'translateX(-58px)';
+      stepsNum.animate([
+        { color: ink, transform: 'none' },
+        { color: none, transform: 'none', offset: 0.2 },
+        { color: none, transform: hide, offset: 0.5 },
+        { color: none, transform: hide, offset: 0.56 },
+        { color: none, transform: 'none', offset: 0.85 },
+        { color: ink, transform: 'none' },
+      ], { duration: 1000, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' });
+      numT = setTimeout(() => { stepsNum.textContent = num; }, 530);   // цифра меняется, пока капсула спрятана
       stepsIcon.animate([{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1)' }], opt);
       stepsTitle.animate([from, to], { ...opt, delay: 60 });
       stepsText.animate([from, to], { ...opt, delay: 140 });
