@@ -498,7 +498,7 @@
           ['Раздел объектов', 'Карточки ЖК', 'Подбор квартир', 'Новости и акции', 'Ипотека и способы покупки', 'SEO и аналитика']],
       ] },
   ];
-  const chevron = '<svg viewBox="0 0 24 24"><path d="M6.4 8.3 12 13.9l5.6-5.6 1.4 1.4-7 7-7-7z"/></svg>';
+  const chevron = '<svg viewBox="0 0 24 24"><path d="M5.46394 8.54484L12.0047 15.0856L18.5454 8.54484C18.9359 8.15432 19.5691 8.15432 19.9596 8.54484C20.3501 8.93537 20.3501 9.56853 19.9596 9.95905L12.7118 17.2069C12.5242 17.3945 12.2699 17.4998 12.0047 17.4998C11.7395 17.4998 11.4851 17.3945 11.2976 17.2069L4.04973 9.95905C4.00091 9.91024 3.9582 9.85763 3.92159 9.80218C3.66531 9.41403 3.70802 8.88655 4.04973 8.54484C4.44025 8.15432 5.07342 8.15432 5.46394 8.54484Z"/></svg>';
   const priceDesc = document.getElementById('priceDesc');
   const priceRow = document.getElementById('priceRow');
   const priceList = document.getElementById('priceList');
@@ -860,8 +860,7 @@
     'раньше видим результат',
     'точнее оцениваем бюджет',
   ];
-  // орбита — овал под пропорции карточки (192×225): зазоры между соседями одинаковые
-  const ECO_RX = 315, ECO_RY = 372, ECO_K = ECO_RY / ECO_RX;
+  const ECO_R = 340;               // радиус цветка
   const ECO_CATCH = 160;          // px (в макете): фото догоняет место уже после закрепления
   const ECO_BUILD = 60;           // px: последние лепестки долетают чуть позже фото
   const ECO_TURN = 520;           // px прокрутки на один шаг поворота (= styles.css)
@@ -915,11 +914,11 @@
   function fitEco() {
     ecoH = window.innerHeight / Z;
     ecoS = 1;
-    ecoY = Math.max(ecoH / 2, 30 + 485 * ecoS);
+    ecoY = Math.max(ecoH / 2, 30 + (ECO_R + 113) * ecoS);
     ecoStage.style.setProperty('--eco-s', ecoS.toFixed(3));
     ecoStage.style.setProperty('--eco-y', ecoY.toFixed(1) + 'px');
     // пустота под цветком — текст ниже подтягивается к нему
-    eco.style.setProperty('--eco-gap', (ecoH - ecoY - 485 * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
+    eco.style.setProperty('--eco-gap', (ecoH - ecoY - (ECO_R + 113) * ecoS).toFixed(1) + 'px');   // < 0 — цветок выходит за низ
     // где низ закреплённого блока этапов (px макета от верха экрана) — на столько подтягиваем экономику
     const sh = stepsStage.offsetHeight;
     eco.style.setProperty('--eco-pull', (Math.max(0, (ecoH - sh) / 2) + sh).toFixed(1) + 'px');
@@ -941,14 +940,14 @@
   // Поворот — пошаговый, как в этапах: шаг после «усилия» колесом,
   // сам поворот доигрывает по времени и останавливается на лепестке
   let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0, ecoTurnT = 0;
-  // место лепестка на круге: угол сдвигается на 45° с каждым шагом, а сам лепесток
-  // поворачивается обратно — стоит вертикально (содержимое всегда ровно)
-  const petalBase = (k) => { const a = (k + ecoCur) * 45; return `scaleY(${ECO_K}) rotate(${a}deg) translateY(-${ECO_RX}px) rotate(${-a}deg) scaleY(${1 / ECO_K})`; };
+  // место лепестка на круге: лепесток развёрнут от центра, как у цветка;
+  // картинка лежит в карточке ровно и поворачивается вместе с ней
+  const petalBase = (k) => `rotate(${(k + ecoCur) * 45}deg) translateY(-${ECO_R}px)`;
   function setEcoStep(i) {
     if (i === ecoCur) return;
     ecoCur = i;
-    // лепестки едут по кругу на следующее место, но сами не поворачиваются —
-    // все стоят вертикально, как верхний; переезд — CSS-переходом (.is-turning)
+    // лепестки едут по кругу на следующее место, поворачиваясь вместе с ним;
+    // переезд — CSS-переходом (.is-turning)
     ecoFlower.classList.add('is-turning');
     clearTimeout(ecoTurnT);
     ecoTurnT = setTimeout(() => ecoFlower.classList.remove('is-turning'), ECO_MS + 50);
