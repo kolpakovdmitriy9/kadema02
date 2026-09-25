@@ -599,32 +599,30 @@
     if (!first && stepsTitle.animate) {
       const from = { opacity: 0, transform: 'translateY(20px)' }, to = { opacity: 1, transform: 'translateY(0)' };
       const opt = { duration: 700, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' };
-      // номер: цифра гаснет → пустая капсула резко уезжает под иконку →
-      // выстреливает обратно с новой цифрой и мягко доводится (ease-out expo)
+      // номер: розовая плашка с иконкой расширяется и накрывает цифру → пока
+      // её не видно, меняются цифра и иконка → плашка сжимается обратно
       clearTimeout(numT); clearTimeout(iconT);
-      stepsNum.getAnimations().forEach((a) => a.cancel());
+      const pill = stepsIcon.parentElement;
+      pill.getAnimations().forEach((a) => a.cancel());
       stepsIcon.getAnimations().forEach((a) => a.cancel());
-      const ink = '#F50F72', none = 'rgba(245,15,114,0)', hide = 'translateX(-58px)';
       const IN = 'cubic-bezier(0.7, 0, 0.84, 0)', OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
-      stepsNum.animate([
-        { color: ink, transform: 'none', easing: 'ease-in' },
-        { color: none, transform: 'none', offset: 0.14, easing: IN },
-        { color: none, transform: hide, offset: 0.42, easing: 'linear' },
-        { color: none, transform: hide, offset: 0.46, easing: OUT },
-        { color: none, transform: 'none', offset: 0.82, easing: 'ease-out' },
-        { color: ink, transform: 'none' },
-      ], { duration: 760 });
-      numT = setTimeout(() => { stepsNum.textContent = num; }, 330);   // цифра меняется, пока капсула спрятана
-      // иконка: коротко сжимается и гаснет → новая «выстреливает» с лёгким перелётом
+      const W = pill.offsetWidth, COVER = W + stepsNum.offsetWidth - 10;   // плашка + капсула − нахлёст
+      const M = -10, MC = M - (COVER - W);                            // отступ сжимается — капсула с цифрой не сдвигается
+      pill.animate([
+        { width: W + 'px', marginRight: M + 'px', easing: IN },
+        { width: COVER + 'px', marginRight: MC + 'px', offset: 0.34 },
+        { width: COVER + 'px', marginRight: MC + 'px', offset: 0.46, easing: OUT },
+        { width: W + 'px', marginRight: M + 'px' },
+      ], { duration: 820 });
+      // иконка гаснет на расширении, новая «выстреливает» в момент, когда плашка начинает сжиматься
+      stepsIcon.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(.5)', opacity: 0 }], { duration: 240, easing: IN, fill: 'forwards' });
       const icon = STEP_ICONS[i];
-      stepsIcon.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(.35)', opacity: 0 }],
-        { duration: 150, easing: IN, fill: 'forwards' });
+      numT = setTimeout(() => { stepsNum.textContent = num; }, 300);   // цифра под плашкой
       iconT = setTimeout(() => {
         stepsIcon.getAnimations().forEach((a) => a.cancel());
         stepsIcon.innerHTML = icon;
-        stepsIcon.animate([{ transform: 'scale(.35)', opacity: 0 }, { transform: 'scale(1.12)', opacity: 1, offset: 0.55 }, { transform: 'scale(1)', opacity: 1 }],
-          { duration: 460, easing: OUT });
-      }, 150);
+        stepsIcon.animate([{ transform: 'scale(.5)', opacity: 0 }, { transform: 'scale(1.12)', opacity: 1, offset: 0.55 }, { transform: 'scale(1)', opacity: 1 }], { duration: 440, easing: OUT });
+      }, 360);
       stepsTitle.animate([from, to], { ...opt, delay: 60 });
       stepsText.animate([from, to], { ...opt, delay: 140 });
     }
