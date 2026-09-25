@@ -28,6 +28,31 @@
     else if (y > lastY + 2) header.classList.add('is-hidden');
     else if (y < lastY - 2) header.classList.remove('is-hidden');
     lastY = y;
+    headerTone();
+  }
+  // Подложка шапки подстраивается под фон под ней: на светлом — заметно темнее,
+  // чтобы белое меню читалось. Фон берём у первого непрозрачного слоя под шапкой
+  const headerNav = header.querySelector('.header__nav');
+  function bgLuma(el) {
+    for (; el && el !== document.documentElement; el = el.parentElement) {
+      const cs = getComputedStyle(el);
+      const m = cs.backgroundColor.match(/[\d.]+/g);
+      if (m && (m[3] === undefined || +m[3] > 0.5)) return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) / 255;
+      if (cs.backgroundImage !== 'none' && !el.classList.contains('page')) return 0;   // картинка/градиент — считаем тёмным
+    }
+    return 1;
+  }
+  function headerTone() {
+    // точка — середина шапки в её видимом положении (даже если сейчас она спрятана)
+    const y = (parseFloat(getComputedStyle(header).top) + 39) * Z;
+    const r = headerNav.getBoundingClientRect();
+    let light = 0, n = 0;
+    for (const x of [r.left + 40, r.left + r.width / 2, window.innerWidth - 60]) {
+      const under = document.elementsFromPoint(x, y).find((el) => !header.contains(el));
+      if (!under) continue;
+      light += bgLuma(under) > 0.6 ? 1 : 0; n++;
+    }
+    if (n) header.classList.toggle('is-light', light / n >= 0.5);
   }
 
   /* ---------- «Как это работает» ----------
@@ -669,10 +694,7 @@
   }).join('');
   const petals = [...ecoFlower.children];
   petals[0].firstElementChild.style.backgroundImage = ecoTop;
-  // фото внутри лепестков поворачиваются обратно — всегда стоят ровно
-  function uprightPetals() {
-    petals.forEach((el, k) => { const a = (k + ecoCur) * 45; el.firstElementChild.style.transform = a ? `rotate(${-a}deg)` : ''; });
-  }
+
 
   // Цветок крупный: не мельче 0.88 от макета; если экран низкий — центр
   // опускается так, чтобы верхний лепесток (с фразой) был целиком виден,
@@ -708,12 +730,10 @@
   // Поворот — пошаговый, как в этапах: шаг после «усилия» колесом,
   // сам поворот доигрывает по времени и останавливается на лепестке
   let ecoCur = 0, ecoBusy = false, ecoAcc = 0, ecoAccT = 0;
-  uprightPetals();
   function setEcoStep(i) {
     if (i === ecoCur) return;
     ecoCur = i;
     ecoFlower.style.transform = i ? `rotate(${i * 45}deg)` : '';
-    uprightPetals();
     setPhrase((8 - i) % 8);                                   // по часовой: на 12 часов встаёт лепесток слева
   }
   function ecoZone() {
