@@ -9,8 +9,9 @@
 Результат: <папка из первой строки-комментария <!-- out: ../direct/index.html -->>.
 Запуск:  python3 ui/build.py            (собрать все страницы)
 """
-import pathlib, re
+import pathlib, re, hashlib
 UI = pathlib.Path(__file__).resolve().parent
+ver = lambda f: hashlib.md5((UI / f).read_bytes()).hexdigest()[:8]  # сброс кэша при изменении стилей/скрипта
 part = lambda n: (UI / 'partials' / f'{n}.html').read_text(encoding='utf-8')
 HEAD = '''<!doctype html>
 <html lang="ru">
@@ -18,8 +19,8 @@ HEAD = '''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{t}</title>
-<link rel="stylesheet" href="{rel}ui/kadema-ui.css">
-<script src="{rel}ui/kadema-ui.js" defer></script>'''
+<link rel="stylesheet" href="{rel}ui/kadema-ui.css?v={vc}">
+<script src="{rel}ui/kadema-ui.js?v={vj}" defer></script>'''
 
 def build(src):
     s = src.read_text(encoding='utf-8')
@@ -27,7 +28,7 @@ def build(src):
     dest = (src.parent / out).resolve()
     rel = '../' * (len(dest.relative_to(UI.parent).parts) - 1)
     s = re.sub(r'<!--\s*out:.*?-->\n?', '', s)
-    s = re.sub(r'\{\{head:(.*?)\}\}', lambda m: HEAD.format(t=m.group(1), rel=rel), s)
+    s = re.sub(r'\{\{head:(.*?)\}\}', lambda m: HEAD.format(t=m.group(1), rel=rel, vc=ver('kadema-ui.css'), vj=ver('kadema-ui.js')), s)
     s = re.sub(r'\{\{header(?::(\w+))?\}\}', lambda m: part('header').replace('{{cur_services}}', ' aria-current="page"' if m.group(1) == 'services' else ''), s)
     s = s.replace('{{modal}}', part('modal')).replace('{{footer}}', part('footer'))
     s = s.replace('{{logo}}', part('logo').strip())
