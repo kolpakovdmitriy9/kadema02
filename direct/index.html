@@ -7,44 +7,25 @@
 <link rel="stylesheet" href="../ui/kadema-ui.css">
 <script src="../ui/kadema-ui.js" defer></script>
 <style>
-  /* локальные раскладки страницы «Директ» — всё остальное из kadema-ui.css */
+  /* раскладки страницы «Директ»; компоненты — в kadema-ui.css (раздел «Блоки 2.0») */
   .d-hero { --k-hero-img: url(../kadema-digital/images/hero.webp); }
-  .d-bento { grid-template-rows: auto auto; }
-  .d-bento .k-card--media { grid-row: span 2; min-height: 420px; --k-media: radial-gradient(70% 60% at 70% 20%, #F50F72 0%, rgba(245,15,114,0) 60%), radial-gradient(60% 50% at 10% 90%, #4a0033 0%, transparent 70%), linear-gradient(160deg, #2a0714, #0b0205); }
-  .d-years { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 12px; }
-  .d-years span { padding: 10px 18px; border-radius: 14px; background: rgba(255,255,255,.6); color: rgba(0,0,0,.4); font-size: 20px; }
-  .d-years span.on { background: #fff; color: #000; font-size: 26px; box-shadow: 0 10px 30px rgba(5,23,41,.08); }
-  .d-years small { display: block; font-size: 13px; color: var(--k-pink); margin-top: 4px; }
-  .d-dots { display: flex; }
-  .d-dots i { width: 44px; height: 44px; border-radius: 50%; background: #000; border: 3px solid var(--k-grey-50); margin-left: -12px; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 12px; }
-  .d-dots i:first-child { margin-left: 0; background: var(--k-pink); }
-  .d-statement { padding-block: var(--k-sec); }
-  .d-statement .k-small { max-width: 22ch; margin-inline: auto; text-align: left; }
-  .d-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  .d-steps .k-card { min-height: 300px; }
-  .d-steps .k-card p { color: rgba(0,0,0,.55); margin-top: auto; }
-  .d-steps .k-h4 { margin-top: 12px; }
-  .d-roadmap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 48px 24px; }
-  .d-roadmap li { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-  .d-roadmap .k-tile { width: min(100%, 240px); }
-  .d-roadmap p { color: rgba(0,0,0,.55); }
-  .d-results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .d-results .k-card { min-height: 250px; justify-content: space-between; }
-  .d-results .k-card p { color: rgba(0,0,0,.55); }
-  .d-results .k-card--pink p { color: rgba(255,255,255,.8); }
-  .d-sq { width: 56px; height: 56px; border-radius: var(--k-r-xs); background: #fff; color: var(--k-pink); display: grid; place-items: center; }
-  .d-works { max-width: 876px; margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
-  .d-audit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
-  .d-audit__card { background: #fff; color: #000; border-radius: var(--k-r-xl); padding: clamp(24px, 3.4vw, 44px); }
-  .d-optim { display: grid; gap: 0; }
-  .d-optim li { display: flex; align-items: center; gap: 20px; padding-block: 18px; border-top: 1px solid rgba(255,255,255,.14); font-size: var(--k-fs-h4); line-height: 1.25; }
-  .d-optim li:first-child { border-top: 0; padding-top: 0; }
-  .d-optim b { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--k-pink); color: var(--k-pink); display: grid; place-items: center; font-weight: 500; font-size: 16px; }
-  .d-flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; }
-  .d-flow .k-icon { width: 18px; height: 18px; opacity: .4; }
-  @media (max-width: 1100px) { .d-steps, .d-roadmap { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 900px) { .d-audit, .d-results { grid-template-columns: 1fr 1fr; } .d-audit { grid-template-columns: 1fr; } .d-bento .k-card--media { grid-row: auto; grid-column: 1 / -1; min-height: 360px; } }
-  @media (max-width: 560px) { .d-steps, .d-results { grid-template-columns: 1fr; } .d-roadmap { grid-template-columns: 1fr 1fr; gap: 32px 16px; } .d-steps .k-card { min-height: 0; } }
+  .d-hero__grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); gap: 40px; align-items: end; }
+  .d-hero__grid > * { min-width: 0; }
+  .d-hero__grid > div:first-child { display: flex; flex-direction: column; gap: clamp(24px, 3vw, 40px); }
+  .d-hero .k-widget { justify-self: end; }
+  .d-dark { margin-inline: clamp(8px, 1.4vw, 20px); border-radius: var(--k-r-xl); overflow: hidden; }
+  .d-board { display: grid; grid-template-columns: 1.1fr 1fr 1fr; border-top: 1px solid rgba(255,255,255,.18); }
+  .d-board > div { padding: 32px clamp(20px, 2.6vw, 40px) 8px 0; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+  .d-board > div + div { padding-left: clamp(20px, 2.6vw, 40px); border-left: 1px solid rgba(255,255,255,.18); }
+  .d-kpi { display: grid; }
+  .d-kpi li { display: grid; grid-template-columns: 38px 1fr; gap: 12px; padding-block: 14px; border-top: 1px solid rgba(255,255,255,.12); font-size: 18px; line-height: 1.25; }
+  .d-kpi li:first-child { border-top: 0; padding-top: 0; }
+  .d-kpi b { font-weight: 500; font-size: 14px; color: var(--k-pink); padding-top: 3px; }
+  .d-say-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px 40px; margin-top: 56px; padding-top: 28px; border-top: 1px solid rgba(0,0,0,.12); }
+  .d-audit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+  .d-audit__card { background: #fff; color: #000; border-radius: var(--k-r-xl); padding: clamp(24px, 3.4vw, 44px); position: sticky; top: 110px; }
+  .d-team { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 40px; align-items: center; }
+  @media (max-width: 1000px) { .d-hero__grid, .d-audit, .d-team { grid-template-columns: 1fr; } .d-hero .k-widget { justify-self: start; } .d-audit__card { position: static; } .d-board { grid-template-columns: 1fr; } .d-board > div + div { padding-left: 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.18); } }
 </style>
 </head>
 <body>
@@ -82,318 +63,284 @@
 
 
 <main>
-<!-- ============ 1. Первый экран ============ -->
+<!-- ============ Первый экран: заголовок + живой отчёт ============ -->
 <section class="k-hero d-hero">
   <div class="k-hero__bg" aria-hidden="true"></div>
   <div class="k-wrap k-hero__in">
-    <div class="k-marquee k-marquee--tags" aria-label="Коротко о нас">
-      <div class="k-marquee__track">
-        <span>1 место в рейтинге региональных агентств</span><span>•</span>
-        <span>Сертифицированное агентство Яндекса</span><span>•</span>
-        <span>Застройщики, B2B, ecom</span><span>•</span>
-        <span>CRM + сквозная аналитика</span><span>•</span>
+    <div class="d-hero__grid">
+      <div>
+        <div class="k-marquee k-marquee--tags" aria-label="Коротко о нас">
+          <div class="k-marquee__track">
+            <span>1 место в рейтинге региональных агентств</span><span>•</span>
+            <span>Сертифицированное агентство</span><span>•</span>
+            <span>Застройщики, B2B, ecom</span><span>•</span>
+            <span>CRM + сквозная аналитика</span><span>•</span>
+          </div>
+        </div>
+        <h1 class="k-h1">Контекстная реклама в&nbsp;Яндекс Директ</h1>
+        <p class="k-text k-hero__sub">Настраиваем и ведём рекламу с фокусом на заявки и продажи. Смотрим не на клики, а на CPL, qCPL, CPA, ДРР и выручку.</p>
+        <div class="k-hero__row">
+          <a href="#audit" class="k-btn k-btn--pink k-btn--lg">Бесплатная консультация</a>
+          <div class="k-person"><span class="k-person__ava">АР</span><span><b>Андрей Рыжов</b><span>Руководитель отдела рекламы</span></span></div>
+        </div>
       </div>
-    </div>
-    <h1 class="k-h1">Контекстная реклама в&nbsp;Яндекс Директ</h1>
-    <p class="k-text k-hero__sub">Настраиваем и ведём рекламу с фокусом на заявки и продажи. Смотрим не на клики, а на CPL, qCPL, CPA, ДРР и выручку.</p>
-    <div class="k-hero__row">
-      <a href="#audit" class="k-btn k-btn--pink k-btn--lg">Бесплатная консультация</a>
-      <div class="k-person"><span class="k-person__ava">АР</span><span><b>Андрей Рыжов</b><span>Руководитель отдела рекламы</span></span></div>
+      <aside class="k-widget" aria-label="Пример сквозного отчёта">
+        <div class="k-widget__head"><span>Сквозной отчёт</span><small>пример · 30 дней</small></div>
+        <div class="k-widget__row"><span>Клики</span><span class="k-widget__bar"><i style="--w:100%"></i></span><b>12 480</b></div>
+        <div class="k-widget__row"><span>Заявки</span><span class="k-widget__bar"><i style="--w:56%;--d:.15s"></i></span><b>624</b></div>
+        <div class="k-widget__row"><span>Целевые</span><span class="k-widget__bar"><i style="--w:38%;--d:.3s"></i></span><b>402</b></div>
+        <div class="k-widget__row k-widget__row--hot"><span>Сделки</span><span class="k-widget__bar"><i style="--w:16%;--d:.45s"></i></span><b>57</b></div>
+        <div class="k-widget__foot"><span>CPL <b>1 850 ₽</b></span><span>qCPL <b>2 870 ₽</b></span><span>ДРР <b>7,4%</b></span></div>
+      </aside>
     </div>
   </div>
 </section>
 
-<!-- ============ 2. Коротко: факты ============ -->
+<!-- ============ Коротко о нас — одной фразой ============ -->
 <section class="k-surface k-surface--white" data-header="light">
   <div class="k-wrap k-sec">
-    <h2 class="k-h3" style="max-width:14ch;margin-bottom:60px">Performance-подход для бизнеса</h2>
-    <div class="k-bento d-bento">
-      <article class="k-card k-card--media">
-        <span class="k-pill k-pill--glass" style="align-self:flex-start;margin-bottom:auto">Performance</span>
-        <h3 class="k-h3">Не просто клики — считаем заявки, сделки и выручку</h3>
-        <div class="k-card__meta"><span>CPL</span><i></i><span>qCPL</span><i></i><span>CPA</span><i></i><span>ДРР</span></div>
-      </article>
-      <article class="k-card k-card--blue" style="align-items:center;justify-content:center">
-        <div class="d-years" aria-label="Годы работы">
-          <span>2016</span>
-          <span class="on">10+ лет<small>в digital-маркетинге</small></span>
-          <span>2026</span>
-        </div>
-      </article>
-      <article class="k-card k-card--grey">
-        <div class="k-row-flex" style="justify-content:space-between">
-          <h3 class="k-h4" style="max-width:10ch">Застройщики, B2B, ecom</h3>
-          <div class="d-dots" aria-hidden="true"><i>Ж</i><i>B2B</i><i>E</i></div>
-        </div>
-        <p class="k-muted">Знаем особенности сложных ниш и длинных сделок</p>
-      </article>
-      <div class="k-badge k-badge--pink">
-        <span class="k-badge__sq"><svg class="k-icon"><use href="#k-i-flag"/></svg></span>
-        <span><span class="k-badge__t">1 место</span><span class="k-badge__s" style="display:block">в рейтинге региональных агентств</span></span>
-      </div>
-      <article class="k-card k-card--black">
-        <svg class="k-icon" style="color:var(--k-pink)"><use href="#k-i-crm"/></svg>
-        <h3 class="k-h4">CRM + аналитика</h3>
-        <p class="k-muted">Связываем рекламу с реальными обращениями и продажами</p>
-      </article>
+    <p class="k-say">
+      <span class="k-dim">Kadema —</span> <span class="k-say__num">10+</span> лет в digital.
+      Приводим заявки <span class="k-say__ava" aria-hidden="true"><i>Ж</i><i>B2B</i><i>E</i></span> застройщикам, B2B и ecom,
+      связываем рекламу <span class="k-say__chip k-say__chip--blue"><svg class="k-icon"><use href="#k-i-crm"/></svg>CRM</span> с продажами
+      <span class="k-dim">и считаем не клики, а</span> <span class="k-say__chip k-say__chip--pink">CPL · qCPL · CPA · ДРР</span>
+    </p>
+    <div class="d-say-foot">
+      <div class="k-brackets"><span class="k-bracket k-bracket--pink">1 место в рейтинге региональных агентств</span><span class="k-bracket">Сертифицированное агентство</span><span class="k-bracket">Сложные ниши и длинные сделки</span></div>
+      <a href="#audit" class="k-btn k-btn--black">Обсудить проект</a>
     </div>
   </div>
 
-  <div class="k-wrap d-statement k-title-c">
-    <p class="k-small">Когда бизнесу нужна не просто настройка Директа,</p>
-    <p class="k-mega" style="font-size:clamp(40px,6.4vw,80px);line-height:1">а системная работа с рекламой</p>
+  <!-- Ситуации: список с фокусом -->
+  <div class="k-wrap k-sec k-sec--end">
+    <div class="k-head"><h2 class="k-h2">Узнаёте свою ситуацию?</h2><p>С этим к нам приходят чаще всего. Наведите на пункт — покажем, что за ним стоит</p></div>
+    <div class="k-focus">
+      <div class="k-focus__list" data-k-tabs="hover" role="tablist" aria-label="Ситуации" aria-orientation="vertical">
+        <div class="k-focus__item is-on" data-k-item><button class="k-focus__btn" role="tab" aria-selected="true" aria-controls="f1" id="fb1"><span class="k-focus__n">01</span><span class="k-focus__t">Реклама работает, но заявок мало</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Показы есть, клики есть, бюджет тратится, но отдел продаж не получает стабильный поток обращений.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="f2" id="fb2" tabindex="-1"><span class="k-focus__n">02</span><span class="k-focus__t">Лиды есть, но они нецелевые</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>В заявку приходят не ЛПР, неподходящие клиенты, спам, дубли или пользователи без реального намерения купить.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="f3" id="fb3" tabindex="-1"><span class="k-focus__n">03</span><span class="k-focus__t">Непонятно, окупается ли реклама</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>В отчётах есть CTR, показы и клики, но нет связи с продажами, выручкой, сделками и качеством обращений.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="f4" id="fb4" tabindex="-1"><span class="k-focus__n">04</span><span class="k-focus__t">Стоимость заявки растёт</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Кампании давно не пересобирались, семантика размыта, стратегии обучаются на мусорных целях.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="f5" id="fb5" tabindex="-1"><span class="k-focus__n">05</span><span class="k-focus__t">Подрядчик ведёт рекламу формально</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Раз в месяц присылает отчёт, но не предлагает гипотез, не анализирует воронку и не показывает, что делать дальше.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="f6" id="fb6" tabindex="-1"><span class="k-focus__n">06</span><span class="k-focus__t">Бизнес хочет масштабироваться</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Нужно увеличить объём заявок или продаж, но без хаотичного роста бюджета и ухудшения качества трафика.</p></div></div>
+      </div>
+      <div class="k-focus__stage" aria-live="polite">
+        <div class="k-tile k-tile--pink" role="tabpanel" id="f1" aria-labelledby="fb1"><svg class="k-icon"><use href="#k-i-funnel"/></svg><span><span class="k-tile__n">↓</span><span class="k-tile__t" style="display:block;margin-top:12px">Клики есть, обращений нет</span></span></div>
+        <div class="k-tile k-tile--black" role="tabpanel" id="f2" aria-labelledby="fb2" hidden><svg class="k-icon"><use href="#k-i-users"/></svg><span><span class="k-tile__n">спам</span><span class="k-tile__t" style="display:block;margin-top:12px">Дубли и не ЛПР в заявках</span></span></div>
+        <div class="k-tile k-tile--lilac" role="tabpanel" id="f3" aria-labelledby="fb3" hidden><svg class="k-icon"><use href="#k-i-ruble"/></svg><span><span class="k-tile__n">ROI?</span><span class="k-tile__t" style="display:block;margin-top:12px">Нет связи с выручкой</span></span></div>
+        <div class="k-tile k-tile--sand" role="tabpanel" id="f4" aria-labelledby="fb4" hidden><svg class="k-icon"><use href="#k-i-chart"/></svg><span><span class="k-tile__n">CPL ↑</span><span class="k-tile__t" style="display:block;margin-top:12px">Размытая семантика, мусорные цели</span></span></div>
+        <div class="k-tile" role="tabpanel" id="f5" aria-labelledby="fb5" hidden><svg class="k-icon"><use href="#k-i-doc"/></svg><span><span class="k-tile__n">1×</span><span class="k-tile__t" style="display:block;margin-top:12px">Отчёт раз в месяц и никаких гипотез</span></span></div>
+        <div class="k-tile k-tile--mint" role="tabpanel" id="f6" aria-labelledby="fb6" hidden><svg class="k-icon"><use href="#k-i-bolt"/></svg><span><span class="k-tile__n">↗</span><span class="k-tile__t" style="display:block;margin-top:12px">Рост без хаоса в бюджете</span></span></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============ 3. Ситуации ============ -->
+<!-- ============ Ниши: горизонтальный аккордеон ============ -->
 <section class="k-surface k-surface--pink" data-header="light">
   <div class="k-wrap k-sec k-sec--end">
-    <div class="k-title-c" style="margin-bottom:60px"><span class="k-lead k-eyebrow-t">С чем к нам приходят</span></div>
-    <div class="k-tasks">
-      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-funnel"/></svg>Реклама работает, но заявок мало</span><p>Показы есть, клики есть, бюджет тратится, но отдел продаж не получает стабильный поток обращений.</p></div>
-      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-users"/></svg>Лиды есть, но они нецелевые</span><p>В заявку приходят не ЛПР, неподходящие клиенты, спам, дубли или пользователи без реального намерения купить.</p></div>
-      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-ruble"/></svg>Непонятно, окупается ли реклама</span><p>В отчётах есть CTR, показы и клики, но нет связи с продажами, выручкой, сделками и качеством обращений.</p></div>
-      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-chart"/></svg>Стоимость заявки растёт</span><p>Кампании давно не пересобирались, семантика размыта, стратегии обучаются на мусорных целях.</p></div>
-      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-doc"/></svg>Подрядчик ведёт рекламу формально</span><p>Раз в месяц присылает отчёт, но не предлагает гипотез, не анализирует воронку и не показывает, что делать дальше.</p></div>
-      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-bolt"/></svg>Бизнес хочет масштабироваться</span><p>Нужно увеличить объём заявок или продаж, но без хаотичного роста бюджета и ухудшения качества трафика.</p></div>
+    <div class="k-head k-head--plain"><h2 class="k-h1" style="max-width:11em">Реклама под вашу бизнес-модель</h2><p>У застройщика, клиники и интернет-магазина разные деньги, циклы сделки и метрики успеха</p></div>
+    <div class="k-hacc" data-k-tabs role="tablist" aria-label="Ниши">
+      <div class="k-hacc__panel is-on" data-k-item>
+        <button class="k-hacc__tab" role="tab" aria-selected="true" aria-controls="h1" id="hb1"><b>01</b><span>Застройщикам</span></button>
+        <div class="k-hacc__body is-on" role="tabpanel" id="h1" aria-labelledby="hb1" data-k-keep>
+          <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">01 · Застройщикам и девелоперам</span>
+          <h3 class="k-h2">Квалифицированные обращения, а не просто заявки на недвижимость</h3>
+          <div class="k-hacc__cols">
+            <div><span class="k-small" style="opacity:.5;display:block;margin-bottom:14px">Что учитываем</span><ul class="k-list"><li>класс и локацию ЖК</li><li>ипотечные программы и субсидированные ставки</li><li>срок сдачи и готовность дома</li><li>географию спроса и план продаж</li><li>качество обработки заявок отделом продаж</li></ul></div>
+            <div class="k-hacc__watch"><span class="k-small" style="opacity:.5">На что смотрим</span><p>Стоимость целевого лида, квалификацию обращений, заявки по конкретным ЖК, конверсию в показ, бронь и сделку</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="k-hacc__panel" data-k-item>
+        <button class="k-hacc__tab" role="tab" aria-selected="false" aria-controls="h2" id="hb2" tabindex="-1"><b>02</b><span>B2B</span></button>
+        <div class="k-hacc__body" role="tabpanel" id="h2" aria-labelledby="hb2" data-k-keep>
+          <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">02 · B2B с длинным циклом сделки</span>
+          <h3 class="k-h2">Обращения от компаний, закупщиков, инженеров и других ЛПР</h3>
+          <div class="k-hacc__cols">
+            <div><span class="k-small" style="opacity:.5;display:block;margin-bottom:14px">Что учитываем</span><ul class="k-list"><li>специфику продукта или услуги</li><li>регионы поставки и отрасли клиентов</li><li>цикл сделки</li><li>сложность принятия решения</li><li>повторные касания и прогрев</li></ul></div>
+            <div class="k-hacc__watch"><span class="k-small" style="opacity:.5">На что смотрим</span><p>Стоимость целевой заявки, качество обращения, статус в CRM, конверсию в КП, встречу, сделку и выручку</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="k-hacc__panel" data-k-item>
+        <button class="k-hacc__tab" role="tab" aria-selected="false" aria-controls="h3" id="hb3" tabindex="-1"><b>03</b><span>Ecom</span></button>
+        <div class="k-hacc__body" role="tabpanel" id="h3" aria-labelledby="hb3" data-k-keep>
+          <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">03 · Интернет-магазинам</span>
+          <h3 class="k-h2">Реклама с учётом каталога, фидов, маржинальности и ДРР</h3>
+          <div class="k-hacc__cols">
+            <div><span class="k-small" style="opacity:.5;display:block;margin-bottom:14px">Что учитываем</span><ul class="k-list"><li>товарные категории</li><li>средний чек и маржу</li><li>цикл сделки</li><li>повторные покупки</li><li>акции и сезонный спрос</li></ul></div>
+            <div class="k-hacc__watch"><span class="k-small" style="opacity:.5">На что смотрим</span><p>Заказы, выручку, ДРР, стоимость покупки, конверсию корзины, эффективность категорий и товарных групп</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="k-hacc__panel" data-k-item>
+        <button class="k-hacc__tab" role="tab" aria-selected="false" aria-controls="h4" id="hb4" tabindex="-1"><b>04</b><span>Медицина</span></button>
+        <div class="k-hacc__body" role="tabpanel" id="h4" aria-labelledby="hb4" data-k-keep>
+          <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">04 · Клиники и стоматологии</span>
+          <h3 class="k-h2">Запись на приём с учётом специфики консультаций и лечения</h3>
+          <div class="k-hacc__cols">
+            <div><span class="k-small" style="opacity:.5;display:block;margin-bottom:14px">Что учитываем</span><ul class="k-list"><li>специализацию клиники и услуги</li><li>географию охвата и конкуренцию</li><li>режим работы и запись на приём</li><li>стоимость услуг и пакетов</li><li>отзывы, репутацию и сезонный спрос</li></ul></div>
+            <div class="k-hacc__watch"><span class="k-small" style="opacity:.5">На что смотрим</span><p>Стоимость записи, конверсию в приём, повторные визиты, LTV пациента, эффективность каналов</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="k-hacc__panel" data-k-item>
+        <button class="k-hacc__tab" role="tab" aria-selected="false" aria-controls="h5" id="hb5" tabindex="-1"><b>05</b><span>Другие ниши</span></button>
+        <div class="k-hacc__body" role="tabpanel" id="h5" aria-labelledby="hb5" data-k-keep>
+          <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">05 · Другие направления</span>
+          <h3 class="k-h2">От образовательных проектов до производства</h3>
+          <div class="k-hacc__cols">
+            <div><span class="k-small" style="opacity:.5;display:block;margin-bottom:14px">Что учитываем</span><ul class="k-list"><li>специфику продукта и аудиторию</li><li>регион и конкурентную среду</li><li>цикл сделки или принятия решения</li><li>маркетинговые каналы и историю</li><li>бюджет и цели роста</li></ul></div>
+            <div class="k-hacc__watch"><span class="k-small" style="opacity:.5">На что смотрим</span><p>Стоимость заявки, качество лидов, конверсию в продажу, окупаемость рекламы, динамику роста</p></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 4. Ниши + 5. Что входит ============ -->
-<section class="k-surface k-surface--white k-surface--lip" data-header="light">
-  <div class="k-wrap k-sec">
-    <div class="k-title-c" style="margin-bottom:48px">
-      <span class="k-lead k-eyebrow-t">Ниши</span>
-      <h2 class="k-h1" style="max-width:13em">Настраиваем рекламу под вашу бизнес-модель</h2>
-    </div>
-    <div class="k-tabs k-tabs--scroll" data-k-tabs role="tablist" aria-label="Ниши" style="justify-content:center;margin-bottom:56px">
-      <button class="k-tab" role="tab" aria-selected="true" aria-controls="n1" id="nt1">Застройщикам</button>
-      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n2" id="nt2" tabindex="-1">B2B</button>
-      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n3" id="nt3" tabindex="-1">Ecom</button>
-      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n4" id="nt4" tabindex="-1">Медицина</button>
-      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n5" id="nt5" tabindex="-1">Другие ниши</button>
-    </div>
-    <div class="k-table__labels"><span>Описание</span><span>Подход</span></div>
-
-    <div class="k-table" role="tabpanel" id="n1" aria-labelledby="nt1">
-      <div class="k-table__side">
-        <p>Помогаем получать не просто заявки на недвижимость, а квалифицированные обращения от людей с реальным интересом к покупке.</p>
-        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
-      </div>
-      <div class="k-table__list" data-k-accordion="multi">
-        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>класс и локацию ЖК</li><li>ипотечные программы и субсидированные ставки</li><li>срок сдачи и готовность дома</li><li>географию спроса</li><li>план продаж</li><li>качество обработки заявок отделом продаж</li></ul></div></div></div></div>
-        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость целевого лида, квалификацию обращений, заявки по конкретным ЖК, конверсию в показ, бронь и сделку.</p></div></div></div></div>
-      </div>
-    </div>
-    <div class="k-table" role="tabpanel" id="n2" aria-labelledby="nt2" hidden>
-      <div class="k-table__side">
-        <p>Настраиваем рекламу так, чтобы она приводила обращения от компаний, закупщиков, инженеров, собственников и других ЛПР.</p>
-        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
-      </div>
-      <div class="k-table__list" data-k-accordion="multi">
-        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>специфику продукта или услуги</li><li>регионы поставки</li><li>отрасли клиентов</li><li>цикл сделки</li><li>сложность принятия решения</li><li>повторные касания и прогрев</li></ul></div></div></div></div>
-        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость целевой заявки, качество обращения, статус в CRM, конверсию в КП, встречу, сделку и выручку.</p></div></div></div></div>
-      </div>
-    </div>
-    <div class="k-table" role="tabpanel" id="n3" aria-labelledby="nt3" hidden>
-      <div class="k-table__side">
-        <p>Запускаем рекламу с учётом каталога, фидов, категорий, маржинальности, сезонности и ДРР.</p>
-        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
-      </div>
-      <div class="k-table__list" data-k-accordion="multi">
-        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>товарные категории</li><li>средний чек</li><li>маржу</li><li>цикл сделки</li><li>повторные покупки</li><li>акции и сезонный спрос</li></ul></div></div></div></div>
-        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Заказы, выручку, ДРР, стоимость покупки, конверсию корзины, эффективность категорий и товарных групп.</p></div></div></div></div>
-      </div>
-    </div>
-    <div class="k-table" role="tabpanel" id="n4" aria-labelledby="nt4" hidden>
-      <div class="k-table__side">
-        <p>Настраиваем рекламу для клиник, стоматологий и медицинских центров с учётом специфики записи, консультаций и лечения.</p>
-        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
-      </div>
-      <div class="k-table__list" data-k-accordion="multi">
-        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>специализацию клиники и услуги</li><li>географию охвата и конкуренцию</li><li>режим работы и запись на приём</li><li>стоимость услуг и пакетов</li><li>отзывы и репутацию</li><li>сезонный спрос на процедуры</li></ul></div></div></div></div>
-        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость записи, конверсию в приём, повторные визиты, LTV пациента, эффективность каналов.</p></div></div></div></div>
-      </div>
-    </div>
-    <div class="k-table" role="tabpanel" id="n5" aria-labelledby="nt5" hidden>
-      <div class="k-table__side">
-        <p>Работаем с любыми направлениями бизнеса. От образовательных проектов до производства — подберём стратегию под вашу специфику.</p>
-        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
-      </div>
-      <div class="k-table__list" data-k-accordion="multi">
-        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>специфику продукта или услуги</li><li>целевую аудиторию и регион</li><li>конкурентную среду</li><li>цикл сделки или принятия решения</li><li>маркетинговые каналы и историю</li><li>бюджет и цели роста</li></ul></div></div></div></div>
-        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость заявки, качество лидов, конверсию в продажу, окупаемость рекламы, динамику роста.</p></div></div></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="k-wrap k-sec">
-    <div class="k-head">
-      <h2 class="k-h2">Что входит в настройку и ведение</h2>
-      <p>Восемь участков работы, которые закрываем внутри проекта</p>
-    </div>
-    <ol class="d-steps">
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-search"/></svg></span><span class="k-step__num">01</span></span><h3 class="k-h4">Аудит текущей ситуации</h3><p>Изучаем сайт, рекламные кабинеты, аналитику, CRM, посадочные страницы, заявки и текущую стоимость привлечения.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-target"/></svg></span><span class="k-step__num">02</span></span><h3 class="k-h4">Медиаплан и стратегия запуска</h3><p>Определяем, какие кампании запускать, какие сегменты разделить, какой бюджет нужен и какие показатели считать целевыми.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-layers"/></svg></span><span class="k-step__num">03</span></span><h3 class="k-h4">Сбор и кластеризация семантики</h3><p>Разделяем горячий спрос, брендовые запросы, конкурентов, категории, регионы, информационные и коммерческие запросы.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-gear"/></svg></span><span class="k-step__num">04</span></span><h3 class="k-h4">Настройка рекламных кампаний</h3><p>Запускаем поиск, РСЯ, ретаргетинг, ЕПК, товарные кампании и другие форматы под задачи бизнеса.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-pen"/></svg></span><span class="k-step__num">05</span></span><h3 class="k-h4">Подготовка объявлений и креативов</h3><p>Пишем заголовки, тексты, быстрые ссылки, уточнения, офферы, баннеры и объявления под разные сегменты аудитории.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-chart"/></svg></span><span class="k-step__num">06</span></span><h3 class="k-h4">Настройка аналитики</h3><p>Проверяем Метрику, цели, звонки, формы, UTM-метки, CRM-связку и корректность передачи данных.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-bolt"/></svg></span><span class="k-step__num">07</span></span><h3 class="k-h4">Оптимизация и развитие</h3><p>Отключаем неэффективные связки, перераспределяем бюджет, тестируем гипотезы, улучшаем объявления и посадочные страницы.</p></li>
-      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-doc"/></svg></span><span class="k-step__num">08</span></span><h3 class="k-h4">Отчётность и рекомендации</h3><p>Показываем не только расходы, но и результат: заявки, качество лидов, стоимость обращения, продажи, выручку и следующие шаги.</p></li>
-    </ol>
-  </div>
-</section>
-
-<!-- ============ 6. Тёмная часть: аналитика, стратегии, кейсы ============ -->
-<section class="k-surface k-surface--dark">
-  <div class="k-wrap k-sec">
-    <div class="k-title-c">
-      <span class="k-pill k-pill--dark">Сквозная аналитика</span>
-      <h2 class="k-h1" style="max-width:12em">Связываем рекламу с реальными заявками и продажами</h2>
-      <p class="k-text k-muted" style="max-width:560px">Контекстная реклама не должна оцениваться только по кликам и показам. Нужно понимать, какие кампании приводят целевые обращения, какие заявки доходят до продаж, а какие просто тратят бюджет.</p>
-    </div>
-    <div class="d-flow k-mt" style="--mt:56px" aria-label="Путь клиента">
-      <span class="k-pill k-pill--dark">Клик</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
-      <span class="k-pill k-pill--dark">Визит</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
-      <span class="k-pill k-pill--dark">Заявка</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
-      <span class="k-pill k-pill--dark">Квалификация</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
-      <span class="k-pill k-pill--dark k-pill--pink">Сделка</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
-      <span class="k-pill k-pill--dark k-pill--pink">Выручка</span>
-    </div>
-    <div class="k-duo k-mt" style="--mt:56px;border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
-      <div>
-        <span class="k-pill k-pill--dark" style="align-self:flex-start">Что настраиваем и проверяем</span>
-        <div class="k-brackets"><span class="k-bracket">цели в Метрике</span><span class="k-bracket">звонки и call tracking</span><span class="k-bracket">UTM-метки</span><span class="k-bracket">связь с CRM</span><span class="k-bracket">передачу данных по лидам и продажам</span><span class="k-bracket">отправку форм</span><span class="k-bracket">клики по мессенджерам</span><span class="k-bracket">события e-commerce</span><span class="k-bracket">статусы заявок</span></div>
+<!-- ============ Что входит: облако + подробности ============ -->
+<section class="k-surface k-surface--white" data-header="light">
+  <div class="k-wrap k-sec k-sec--end">
+    <div class="k-pick">
+      <div class="k-stack" style="--gap:36px">
+        <div class="k-stack" style="--gap:18px"><span class="k-pill k-pill--soft">Состав работ</span><h2 class="k-h2" style="max-width:12em">Что входит в настройку и ведение</h2></div>
+        <div class="k-pick__cloud" data-k-tabs role="tablist" aria-label="Состав работ">
+          <button class="k-pick__chip" role="tab" aria-selected="true" aria-controls="p1" id="pc1"><i>01</i>Аудит</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p2" id="pc2" tabindex="-1"><i>02</i>Медиаплан</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p3" id="pc3" tabindex="-1"><i>03</i>Семантика</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p4" id="pc4" tabindex="-1"><i>04</i>Кампании</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p5" id="pc5" tabindex="-1"><i>05</i>Объявления и креативы</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p6" id="pc6" tabindex="-1"><i>06</i>Аналитика</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p7" id="pc7" tabindex="-1"><i>07</i>Оптимизация</button>
+          <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="p8" id="pc8" tabindex="-1"><i>08</i>Отчётность</button>
+        </div>
       </div>
       <div>
-        <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Результат для клиента</span>
-        <p class="k-h3" style="line-height:1.15">Вы видите, какие кампании приводят не просто обращения, а реальные возможности для продаж.</p>
+        <div class="k-pick__pane" role="tabpanel" id="p1" aria-labelledby="pc1"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-search"/></svg></span><span class="k-step__num">01</span></span><h3 class="k-h2">Аудит текущей ситуации</h3><p>Изучаем сайт, рекламные кабинеты, аналитику, CRM, посадочные страницы, заявки и текущую стоимость привлечения.</p><span class="k-pick__big" aria-hidden="true">01</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p2" aria-labelledby="pc2" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-target"/></svg></span><span class="k-step__num">02</span></span><h3 class="k-h2">Медиаплан и стратегия запуска</h3><p>Определяем, какие кампании запускать, какие сегменты разделить, какой бюджет нужен и какие показатели считать целевыми.</p><span class="k-pick__big" aria-hidden="true">02</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p3" aria-labelledby="pc3" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-layers"/></svg></span><span class="k-step__num">03</span></span><h3 class="k-h2">Сбор и кластеризация семантики</h3><p>Разделяем горячий спрос, брендовые запросы, конкурентов, категории, регионы, информационные и коммерческие запросы.</p><span class="k-pick__big" aria-hidden="true">03</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p4" aria-labelledby="pc4" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-gear"/></svg></span><span class="k-step__num">04</span></span><h3 class="k-h2">Настройка рекламных кампаний</h3><p>Запускаем поиск, РСЯ, ретаргетинг, ЕПК, товарные кампании и другие форматы под задачи бизнеса.</p><span class="k-pick__big" aria-hidden="true">04</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p5" aria-labelledby="pc5" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-pen"/></svg></span><span class="k-step__num">05</span></span><h3 class="k-h2">Подготовка объявлений и креативов</h3><p>Пишем заголовки, тексты, быстрые ссылки, уточнения, офферы, баннеры и объявления под разные сегменты аудитории.</p><span class="k-pick__big" aria-hidden="true">05</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p6" aria-labelledby="pc6" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-chart"/></svg></span><span class="k-step__num">06</span></span><h3 class="k-h2">Настройка аналитики</h3><p>Проверяем Метрику, цели, звонки, формы, UTM-метки, CRM-связку и корректность передачи данных.</p><span class="k-pick__big" aria-hidden="true">06</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p7" aria-labelledby="pc7" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-bolt"/></svg></span><span class="k-step__num">07</span></span><h3 class="k-h2">Оптимизация и развитие</h3><p>Отключаем неэффективные связки, перераспределяем бюджет, тестируем гипотезы, улучшаем объявления и посадочные страницы.</p><span class="k-pick__big" aria-hidden="true">07</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="p8" aria-labelledby="pc8" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-doc"/></svg></span><span class="k-step__num">08</span></span><h3 class="k-h2">Отчётность и рекомендации</h3><p>Показываем не только расходы, но и результат: заявки, качество лидов, стоимость обращения, продажи, выручку и следующие шаги.</p><span class="k-pick__big" aria-hidden="true">08</span></div>
       </div>
     </div>
   </div>
 
+  <!-- Тёмная вставка: аналитика и стратегии -->
+  <div class="k-surface--dark d-dark">
+    <div class="k-wrap k-sec">
+      <div class="k-title-c">
+        <span class="k-pill k-pill--dark">Сквозная аналитика</span>
+        <h2 class="k-h1" style="max-width:12em">Связываем рекламу с реальными заявками и продажами</h2>
+        <p class="k-text k-muted" style="max-width:560px">Контекстную рекламу нельзя оценивать только по кликам и показам. Мы ведём каждое обращение от клика до выручки и видим, какие кампании приносят продажи, а какие просто тратят бюджет.</p>
+      </div>
+      <div class="k-flow k-mt" style="--mt:64px" aria-label="Путь клиента и что мы настраиваем на каждом шаге">
+        <span class="k-flow__dot"></span><span class="k-flow__dot" style="--d:-1.6s"></span><span class="k-flow__dot" style="--d:-3.2s"></span>
+        <div class="k-flow__node"><span>Клик</span><small>UTM-метки и Яндекс Метрика</small></div>
+        <div class="k-flow__node"><span>Визит</span><small>цели и события на сайте</small></div>
+        <div class="k-flow__node"><span>Заявка</span><small>формы, звонки, мессенджеры</small></div>
+        <div class="k-flow__node"><span>Квалификация</span><small>статусы заявок в CRM</small></div>
+        <div class="k-flow__node k-flow__node--hot"><span>Сделка</span><small>данные о лидах и продажах</small></div>
+        <div class="k-flow__node k-flow__node--hot"><span>Выручка</span><small>события e-commerce</small></div>
+      </div>
+      <p class="k-say k-center" style="max-width:17em;text-align:center;margin-top:72px;font-size:clamp(26px,3.4vw,46px)"><span class="k-dim">В итоге вы видите, какие кампании приводят не просто обращения, а</span> реальные возможности для продаж</p>
+    </div>
+
+    <div class="k-wrap k-sec k-sec--end">
+      <div class="k-head">
+        <h2 class="k-h2">Как отличается стратегия в разных нишах</h2>
+        <div class="k-tabs" data-k-tabs role="tablist" aria-label="Стратегии" style="justify-content:flex-end">
+          <button class="k-tab" role="tab" aria-selected="true" aria-controls="s1" id="st1">Застройщики</button>
+          <button class="k-tab" role="tab" aria-selected="false" aria-controls="s2" id="st2" tabindex="-1">B2B</button>
+          <button class="k-tab" role="tab" aria-selected="false" aria-controls="s3" id="st3" tabindex="-1">Ecom</button>
+        </div>
+      </div>
+      <div class="d-board" role="tabpanel" id="s1" aria-labelledby="st1">
+        <div><span class="k-bracket k-bracket--pink" style="align-self:flex-start">Контекст</span><p class="k-lead">В недвижимости важно понять, насколько человек готов к покупке: интересуется конкретным ЖК, подходит ли по бюджету, рассматривает ипотеку, готов ли к звонку, показу или встрече.</p></div>
+        <div><span class="k-bracket" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>кампании по конкретным ЖК</li><li>рекламу по району, классу жилья и типу квартиры</li><li>кампании под ипотечные и акционные офферы</li><li>ретаргетинг на посетителей сайта и квиза</li><li>кампании на бренд и конкурентов</li><li>связки под готовые квартиры, старт продаж и спецпредложения</li></ul></div>
+        <div><span class="k-bracket" style="align-self:flex-start">Что оптимизируем</span><ol class="d-kpi"><li><b>01</b>стоимость целевого лида</li><li><b>02</b>долю квалифицированных обращений</li><li><b>03</b>конверсию из заявки в показ и бронь</li><li><b>04</b>эффективность связок по каждому ЖК</li></ol></div>
+      </div>
+      <div class="d-board" role="tabpanel" id="s2" aria-labelledby="st2" hidden>
+        <div><span class="k-bracket k-bracket--pink" style="align-self:flex-start">Контекст</span><p class="k-lead">В B2B решение принимают несколько человек, а сделка может длиться месяцами. Важно получать обращения от компаний и ЛПР и видеть, какие заявки доходят до КП и договора.</p></div>
+        <div><span class="k-bracket" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>кампании по продуктам и направлениям услуг</li><li>рекламу на отрасли и регионы поставки</li><li>кампании на профессиональные и технические запросы</li><li>ретаргетинг на посетителей каталога и прайса</li><li>кампании на бренд и конкурентов</li><li>связки под длинный цикл сделки и повторные касания</li></ul></div>
+        <div><span class="k-bracket" style="align-self:flex-start">Что оптимизируем</span><ol class="d-kpi"><li><b>01</b>стоимость целевой заявки</li><li><b>02</b>долю обращений от компаний и ЛПР</li><li><b>03</b>конверсию из заявки в КП и встречу</li><li><b>04</b>выручку по рекламным кампаниям</li></ol></div>
+      </div>
+      <div class="d-board" role="tabpanel" id="s3" aria-labelledby="st3" hidden>
+        <div><span class="k-bracket k-bracket--pink" style="align-self:flex-start">Контекст</span><p class="k-lead">В ecom результат считается в заказах и выручке. Реклама учитывает каталог, остатки, маржинальность и сезонность, а бюджет уходит в категории с лучшей окупаемостью.</p></div>
+        <div><span class="k-bracket" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>товарные кампании и ЕПК по фиду</li><li>кампании по категориям и брендам</li><li>рекламу на акции и сезонный спрос</li><li>динамический ретаргетинг на просмотренные товары</li><li>кампании на бренд магазина</li><li>связки под товары с высокой маржой</li></ul></div>
+        <div><span class="k-bracket" style="align-self:flex-start">Что оптимизируем</span><ol class="d-kpi"><li><b>01</b>ДРР и стоимость заказа</li><li><b>02</b>конверсию корзины и оформления</li><li><b>03</b>выручку по категориям и товарным группам</li><li><b>04</b>долю повторных покупок</li></ol></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кейсы: карусель -->
   <div class="k-wrap k-sec">
-    <div class="k-head">
-      <h2 class="k-h2">Как отличается стратегия в разных нишах</h2>
-      <div class="k-tabs" data-k-tabs role="tablist" aria-label="Стратегии" style="justify-content:flex-end">
-        <button class="k-tab" role="tab" aria-selected="true" aria-controls="s1" id="st1">Застройщики</button>
-        <button class="k-tab" role="tab" aria-selected="false" aria-controls="s2" id="st2" tabindex="-1">B2B</button>
-        <button class="k-tab" role="tab" aria-selected="false" aria-controls="s3" id="st3" tabindex="-1">Ecom</button>
+    <div class="k-head"><h2 class="k-h1">Кейсы</h2><p>Проекты, где реклама отвечает за заявки и продажи. Листайте стрелками или свайпом</p></div>
+    <div class="k-car" data-k-car>
+      <div class="k-car__track">
+        <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 75% 25%, #F50F72 0%, transparent 60%), linear-gradient(150deg,#3b4150 0%,#1d2129 55%,#0e1014 100%)">
+          <span class="k-work__img"></span><span class="k-work__blur"></span>
+          <span class="k-work__top"><span class="k-work__title">Supernova — ЖК в микрорайоне Ближнее Арбеково</span><span class="k-work__logo" aria-hidden="true"></span></span>
+          <span class="k-work__about"><span>Недвижимость</span><p>Как достичь KPI по целевым лидам при жёстких критериях квалификации</p></span>
+          <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Директ</span><span class="k-bracket">Таргет VK</span><span class="k-bracket">Маркет-платформа</span></span></span>
+        </a>
+        <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 20% 30%, #ff8a3d 0%, transparent 60%), linear-gradient(150deg,#3f3a33 0%,#24201c 55%,#0f0e0c 100%)">
+          <span class="k-work__img"></span><span class="k-work__blur"></span>
+          <span class="k-work__top"><span class="k-work__title">Группа компаний «АДСТ»</span><span class="k-work__logo" aria-hidden="true"></span></span>
+          <span class="k-work__about"><span>Аренда спецтехники</span><p>Как с помощью Яндекс Директа увеличить клиентскую базу по аренде спецтехники в Санкт-Петербурге и ЛО</p></span>
+          <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Контекстная реклама</span></span></span>
+        </a>
+        <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 70% 70%, #209EE9 0%, transparent 55%), linear-gradient(150deg,#2f3d3a 0%,#1a2321 55%,#0c100f 100%)">
+          <span class="k-work__img"></span><span class="k-work__blur"></span>
+          <span class="k-work__top"><span class="k-work__title">«Супер Потолок» — натяжные потолки</span><span class="k-work__logo" aria-hidden="true"></span></span>
+          <span class="k-work__about"><span>B2C проекты</span><p>Количество обращений и замеров выросло в 2 раза</p></span>
+          <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Сайт</span><span class="k-bracket">Директ</span><span class="k-bracket">SEO</span><span class="k-bracket">Таргет</span></span></span>
+        </a>
       </div>
-    </div>
-    <div role="tabpanel" id="s1" aria-labelledby="st1">
-      <p class="k-lead" style="max-width:760px">В недвижимости важно понять, насколько человек готов к покупке: интересуется конкретным ЖК, подходит ли по бюджету, рассматривает ипотеку, готов ли к звонку, показу или встрече.</p>
-      <div class="k-duo k-mt" style="border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
-        <div><span class="k-pill k-pill--dark" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>кампании по конкретным ЖК</li><li>рекламу по району, классу жилья и типу квартиры</li><li>кампании под ипотечные и акционные офферы</li><li>ретаргетинг на посетителей сайта и квиза</li><li>кампании на бренд и конкурентов</li><li>связки под готовые квартиры, старт продаж и спецпредложения</li></ul></div>
-        <div><span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Что оптимизируем</span><ol class="d-optim"><li><b>1</b>стоимость целевого лида</li><li><b>2</b>долю квалифицированных обращений</li><li><b>3</b>конверсию из заявки в показ и бронь</li><li><b>4</b>эффективность связок по каждому ЖК</li></ol></div>
-      </div>
-    </div>
-    <div role="tabpanel" id="s2" aria-labelledby="st2" hidden>
-      <p class="k-lead" style="max-width:760px">В B2B решение принимают несколько человек, а сделка может длиться месяцами. Важно получать обращения от компаний и ЛПР и видеть, какие заявки доходят до КП и договора.</p>
-      <div class="k-duo k-mt" style="border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
-        <div><span class="k-pill k-pill--dark" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>кампании по продуктам и направлениям услуг</li><li>рекламу на отрасли и регионы поставки</li><li>кампании на профессиональные и технические запросы</li><li>ретаргетинг на посетителей каталога и прайса</li><li>кампании на бренд и конкурентов</li><li>связки под длинный цикл сделки и повторные касания</li></ul></div>
-        <div><span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Что оптимизируем</span><ol class="d-optim"><li><b>1</b>стоимость целевой заявки</li><li><b>2</b>долю обращений от компаний и ЛПР</li><li><b>3</b>конверсию из заявки в КП и встречу</li><li><b>4</b>выручку по рекламным кампаниям</li></ol></div>
-      </div>
-    </div>
-    <div role="tabpanel" id="s3" aria-labelledby="st3" hidden>
-      <p class="k-lead" style="max-width:760px">В ecom результат считается в заказах и выручке. Реклама учитывает каталог, остатки, маржинальность и сезонность, а бюджет уходит в категории с лучшей окупаемостью.</p>
-      <div class="k-duo k-mt" style="border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
-        <div><span class="k-pill k-pill--dark" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>товарные кампании и ЕПК по фиду</li><li>кампании по категориям и брендам</li><li>рекламу на акции и сезонный спрос</li><li>динамический ретаргетинг на просмотренные товары</li><li>кампании на бренд магазина</li><li>связки под товары с высокой маржой</li></ul></div>
-        <div><span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Что оптимизируем</span><ol class="d-optim"><li><b>1</b>ДРР и стоимость заказа</li><li><b>2</b>конверсию корзины и оформления</li><li><b>3</b>выручку по категориям и товарным группам</li><li><b>4</b>долю повторных покупок</li></ol></div>
-      </div>
+      <div class="k-car__bar"><span class="k-car__count">01 / 03</span><span class="k-car__progress"><i></i></span><span class="k-car__btns"><button type="button" data-k-prev aria-label="Назад"><svg class="k-icon" style="transform:rotate(180deg)"><use href="#k-i-arrow-r"/></svg></button><button type="button" data-k-next aria-label="Вперёд"><svg class="k-icon"><use href="#k-i-arrow-r"/></svg></button></span></div>
     </div>
   </div>
 
-  <div class="k-wrap k-sec k-sec--end" style="padding-bottom:calc(var(--k-sec) + var(--k-r-xl))">
-    <h2 class="k-mega k-center" style="max-width:9em">Наши кейсы</h2>
-    <p class="k-center k-muted" style="margin:40px auto 60px">Проекты, где реклама отвечает за заявки и продажи</p>
-    <div class="d-works">
-      <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 75% 25%, #F50F72 0%, transparent 60%), linear-gradient(150deg,#3b4150 0%,#1d2129 55%,#0e1014 100%)">
-        <span class="k-work__img"></span><span class="k-work__blur"></span>
-        <span class="k-work__top"><span class="k-work__title">Supernova — ЖК в микрорайоне Ближнее Арбеково</span><span class="k-work__logo" aria-hidden="true"></span></span>
-        <span class="k-work__about"><span>Недвижимость</span><p>Как достичь KPI по целевым лидам при жёстких критериях квалификации</p></span>
-        <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Директ</span><span class="k-bracket">Таргет VK</span><span class="k-bracket">Маркет-платформа</span></span></span>
-      </a>
-      <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 20% 30%, #ff8a3d 0%, transparent 60%), linear-gradient(150deg,#3f3a33 0%,#24201c 55%,#0f0e0c 100%)">
-        <span class="k-work__img"></span><span class="k-work__blur"></span>
-        <span class="k-work__top"><span class="k-work__title">Группа компаний «АДСТ»</span><span class="k-work__logo" aria-hidden="true"></span></span>
-        <span class="k-work__about"><span>Аренда спецтехники</span><p>Как с помощью Яндекс Директа увеличить клиентскую базу по аренде спецтехники в Санкт-Петербурге и ЛО</p></span>
-        <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Контекстная реклама</span></span></span>
-      </a>
-      <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 70% 70%, #209EE9 0%, transparent 55%), linear-gradient(150deg,#2f3d3a 0%,#1a2321 55%,#0c100f 100%)">
-        <span class="k-work__img"></span><span class="k-work__blur"></span>
-        <span class="k-work__top"><span class="k-work__title">«Супер Потолок» — натяжные потолки</span><span class="k-work__logo" aria-hidden="true"></span></span>
-        <span class="k-work__about"><span>B2C проекты</span><p>Количество обращений и замеров выросло в 2 раза</p></span>
-        <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Сайт</span><span class="k-bracket">Директ</span><span class="k-bracket">SEO</span><span class="k-bracket">Таргет</span></span></span>
-      </a>
-    </div>
-    <div class="k-center" style="text-align:center;margin-top:44px"><a href="#" class="k-btn k-btn--ghost k-btn--lg">Показать ещё</a></div>
-  </div>
-</section>
-
-<!-- ============ 7. Почему не работает, дорожная карта, тарифы, результаты ============ -->
-<section class="k-surface k-surface--white k-surface--lip" data-header="light" style="margin-top:calc(-1 * var(--k-r-xl));border-radius:var(--k-r-xl)">
+  <!-- Почему не работает: переключатель -->
   <div class="k-wrap k-sec">
-    <div class="k-title-c" style="margin-bottom:60px">
-      <span class="k-lead k-eyebrow-t">Разбор типичных ошибок</span>
-      <h2 class="k-h1" style="max-width:12em">Почему Яндекс Директ часто не приносит результат</h2>
-    </div>
-    <div class="k-table__labels"><span>Что делаем</span><span>Причина</span></div>
-    <div class="k-table">
-      <div class="k-table__side">
-        <div class="k-table__side-top"><p>Пять причин, которые мы чаще всего находим на аудите. Откройте причину, чтобы увидеть, как мы её исправляем.</p></div>
-        <div class="k-table__side-bottom"><a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Заказать аудит</a></div>
+    <div class="k-flip" data-k-flip>
+      <div class="k-head"><h2 class="k-h2">Почему Директ часто не приносит результат</h2>
+        <div class="k-flip__toggle" role="group" aria-label="Показать"><button type="button" data-k-flip-set="bad" aria-pressed="true">Как бывает</button><button type="button" class="is-pink" data-k-flip-set="fix" aria-pressed="false">Как делаем мы</button></div>
       </div>
-      <div class="k-table__list" data-k-accordion>
-        <div class="k-row k-row--q is-open"><button class="k-row__head" type="button"><span class="k-row__name">Кампании оптимизируются по неправильным целям</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Перед началом продвижения оцениваем потенциал сайта: текущую видимость, конкуренцию, спрос по услугам и возможный рост трафика.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Настраиваем цели и аналитику так, чтобы оценивать реальные обращения и их качество.</p></div></div></div></div>
-        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Семантика собрана слишком широко</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>В рекламу попадают информационные, случайные и некоммерческие запросы.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Разделяем спрос по намерению пользователя и чистим кампании от мусорного трафика.</p></div></div></div></div>
-        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Нет связи с CRM и продажами</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Рекламный кабинет показывает заявки, но бизнес не понимает, какие из них стали продажами.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Связываем рекламу с CRM-статусами и анализируем путь от клика до сделки.</p></div></div></div></div>
-        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Все заявки считаются одинаковыми</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Спам, дубли, неподходящие обращения и целевые лиды попадают в один отчёт.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Разделяем обращения по качеству и оптимизируем рекламу по тем лидам, которые реально нужны бизнесу.</p></div></div></div></div>
-        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Рекламу ведут отдельно от сайта</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
-          <div class="k-row__body"><div><div class="k-row__in"><p>Объявления обещают одно, посадочная страница говорит другое, пользователь не оставляет заявку.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Смотрим на всю связку: объявление, оффер, посадочную страницу, форму, квиз и обработку обращения.</p></div></div></div></div>
+      <div class="k-flip__rows">
+        <div class="k-flip__row"><span class="k-flip__n">01</span><h3>Кампании оптимизируются по неправильным целям</h3><div class="k-flip__txt"><p class="k-flip__bad">Стратегии обучаются на кликах и мусорных целях, а не на обращениях, которые нужны бизнесу.</p><p class="k-flip__fix">Настраиваем цели и аналитику так, чтобы оценивать реальные обращения и их качество.</p></div></div>
+        <div class="k-flip__row"><span class="k-flip__n">02</span><h3>Семантика собрана слишком широко</h3><div class="k-flip__txt"><p class="k-flip__bad">В рекламу попадают информационные, случайные и некоммерческие запросы.</p><p class="k-flip__fix">Разделяем спрос по намерению пользователя и чистим кампании от мусорного трафика.</p></div></div>
+        <div class="k-flip__row"><span class="k-flip__n">03</span><h3>Нет связи с CRM и продажами</h3><div class="k-flip__txt"><p class="k-flip__bad">Рекламный кабинет показывает заявки, но бизнес не понимает, какие из них стали продажами.</p><p class="k-flip__fix">Связываем рекламу с CRM-статусами и анализируем путь от клика до сделки.</p></div></div>
+        <div class="k-flip__row"><span class="k-flip__n">04</span><h3>Все заявки считаются одинаковыми</h3><div class="k-flip__txt"><p class="k-flip__bad">Спам, дубли, неподходящие обращения и целевые лиды попадают в один отчёт.</p><p class="k-flip__fix">Разделяем обращения по качеству и оптимизируем рекламу по тем лидам, которые реально нужны бизнесу.</p></div></div>
+        <div class="k-flip__row"><span class="k-flip__n">05</span><h3>Рекламу ведут отдельно от сайта</h3><div class="k-flip__txt"><p class="k-flip__bad">Объявления обещают одно, посадочная страница говорит другое, пользователь не оставляет заявку.</p><p class="k-flip__fix">Смотрим на всю связку: объявление, оффер, посадочную страницу, форму, квиз и обработку обращения.</p></div></div>
       </div>
     </div>
   </div>
 
+  <!-- Дорожная карта: горизонтальная дорожка -->
   <div class="k-wrap k-sec">
-    <div class="k-head">
-      <h2 class="k-h2">Как мы запускаем и развиваем рекламу</h2>
-      <p>Восемь этапов — от погружения в бизнес до плана на следующий период</p>
+    <div class="k-head"><h2 class="k-h2">Как мы запускаем и развиваем рекламу</h2><p>Восемь этапов — от погружения в бизнес до плана на следующий период</p></div>
+    <div class="k-car" data-k-car>
+      <ol class="k-car__track">
+        <li class="k-stepcard"><div class="k-tile k-tile--pink"><span class="k-tile__n">01</span><svg class="k-icon"><use href="#k-i-users"/></svg></div><h3 class="k-h4">Погружаемся в бизнес</h3><p>Изучаем продукт, аудиторию, географию, конкурентов, средний чек, маржу, цикл сделки и план продаж.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--lilac"><span class="k-tile__n">02</span><svg class="k-icon"><use href="#k-i-search"/></svg></div><h3 class="k-h4">Проводим аудит</h3><p>Проверяем сайт, рекламные кабинеты, Метрику, цели, CRM, текущие кампании и качество заявок.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--black"><span class="k-tile__n">03</span><svg class="k-icon"><use href="#k-i-target"/></svg></div><h3 class="k-h4">Формируем стратегию</h3><p>Определяем структуру кампаний, рекламные форматы, бюджет, KPI и точки контроля эффективности.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--mint"><span class="k-tile__n">04</span><svg class="k-icon"><use href="#k-i-chart"/></svg></div><h3 class="k-h4">Настраиваем аналитику</h3><p>Подключаем цели, события, звонки, формы, UTM-метки, e-commerce и CRM-данные.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--sand"><span class="k-tile__n">05</span><svg class="k-icon"><use href="#k-i-mega"/></svg></div><h3 class="k-h4">Запускаем кампании</h3><p>Готовим объявления, креативы, расширения, посадочные связки и запускаем рекламу по согласованной структуре.</p></li>
+        <li class="k-stepcard"><div class="k-tile"><span class="k-tile__n">06</span><svg class="k-icon"><use href="#k-i-eye"/></svg></div><h3 class="k-h4">Собираем статистику</h3><p>Анализируем первые данные, отсеиваем неэффективные запросы и площадки, проверяем качество обращений.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--pink"><span class="k-tile__n">07</span><svg class="k-icon"><use href="#k-i-bolt"/></svg></div><h3 class="k-h4">Оптимизируем и масштабируем</h3><p>Перераспределяем бюджет, тестируем гипотезы, улучшаем объявления, посадочные страницы и стратегии.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--black"><span class="k-tile__n">08</span><svg class="k-icon"><use href="#k-i-doc"/></svg></div><h3 class="k-h4">Отчитываемся и планируем</h3><p>Показываем результаты, выводы, проблемные зоны и план действий на следующий период.</p></li>
+      </ol>
+      <div class="k-car__bar"><a href="#audit" class="k-btn k-btn--pink k-btn--lg">Начать работу</a><span class="k-car__progress"><i></i></span><span class="k-car__btns"><button type="button" data-k-prev aria-label="Назад"><svg class="k-icon" style="transform:rotate(180deg)"><use href="#k-i-arrow-r"/></svg></button><button type="button" data-k-next aria-label="Вперёд"><svg class="k-icon"><use href="#k-i-arrow-r"/></svg></button></span></div>
     </div>
-    <ol class="d-roadmap">
-      <li><div class="k-tile k-tile--pink"><svg class="k-icon"><use href="#k-i-users"/></svg><span><span class="k-tile__n">01</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Погружаемся в бизнес</h3><p>Изучаем продукт, аудиторию, географию, конкурентов, средний чек, маржу, цикл сделки и план продаж.</p></li>
-      <li><div class="k-tile k-tile--lilac"><svg class="k-icon"><use href="#k-i-search"/></svg><span><span class="k-tile__n">02</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Проводим аудит</h3><p>Проверяем сайт, рекламные кабинеты, Метрику, цели, CRM, текущие кампании и качество заявок.</p></li>
-      <li><div class="k-tile k-tile--black"><svg class="k-icon"><use href="#k-i-target"/></svg><span><span class="k-tile__n">03</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Формируем стратегию</h3><p>Определяем структуру кампаний, рекламные форматы, бюджет, KPI и точки контроля эффективности.</p></li>
-      <li><div class="k-tile k-tile--mint"><svg class="k-icon"><use href="#k-i-chart"/></svg><span><span class="k-tile__n">04</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Настраиваем аналитику</h3><p>Подключаем цели, события, звонки, формы, UTM-метки, e-commerce и CRM-данные.</p></li>
-      <li><div class="k-tile k-tile--sand"><svg class="k-icon"><use href="#k-i-mega"/></svg><span><span class="k-tile__n">05</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Запускаем кампании</h3><p>Готовим объявления, креативы, расширения, посадочные связки и запускаем рекламу по согласованной структуре.</p></li>
-      <li><div class="k-tile"><svg class="k-icon"><use href="#k-i-eye"/></svg><span><span class="k-tile__n">06</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Собираем статистику</h3><p>Анализируем первые данные, отсеиваем неэффективные запросы и площадки, проверяем качество обращений.</p></li>
-      <li><div class="k-tile k-tile--pink"><svg class="k-icon"><use href="#k-i-bolt"/></svg><span><span class="k-tile__n">07</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Оптимизируем и масштабируем</h3><p>Перераспределяем бюджет, тестируем гипотезы, улучшаем объявления, посадочные страницы и стратегии.</p></li>
-      <li><div class="k-tile k-tile--black"><svg class="k-icon"><use href="#k-i-doc"/></svg><span><span class="k-tile__n">08</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Отчитываемся и планируем</h3><p>Показываем результаты, выводы, проблемные зоны и план действий на следующий период.</p></li>
-    </ol>
-    <div style="margin-top:56px"><a href="#audit" class="k-btn k-btn--pink k-btn--lg">Начать работу</a></div>
   </div>
 
+  <!-- Тарифы: таблица-аккордеон -->
   <div class="k-wrap k-sec" id="tariffs">
-    <div class="k-title-c" style="margin-bottom:60px">
-      <span class="k-lead k-eyebrow-t">Цены и формат</span>
-      <h2 class="k-h1">Форматы работы</h2>
-    </div>
+    <div class="k-title-c" style="margin-bottom:60px"><span class="k-lead k-eyebrow-t">Цены и формат</span><h2 class="k-h1">Форматы работы</h2></div>
     <div class="k-table__labels"><span>Описание</span><span>Тариф</span></div>
     <div class="k-table">
       <div class="k-table__side">
@@ -413,41 +360,42 @@
     </div>
   </div>
 
-  <div class="k-wrap k-sec">
-    <div class="k-head">
-      <h2 class="k-h2">Что вы получаете в результате</h2>
-      <p>Шесть изменений, которые клиенты замечают в первые месяцы работы</p>
-    </div>
-    <div class="d-results">
-      <article class="k-card k-card--pink"><span class="d-sq"><svg class="k-icon"><use href="#k-i-grid"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Понятную систему продвижения</h3><p>Вы понимаете, какие кампании работают, какие заявки они приводят и куда стоит направлять бюджет.</p></div></article>
-      <article class="k-card k-card--grey"><span class="d-sq"><svg class="k-icon"><use href="#k-i-chart"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Прозрачную аналитику</h3><p>Видите не только клики, но и обращения, качество лидов, продажи, выручку и эффективность каналов.</p></div></article>
-      <article class="k-card k-card--grey"><span class="d-sq"><svg class="k-icon"><use href="#k-i-ruble"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Оптимизацию бюджета</h3><p>Деньги перераспределяются в пользу кампаний, которые дают лучший результат.</p></div></article>
-      <article class="k-card k-card--blue"><span class="d-sq"><svg class="k-icon"><use href="#k-i-check"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Улучшение качества лидов</h3><p>Мы анализируем не только количество заявок, но и их пригодность для продаж.</p></div></article>
-      <article class="k-card k-card--blue"><span class="d-sq"><svg class="k-icon"><use href="#k-i-spark"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Постоянное развитие рекламы</h3><p>Регулярно тестируем гипотезы, обновляем объявления и ищем точки роста.</p></div></article>
-      <article class="k-card k-card--grey"><span class="d-sq"><svg class="k-icon"><use href="#k-i-funnel"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Рекомендации по всей воронке</h3><p>Если проблема не в рекламе, а в сайте, форме, оффере или обработке заявок, мы это покажем.</p></div></article>
+  <!-- Результат: стопка карточек -->
+  <div class="k-wrap k-sec k-sec--end">
+    <div class="k-head"><h2 class="k-h2">Что вы получаете в результате</h2><p>Шесть изменений, которые клиенты замечают в работе с рекламой</p></div>
+    <div class="k-pile">
+      <article class="k-pile__card" style="--i:0;--bg:var(--k-pink);--fg:#fff"><h3 class="k-h2">Понятную систему продвижения</h3><div class="k-pile__meta"><p>Вы понимаете, какие кампании работают, какие заявки они приводят и куда стоит направлять бюджет.</p><span class="k-pile__num">01</span></div></article>
+      <article class="k-pile__card" style="--i:1;--bg:#000;--fg:#fff"><h3 class="k-h2">Прозрачную аналитику</h3><div class="k-pile__meta"><p>Видите не только клики, но и обращения, качество лидов, продажи, выручку и эффективность каналов.</p><span class="k-pile__num">02</span></div></article>
+      <article class="k-pile__card" style="--i:2;--bg:var(--k-blue-50)"><h3 class="k-h2">Оптимизацию бюджета</h3><div class="k-pile__meta"><p>Деньги перераспределяются в пользу кампаний, которые дают лучший результат.</p><span class="k-pile__num">03</span></div></article>
+      <article class="k-pile__card" style="--i:3;--bg:var(--k-pink-50)"><h3 class="k-h2">Улучшение качества лидов</h3><div class="k-pile__meta"><p>Мы анализируем не только количество заявок, но и их пригодность для продаж.</p><span class="k-pile__num">04</span></div></article>
+      <article class="k-pile__card" style="--i:4;--bg:var(--k-mint)"><h3 class="k-h2">Постоянное развитие рекламы</h3><div class="k-pile__meta"><p>Регулярно тестируем гипотезы, обновляем объявления и ищем точки роста.</p><span class="k-pile__num">05</span></div></article>
+      <article class="k-pile__card" style="--i:5;--bg:var(--k-grey-50)"><h3 class="k-h2">Рекомендации по всей воронке</h3><div class="k-pile__meta"><p>Если проблема не в рекламе, а в сайте, форме, оффере или обработке заявок, мы это покажем.</p><span class="k-pile__num">06</span></div></article>
     </div>
   </div>
 </section>
 
-<!-- ============ 8. Тёмный низ: команда, аудит, вопросы, подвал ============ -->
+<!-- ============ Ночной низ: команда, аудит, вопросы, подвал ============ -->
 <section class="k-surface k-surface--night">
   <div class="k-wrap k-sec">
-    <div class="k-head">
-      <h2 class="k-h2">Над проектом работает команда, а не один специалист</h2>
-      <p>Смотрим на рекламу шире: оффер, сайт, аналитика, качество заявок и движение клиента по воронке</p>
-    </div>
-    <div class="k-marquee" style="--gap:10px;--dur:36s" aria-label="Роли в команде">
-      <div class="k-marquee__track">
-        <div class="k-svc k-svc--pink"><svg class="k-icon"><use href="#k-i-target"/></svg><span>Стратег / маркетолог</span></div>
-        <div class="k-svc"><svg class="k-icon"><use href="#k-i-mega"/></svg><span>Специалист по контекстной рекламе</span></div>
-        <div class="k-svc"><svg class="k-icon"><use href="#k-i-chart"/></svg><span>Аналитик</span></div>
-        <div class="k-svc"><svg class="k-icon"><use href="#k-i-layers"/></svg><span>Специалист по посадочным страницам</span></div>
-        <div class="k-svc"><svg class="k-icon"><use href="#k-i-pen"/></svg><span>Копирайтер</span></div>
-        <div class="k-svc"><svg class="k-icon"><use href="#k-i-grid"/></svg><span>Дизайнер</span></div>
-        <div class="k-svc"><svg class="k-icon"><use href="#k-i-users"/></svg><span>Project manager</span></div>
+    <div class="d-team">
+      <div class="k-stack" style="--gap:28px">
+        <span class="k-pill k-pill--dark" style="align-self:flex-start">Команда проекта</span>
+        <h2 class="k-h1">Над проектом работает команда, а не один специалист</h2>
+        <p class="k-muted" style="max-width:30em">Смотрим на рекламу шире: не только на настройки кампаний, но и на оффер, сайт, аналитику, качество заявок и движение клиента по воронке.</p>
+      </div>
+      <div class="k-orbit" style="--n:7" aria-label="Роли в команде">
+        <div class="k-orbit__core">Ваш<br>проект</div>
+        <div class="k-orbit__ring">
+          <div class="k-orbit__item" style="--i:0"><span><i><svg class="k-icon"><use href="#k-i-target"/></svg></i>Стратег / маркетолог</span></div>
+          <div class="k-orbit__item" style="--i:1"><span><i><svg class="k-icon"><use href="#k-i-mega"/></svg></i>Специалист по Директу</span></div>
+          <div class="k-orbit__item" style="--i:2"><span><i><svg class="k-icon"><use href="#k-i-chart"/></svg></i>Аналитик</span></div>
+          <div class="k-orbit__item" style="--i:3"><span><i><svg class="k-icon"><use href="#k-i-layers"/></svg></i>Посадочные страницы</span></div>
+          <div class="k-orbit__item" style="--i:4"><span><i><svg class="k-icon"><use href="#k-i-pen"/></svg></i>Копирайтер</span></div>
+          <div class="k-orbit__item" style="--i:5"><span><i><svg class="k-icon"><use href="#k-i-grid"/></svg></i>Дизайнер</span></div>
+          <div class="k-orbit__item" style="--i:6"><span><i><svg class="k-icon"><use href="#k-i-users"/></svg></i>Project manager</span></div>
+        </div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:clamp(64px,8vw,120px)"><a href="#" class="k-cta-big" data-k-modal>Оставить заявку</a></div>
   </div>
 
   <div class="k-wrap k-sec" id="audit">
@@ -455,21 +403,27 @@
       <div class="k-stack" style="--gap:32px">
         <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Бесплатный аудит</span>
         <h2 class="k-h1">Не уверены, что ваш Директ работает эффективно?</h2>
-        <p class="k-muted">Проведём аудит рекламных кампаний и покажем, где теряется бюджет, какие настройки мешают росту заявок и что можно улучшить в первую очередь.</p>
-        <div class="k-stack" style="--gap:16px">
-          <span class="k-small k-muted">Что проверим</span>
-          <div class="k-brackets"><span class="k-bracket">структуру кампаний</span><span class="k-bracket">объявления и креативы</span><span class="k-bracket">звонки и формы</span><span class="k-bracket">расходы и стоимость заявок</span><span class="k-bracket">семантику и минус-слова</span><span class="k-bracket">цели в Метрике</span><span class="k-bracket">посадочные страницы</span><span class="k-bracket">качество обращений</span></div>
+        <p class="k-muted">Покажем, где теряется бюджет, какие настройки мешают росту заявок и что улучшить в первую очередь. Отметьте, что вызывает сомнения, — начнём с этого.</p>
+        <div class="k-checks" data-k-checks id="audit-checks">
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Структура кампаний</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Объявления и креативы</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Звонки и формы</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Расходы и стоимость заявок</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Семантика и минус-слова</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Цели в Метрике</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Посадочные страницы</label>
+          <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Качество обращений</label>
         </div>
         <div class="k-row-flex"><span class="k-small k-muted">или напишите менеджеру</span><a href="#" class="k-btn k-btn--glass">Telegram</a><a href="#" class="k-btn k-btn--glass">WhatsApp</a></div>
       </div>
       <div class="d-audit__card">
+        <p class="k-checks__count" style="margin-bottom:24px">Отмечено <span data-k-checks-out="audit-checks">0</span> из 8 пунктов</p>
         <form class="k-form" data-k-form>
           <div class="k-field"><label for="a-name">Имя</label><input class="k-input" id="a-name" autocomplete="name" placeholder="Как к вам обращаться"></div>
           <div class="k-field"><label for="a-phone">Телефон*</label><input class="k-input" id="a-phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required><span class="k-error" id="a-phone-err" hidden>Укажите номер из 10–11 цифр</span></div>
           <div class="k-field"><label for="a-site">Сайт</label><input class="k-input" id="a-site" placeholder="example.ru"></div>
-          <div class="k-field"><label for="a-niche">Ниша</label><select class="k-input" id="a-niche"><option value="">Выберите нишу</option><option>Недвижимость</option><option>B2B</option><option>Ecom</option><option>Медицина</option><option>Другое</option></select></div>
-          <div class="k-field k-field--full"><label for="a-budget">Рекламный бюджет в месяц</label><select class="k-input" id="a-budget"><option value="">Выберите диапазон</option><option>до 100 000 ₽</option><option>100 000 – 300 000 ₽</option><option>300 000 – 1 000 000 ₽</option><option>более 1 000 000 ₽</option></select></div>
-          <div class="k-field k-field--full"><label for="a-comment">Комментарий</label><textarea class="k-input" id="a-comment" placeholder="Что сейчас не устраивает в рекламе"></textarea></div>
+          <div class="k-field"><label for="a-budget">Бюджет в месяц</label><select class="k-input" id="a-budget"><option value="">Выберите</option><option>до 100 000 ₽</option><option>100–300 тыс. ₽</option><option>300 тыс. – 1 млн ₽</option><option>более 1 млн ₽</option></select></div>
+          <div class="k-field k-field--full"><label for="a-comment">Комментарий</label><textarea class="k-input" id="a-comment" placeholder="Ниша и что сейчас не устраивает в рекламе"></textarea></div>
           <div class="k-field k-field--full"><span class="k-field__l">Удобный способ связи</span>
             <div class="k-chips" role="radiogroup" aria-label="Способ связи">
               <label class="k-chip"><input type="radio" name="a-way" id="aw1" checked><span>Телефон</span></label>
