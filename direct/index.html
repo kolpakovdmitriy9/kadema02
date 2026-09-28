@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Контекстная реклама в Яндекс Директ — Kadema Digital</title>
+<link rel="stylesheet" href="../ui/kadema-ui.css">
+<script src="../ui/kadema-ui.js" defer></script>
+<style>
+  /* локальные раскладки страницы «Директ» — всё остальное из kadema-ui.css */
+  .d-hero { --k-hero-img: url(../kadema-digital/images/hero.webp); }
+  .d-bento { grid-template-rows: auto auto; }
+  .d-bento .k-card--media { grid-row: span 2; min-height: 420px; --k-media: radial-gradient(70% 60% at 70% 20%, #F50F72 0%, rgba(245,15,114,0) 60%), radial-gradient(60% 50% at 10% 90%, #4a0033 0%, transparent 70%), linear-gradient(160deg, #2a0714, #0b0205); }
+  .d-years { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 12px; }
+  .d-years span { padding: 10px 18px; border-radius: 14px; background: rgba(255,255,255,.6); color: rgba(0,0,0,.4); font-size: 20px; }
+  .d-years span.on { background: #fff; color: #000; font-size: 26px; box-shadow: 0 10px 30px rgba(5,23,41,.08); }
+  .d-years small { display: block; font-size: 13px; color: var(--k-pink); margin-top: 4px; }
+  .d-dots { display: flex; }
+  .d-dots i { width: 44px; height: 44px; border-radius: 50%; background: #000; border: 3px solid var(--k-grey-50); margin-left: -12px; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 12px; }
+  .d-dots i:first-child { margin-left: 0; background: var(--k-pink); }
+  .d-statement { padding-block: var(--k-sec); }
+  .d-statement .k-small { max-width: 22ch; margin-inline: auto; text-align: left; }
+  .d-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .d-steps .k-card { min-height: 300px; }
+  .d-steps .k-card p { color: rgba(0,0,0,.55); margin-top: auto; }
+  .d-steps .k-h4 { margin-top: 12px; }
+  .d-roadmap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 48px 24px; }
+  .d-roadmap li { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .d-roadmap .k-tile { width: min(100%, 240px); }
+  .d-roadmap p { color: rgba(0,0,0,.55); }
+  .d-results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .d-results .k-card { min-height: 250px; justify-content: space-between; }
+  .d-results .k-card p { color: rgba(0,0,0,.55); }
+  .d-results .k-card--pink p { color: rgba(255,255,255,.8); }
+  .d-sq { width: 56px; height: 56px; border-radius: var(--k-r-xs); background: #fff; color: var(--k-pink); display: grid; place-items: center; }
+  .d-works { max-width: 876px; margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
+  .d-audit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+  .d-audit__card { background: #fff; color: #000; border-radius: var(--k-r-xl); padding: clamp(24px, 3.4vw, 44px); }
+  .d-optim { display: grid; gap: 0; }
+  .d-optim li { display: flex; align-items: center; gap: 20px; padding-block: 18px; border-top: 1px solid rgba(255,255,255,.14); font-size: var(--k-fs-h4); line-height: 1.25; }
+  .d-optim li:first-child { border-top: 0; padding-top: 0; }
+  .d-optim b { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--k-pink); color: var(--k-pink); display: grid; place-items: center; font-weight: 500; font-size: 16px; }
+  .d-flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; }
+  .d-flow .k-icon { width: 18px; height: 18px; opacity: .4; }
+  @media (max-width: 1100px) { .d-steps, .d-roadmap { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 900px) { .d-audit, .d-results { grid-template-columns: 1fr 1fr; } .d-audit { grid-template-columns: 1fr; } .d-bento .k-card--media { grid-row: auto; grid-column: 1 / -1; min-height: 360px; } }
+  @media (max-width: 560px) { .d-steps, .d-results { grid-template-columns: 1fr; } .d-roadmap { grid-template-columns: 1fr 1fr; gap: 32px 16px; } .d-steps .k-card { min-height: 0; } }
+</style>
+</head>
+<body>
+<header class="k-header">
+  <nav class="k-header__nav" aria-label="Основное меню">
+    <a href="../kadema-digital/" class="k-logo" aria-label="Kadema Digital"><svg width="200" height="30" viewBox="0 0 200 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.99583 1.99583C0 3.99083 0 6.63083 0 13.0558V15.3275C0 21.7525 0 24.3925 1.99583 26.3875C3.9275 28.32 6.4325 28.3833 12.4617 28.3833H15.915C21.9442 28.3833 24.4483 28.3192 26.3808 26.3875C28.3133 24.4558 28.3758 21.3775 28.3758 15.3558V13.035C28.3758 7.00583 28.3125 3.935 26.3808 1.99583C24.385 0 21.7458 0 15.32 0H13.05C6.63083 0 3.99083 0 1.99583 1.99583Z" fill="url(#paint0_linear_182_1530)"/>
+        <path d="M7.14747 13.593H12.9425C14.2025 13.593 15.2991 13.4938 16.2116 13.303C17.1316 13.1046 17.9033 12.8288 18.5258 12.468C19.5688 11.8914 20.4406 11.049 21.0525 10.0263C21.6666 9.00797 21.9725 7.80547 21.9725 6.42464H17.8116V6.4463C17.8116 7.38797 17.6275 8.60464 17.2591 9.27714C16.8916 9.9488 16.3041 10.473 15.5041 10.848C15.1008 11.0313 14.6833 11.1588 14.2591 11.223C13.8341 11.2938 13.1975 11.3221 12.3408 11.3221H10.3808V6.41797H6.36914V12.8013C6.36914 13.2321 6.72247 13.5788 7.14747 13.5788V13.593ZM18.5325 15.9996C17.9103 15.6396 17.1389 15.3613 16.2183 15.1646C15.2989 14.9719 14.2091 14.8749 12.9491 14.8738H7.15331C7.05097 14.8734 6.94956 14.8932 6.85493 14.9322C6.7603 14.9711 6.67432 15.0284 6.60196 15.1008C6.5296 15.1732 6.47228 15.2591 6.43332 15.3538C6.39436 15.4484 6.37453 15.5498 6.37497 15.6521V22.0355H10.3875V17.1313H12.3475C13.2041 17.1313 13.8475 17.1671 14.2658 17.2313C14.6908 17.2938 15.1075 17.4213 15.5108 17.6063C16.3175 17.9813 16.8983 18.5046 17.2658 19.1763C17.6341 19.8488 17.8175 21.0655 17.8175 22.0071V22.028H21.9783C21.9783 20.6488 21.6675 19.4455 21.0583 18.4263C20.4448 17.4052 19.5738 16.5632 18.5325 15.9846V15.9996Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M185.001 17.9146H183.986C183.134 17.9146 182.025 17.9837 181.255 18.3687C180.695 18.6487 180.415 19.0804 180.415 19.7104C180.415 20.1313 180.555 20.4812 180.87 20.7496C181.243 21.0646 181.757 21.1462 182.235 21.1462C182.726 21.1462 183.216 21.0646 183.671 20.8662C184.056 20.7029 184.406 20.4696 184.662 20.1312C184.896 19.8279 185.001 19.4896 185.001 19.1154V17.9146ZM153.252 20.3996C153.742 20.3996 154.244 20.3179 154.699 20.1079C155.084 19.9329 155.422 19.6754 155.667 19.3371C155.912 19.0104 156.017 18.6371 156.017 18.2288V16.1871C156.017 15.7787 155.901 15.4171 155.656 15.0904C155.399 14.7404 155.072 14.4954 154.687 14.3088C154.232 14.0988 153.742 14.0171 153.241 14.0171C152.471 14.0171 151.782 14.2387 151.268 14.8337C150.708 15.4871 150.557 16.3737 150.557 17.2021C150.557 18.0304 150.708 18.9404 151.268 19.5829C151.782 20.1663 152.471 20.3879 153.241 20.3879L153.252 20.3996ZM115.25 17.9137H114.235C113.382 17.9137 112.274 17.9837 111.504 18.3687C110.944 18.6487 110.664 19.0804 110.664 19.7104C110.664 20.1313 110.792 20.4812 111.119 20.7496C111.492 21.0646 112.006 21.1462 112.484 21.1462C112.977 21.1525 113.465 21.0572 113.919 20.8662C114.305 20.7029 114.655 20.4696 114.912 20.1312C115.145 19.8279 115.25 19.4896 115.25 19.1154V17.9137ZM79.6858 16.4446H84.925C84.8666 15.8263 84.7033 15.1729 84.3183 14.6829C83.84 14.0879 83.1516 13.8896 82.4041 13.8896C81.6108 13.8896 80.8641 14.0996 80.3391 14.7296C79.9425 15.2079 79.7558 15.8263 79.6858 16.4446ZM68.835 21.0771C69.3366 21.0771 69.85 20.9837 70.2933 20.7387C70.6878 20.5226 71.0241 20.2141 71.2733 19.8396C71.53 19.4546 71.635 19.0229 71.635 18.5562V16.5146C71.6466 16.0479 71.5533 15.6046 71.285 15.2196C71.0271 14.8516 70.6877 14.5481 70.2933 14.3329C69.85 14.0762 69.3483 13.9829 68.8466 13.9829C68.0525 14.0062 67.3758 14.2746 66.8741 14.9046C66.2908 15.6279 66.1508 16.6429 66.1508 17.5412C66.1508 18.4513 66.3141 19.4554 66.8741 20.1904C67.3641 20.8321 68.0408 21.0771 68.835 21.0771ZM58.4616 17.9271H57.4466C56.595 17.9271 55.4866 17.9962 54.7166 18.3812C54.1566 18.6612 53.8766 19.0929 53.8766 19.7229C53.8766 20.1437 54.0166 20.4937 54.3316 20.7621C54.705 21.0771 55.2183 21.1587 55.6966 21.1587C56.1866 21.1587 56.6766 21.0771 57.1316 20.8787C57.5166 20.7154 57.8666 20.4821 58.1233 20.1437C58.3566 19.8404 58.4616 19.5021 58.4616 19.1279V17.9271ZM130.01 9.88625L130.033 20.6212L131.83 20.6446C132.81 20.6446 133.895 20.5046 134.782 20.0729C135.528 19.7112 136.065 19.1271 136.403 18.3687C136.823 17.4237 136.94 16.2804 136.952 15.2654C136.952 14.2504 136.823 13.0954 136.403 12.1496C136.065 11.3912 135.528 10.8196 134.782 10.4579C133.895 10.0262 132.81 9.89792 131.83 9.88625H130.01ZM190.683 23.3746V7.15625H193.74V23.3746H190.683ZM184.989 15.6854C184.989 15.3471 184.931 14.9621 184.802 14.6704C184.686 14.4021 184.476 14.2387 184.207 14.1337C183.822 13.9937 183.309 13.9704 182.889 13.9821C182.142 13.9821 181.407 14.0638 180.672 14.1921C179.937 14.3321 179.213 14.5421 178.525 14.8337L178.315 14.9271L177.907 12.4421L178.047 12.3837C178.853 12.0869 179.685 11.864 180.532 11.7179C181.433 11.5544 182.347 11.4724 183.262 11.4729C184.184 11.4729 185.187 11.5546 186.027 11.9054C186.727 12.1971 187.252 12.6871 187.556 13.3871C187.917 14.1921 188.011 15.1721 188.011 16.0471V23.3512H185.106L185.082 22.2546C184.651 22.6396 184.126 22.9196 183.589 23.1296C182.856 23.4131 182.076 23.5595 181.29 23.5612C180.263 23.5612 179.26 23.3162 178.502 22.5929C177.767 21.8929 177.475 20.9712 177.475 19.9787C177.475 18.6371 177.977 17.5404 179.097 16.7704C180.368 15.8954 182.083 15.6737 183.589 15.6737H184.989V15.6854ZM169.354 14.2038H166.833V11.7062H169.354V8.00792H172.411V11.7062H176.215V14.2038H172.411V19.2087C172.411 19.6171 172.446 20.2712 172.726 20.5979C172.982 20.9012 173.484 20.9596 173.857 20.9596C174.184 20.9596 174.511 20.9246 174.826 20.8779C175.132 20.8282 175.433 20.7501 175.725 20.6446L175.947 20.5629L176.227 23.1412L176.075 23.1879C175.608 23.3279 175.141 23.4329 174.662 23.5029C174.214 23.5634 173.762 23.5946 173.309 23.5963C172.294 23.5963 171.069 23.4446 170.299 22.7212C169.529 22.0096 169.354 20.8896 169.354 19.8971V14.2038ZM162.038 23.3746L162.015 11.7762H165.048L165.072 23.3746H162.038ZM162.015 10.0612V7.15625H165.048L165.072 10.0846L162.015 10.0612ZM156.017 21.7062C155.621 22.0745 155.158 22.3635 154.652 22.5579C153.987 22.8263 153.276 22.9429 152.552 22.9429C151.128 22.9429 149.845 22.5229 148.9 21.4263C147.897 20.2712 147.593 18.7187 147.593 17.2262C147.593 15.7321 147.897 14.1804 148.9 13.0254C149.845 11.9288 151.128 11.5087 152.552 11.5087C153.299 11.5087 154.022 11.6254 154.711 11.9054C155.224 12.1037 155.702 12.3837 156.111 12.7571L156.134 11.7304H159.016V21.9746C159.016 23.6079 158.712 25.4163 157.534 26.6412C156.344 27.8662 154.559 28.1704 152.926 28.1704C152.05 28.1704 151.187 28.0888 150.335 27.9021C149.612 27.7504 148.888 27.5171 148.247 27.1437L148.142 27.0854L148.55 24.6112L148.783 24.7396C149.343 25.0662 149.962 25.2763 150.592 25.4279C151.268 25.5912 151.968 25.6729 152.669 25.6729C153.556 25.6729 154.629 25.5329 155.259 24.8329C155.912 24.1096 156.029 22.8846 156.029 21.9629V21.7062H156.017ZM142.354 23.3746L142.331 11.7762H145.365L145.388 23.3746H142.354ZM142.331 10.0612V7.15625H145.365L145.388 10.0846L142.331 10.0612ZM115.238 15.6971C115.238 15.3588 115.18 14.9738 115.052 14.6821C114.935 14.4138 114.725 14.2504 114.457 14.1454C114.071 14.0054 113.557 13.9821 113.137 13.9937C112.391 13.9937 111.656 14.0754 110.921 14.2038C110.186 14.3438 109.462 14.5537 108.774 14.8454L108.564 14.9388L108.156 12.4537L108.296 12.3954C109.102 12.0986 109.934 11.8757 110.781 11.7296C111.682 11.5661 112.595 11.4841 113.511 11.4846C114.433 11.4846 115.437 11.5662 116.277 11.9162C116.977 12.2079 117.502 12.6987 117.805 13.3987C118.167 14.2037 118.26 15.1838 118.26 16.0588V23.3629H115.355L115.332 22.2662C114.9 22.6512 114.375 22.9312 113.837 23.1412C113.104 23.4247 112.325 23.571 111.539 23.5729C110.512 23.5729 109.509 23.3279 108.751 22.6046C108.016 21.9046 107.724 20.9829 107.724 19.9904C107.724 18.6487 108.226 17.5521 109.346 16.7821C110.617 15.9071 112.332 15.6854 113.837 15.6854H115.238V15.6971ZM92.6725 12.8154C93.035 12.4478 93.4571 12.1441 93.9208 11.9171C94.5625 11.6129 95.2741 11.4963 95.9741 11.4963C96.6741 11.4963 97.3391 11.6013 97.9341 11.9171C98.3891 12.1504 98.7516 12.4879 99.0083 12.9204C99.3988 12.4739 99.88 12.1159 100.42 11.8704C101.073 11.5896 101.785 11.4846 102.497 11.4846C103.512 11.4846 104.597 11.7062 105.285 12.5121C105.997 13.3521 106.148 14.6004 106.148 15.6621V23.3629H103.197V16.3154C103.197 15.7671 103.138 15.0087 102.812 14.5537C102.532 14.1571 102.1 14.0404 101.633 14.0404C101.015 14.0404 100.467 14.2271 100.058 14.6937C99.615 15.1954 99.475 15.8371 99.475 16.4904V23.3629H96.4991V16.1171C96.4991 15.5921 96.4175 14.9737 96.0791 14.5421C95.7875 14.1687 95.3791 14.0404 94.9241 14.0404C94.5275 14.0404 94.1658 14.1454 93.8391 14.3554C93.5098 14.5725 93.2409 14.8695 93.0575 15.2187C92.8475 15.6037 92.7658 16.0354 92.7658 16.4788V23.3512H89.79V11.6946H92.6258L92.6608 12.7921L92.6725 12.8154ZM79.6741 18.7537C79.7558 19.3604 79.9775 19.9329 80.4325 20.3646C81.0975 20.9712 82.0775 21.1112 82.9408 21.1112C83.5833 21.1112 84.2366 21.0412 84.8666 20.9246C85.485 20.8196 86.0916 20.6679 86.675 20.4462L86.885 20.3646L87.27 22.8146L87.13 22.8729C86.5116 23.1179 85.8583 23.2812 85.205 23.4096C84.4933 23.5379 83.77 23.6079 83.0466 23.6079C81.3425 23.6079 79.5925 23.2462 78.3208 22.0329C77.0725 20.8546 76.6525 19.2329 76.6525 17.5521C76.6525 15.8713 77.0375 14.3321 78.1925 13.1304C79.3125 11.9512 80.7941 11.5079 82.3925 11.5079C83.91 11.5079 85.345 11.9054 86.395 13.0487C87.48 14.2271 87.8066 15.8137 87.8066 17.3654C87.8066 17.5987 87.8066 17.8204 87.7833 18.0537C87.7833 18.2404 87.76 18.4271 87.7366 18.6138L87.7133 18.7771H79.6625L79.6741 18.7537ZM71.6233 12.8271L71.6466 7.15625H74.6216V23.3746H71.7633L71.74 22.2546C71.3316 22.6512 70.8533 22.9546 70.3283 23.1762C69.6406 23.4618 68.9021 23.6046 68.1575 23.5963C66.6991 23.5963 65.4391 23.1179 64.5058 21.9862C63.4908 20.7496 63.1991 19.1037 63.1991 17.5529C63.1991 16.0004 63.4908 14.3437 64.5058 13.1187C65.4391 11.9871 66.6991 11.5079 68.1583 11.5079C68.8816 11.5079 69.605 11.6246 70.27 11.9162C70.7833 12.1387 71.2383 12.4412 71.6233 12.8387V12.8271ZM58.45 15.6971C58.45 15.3588 58.3916 14.9738 58.2633 14.6821C58.1466 14.4138 57.9366 14.2504 57.6683 14.1454C57.2833 14.0054 56.77 13.9821 56.35 13.9937C55.6033 13.9937 54.8683 14.0754 54.1333 14.2038C53.3983 14.3438 52.675 14.5537 51.9858 14.8454L51.7758 14.9388L51.3675 12.4537L51.5075 12.3954C52.3142 12.0985 53.1462 11.8757 53.9933 11.7296C54.8941 11.5661 55.8078 11.4841 56.7233 11.4846C57.645 11.4846 58.6483 11.5662 59.4883 11.9162C60.1883 12.2079 60.7133 12.6987 61.0175 13.3987C61.3791 14.2037 61.4725 15.1838 61.4725 16.0588V23.3629H58.5666L58.5433 22.2662C58.1116 22.6512 57.5866 22.9312 57.05 23.1412C56.3168 23.4247 55.5377 23.571 54.7516 23.5729C53.725 23.5729 52.7216 23.3279 51.9625 22.6046C51.2275 21.9046 50.9358 20.9829 50.9358 19.9904C50.9358 18.6487 51.4375 17.5521 52.5575 16.7821C53.83 15.9071 55.545 15.6854 57.05 15.6854H58.45V15.6971ZM44.67 15.2654L50.3533 23.3746H46.8166L42.0916 16.6304H39.7V23.3746H36.6191V7.15625H39.7V13.9004H42.0916L46.8166 7.15625H50.3525L44.67 15.2654ZM126.941 23.3746V7.15625H131.643C133.848 7.15625 136.322 7.55292 137.967 9.15125C139.601 10.7262 140.032 13.0837 140.032 15.2654C140.032 17.4471 139.601 19.8038 137.967 21.3796C136.31 22.9779 133.848 23.3746 131.643 23.3746H126.941Z" fill="currentColor"/>
+        <defs>
+        <linearGradient id="paint0_linear_182_1530" x1="0.4525" y1="23.09" x2="27.3783" y2="5.64667" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F02D13"/>
+        <stop offset="1" stop-color="#F700A1"/>
+        </linearGradient>
+        </defs>
+        </svg></a>
+    <div class="k-header__links">
+      <a href="#" aria-current="page">Услуги</a>
+      <a href="#">О компании</a>
+      <a href="#">Кейсы</a>
+      <a href="#">Блог</a>
+      <a href="#">Контакты</a>
+    </div>
+    <button class="k-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="k-menu"><i></i><i></i></button>
+  </nav>
+  <div class="k-header__cta">
+    <a href="#" data-k-modal>Обратный звонок</a>
+    <a href="#" class="k-btn k-btn--black" data-k-modal>Обсудить проект</a>
+  </div>
+</header>
+<nav class="k-menu" id="k-menu" hidden aria-label="Меню">
+  <a href="#">Услуги</a><a href="#">О компании</a><a href="#">Кейсы</a><a href="#">Блог</a><a href="#">Контакты</a>
+  <a href="#" class="k-btn k-btn--pink k-btn--lg" data-k-modal>Обсудить проект</a>
+</nav>
+
+
+<main>
+<!-- ============ 1. Первый экран ============ -->
+<section class="k-hero d-hero">
+  <div class="k-hero__bg" aria-hidden="true"></div>
+  <div class="k-wrap k-hero__in">
+    <div class="k-marquee k-marquee--tags" aria-label="Коротко о нас">
+      <div class="k-marquee__track">
+        <span>1 место в рейтинге региональных агентств</span><span>•</span>
+        <span>Сертифицированное агентство Яндекса</span><span>•</span>
+        <span>Застройщики, B2B, ecom</span><span>•</span>
+        <span>CRM + сквозная аналитика</span><span>•</span>
+      </div>
+    </div>
+    <h1 class="k-h1">Контекстная реклама в&nbsp;Яндекс Директ</h1>
+    <p class="k-text k-hero__sub">Настраиваем и ведём рекламу с фокусом на заявки и продажи. Смотрим не на клики, а на CPL, qCPL, CPA, ДРР и выручку.</p>
+    <div class="k-hero__row">
+      <a href="#audit" class="k-btn k-btn--pink k-btn--lg">Бесплатная консультация</a>
+      <div class="k-person"><span class="k-person__ava">АР</span><span><b>Андрей Рыжов</b><span>Руководитель отдела рекламы</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. Коротко: факты ============ -->
+<section class="k-surface k-surface--white" data-header="light">
+  <div class="k-wrap k-sec">
+    <h2 class="k-h3" style="max-width:14ch;margin-bottom:60px">Performance-подход для бизнеса</h2>
+    <div class="k-bento d-bento">
+      <article class="k-card k-card--media">
+        <span class="k-pill k-pill--glass" style="align-self:flex-start;margin-bottom:auto">Performance</span>
+        <h3 class="k-h3">Не просто клики — считаем заявки, сделки и выручку</h3>
+        <div class="k-card__meta"><span>CPL</span><i></i><span>qCPL</span><i></i><span>CPA</span><i></i><span>ДРР</span></div>
+      </article>
+      <article class="k-card k-card--blue" style="align-items:center;justify-content:center">
+        <div class="d-years" aria-label="Годы работы">
+          <span>2016</span>
+          <span class="on">10+ лет<small>в digital-маркетинге</small></span>
+          <span>2026</span>
+        </div>
+      </article>
+      <article class="k-card k-card--grey">
+        <div class="k-row-flex" style="justify-content:space-between">
+          <h3 class="k-h4" style="max-width:10ch">Застройщики, B2B, ecom</h3>
+          <div class="d-dots" aria-hidden="true"><i>Ж</i><i>B2B</i><i>E</i></div>
+        </div>
+        <p class="k-muted">Знаем особенности сложных ниш и длинных сделок</p>
+      </article>
+      <div class="k-badge k-badge--pink">
+        <span class="k-badge__sq"><svg class="k-icon"><use href="#k-i-flag"/></svg></span>
+        <span><span class="k-badge__t">1 место</span><span class="k-badge__s" style="display:block">в рейтинге региональных агентств</span></span>
+      </div>
+      <article class="k-card k-card--black">
+        <svg class="k-icon" style="color:var(--k-pink)"><use href="#k-i-crm"/></svg>
+        <h3 class="k-h4">CRM + аналитика</h3>
+        <p class="k-muted">Связываем рекламу с реальными обращениями и продажами</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="k-wrap d-statement k-title-c">
+    <p class="k-small">Когда бизнесу нужна не просто настройка Директа,</p>
+    <p class="k-mega" style="font-size:clamp(40px,6.4vw,80px);line-height:1">а системная работа с рекламой</p>
+  </div>
+</section>
+
+<!-- ============ 3. Ситуации ============ -->
+<section class="k-surface k-surface--pink" data-header="light">
+  <div class="k-wrap k-sec k-sec--end">
+    <div class="k-title-c" style="margin-bottom:60px"><span class="k-lead k-eyebrow-t">С чем к нам приходят</span></div>
+    <div class="k-tasks">
+      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-funnel"/></svg>Реклама работает, но заявок мало</span><p>Показы есть, клики есть, бюджет тратится, но отдел продаж не получает стабильный поток обращений.</p></div>
+      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-users"/></svg>Лиды есть, но они нецелевые</span><p>В заявку приходят не ЛПР, неподходящие клиенты, спам, дубли или пользователи без реального намерения купить.</p></div>
+      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-ruble"/></svg>Непонятно, окупается ли реклама</span><p>В отчётах есть CTR, показы и клики, но нет связи с продажами, выручкой, сделками и качеством обращений.</p></div>
+      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-chart"/></svg>Стоимость заявки растёт</span><p>Кампании давно не пересобирались, семантика размыта, стратегии обучаются на мусорных целях.</p></div>
+      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-doc"/></svg>Подрядчик ведёт рекламу формально</span><p>Раз в месяц присылает отчёт, но не предлагает гипотез, не анализирует воронку и не показывает, что делать дальше.</p></div>
+      <div class="k-task"><span class="k-task__h"><svg class="k-icon"><use href="#k-i-bolt"/></svg>Бизнес хочет масштабироваться</span><p>Нужно увеличить объём заявок или продаж, но без хаотичного роста бюджета и ухудшения качества трафика.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. Ниши + 5. Что входит ============ -->
+<section class="k-surface k-surface--white k-surface--lip" data-header="light">
+  <div class="k-wrap k-sec">
+    <div class="k-title-c" style="margin-bottom:48px">
+      <span class="k-lead k-eyebrow-t">Ниши</span>
+      <h2 class="k-h1" style="max-width:13em">Настраиваем рекламу под вашу бизнес-модель</h2>
+    </div>
+    <div class="k-tabs k-tabs--scroll" data-k-tabs role="tablist" aria-label="Ниши" style="justify-content:center;margin-bottom:56px">
+      <button class="k-tab" role="tab" aria-selected="true" aria-controls="n1" id="nt1">Застройщикам</button>
+      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n2" id="nt2" tabindex="-1">B2B</button>
+      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n3" id="nt3" tabindex="-1">Ecom</button>
+      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n4" id="nt4" tabindex="-1">Медицина</button>
+      <button class="k-tab" role="tab" aria-selected="false" aria-controls="n5" id="nt5" tabindex="-1">Другие ниши</button>
+    </div>
+    <div class="k-table__labels"><span>Описание</span><span>Подход</span></div>
+
+    <div class="k-table" role="tabpanel" id="n1" aria-labelledby="nt1">
+      <div class="k-table__side">
+        <p>Помогаем получать не просто заявки на недвижимость, а квалифицированные обращения от людей с реальным интересом к покупке.</p>
+        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
+      </div>
+      <div class="k-table__list" data-k-accordion="multi">
+        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>класс и локацию ЖК</li><li>ипотечные программы и субсидированные ставки</li><li>срок сдачи и готовность дома</li><li>географию спроса</li><li>план продаж</li><li>качество обработки заявок отделом продаж</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость целевого лида, квалификацию обращений, заявки по конкретным ЖК, конверсию в показ, бронь и сделку.</p></div></div></div></div>
+      </div>
+    </div>
+    <div class="k-table" role="tabpanel" id="n2" aria-labelledby="nt2" hidden>
+      <div class="k-table__side">
+        <p>Настраиваем рекламу так, чтобы она приводила обращения от компаний, закупщиков, инженеров, собственников и других ЛПР.</p>
+        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
+      </div>
+      <div class="k-table__list" data-k-accordion="multi">
+        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>специфику продукта или услуги</li><li>регионы поставки</li><li>отрасли клиентов</li><li>цикл сделки</li><li>сложность принятия решения</li><li>повторные касания и прогрев</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость целевой заявки, качество обращения, статус в CRM, конверсию в КП, встречу, сделку и выручку.</p></div></div></div></div>
+      </div>
+    </div>
+    <div class="k-table" role="tabpanel" id="n3" aria-labelledby="nt3" hidden>
+      <div class="k-table__side">
+        <p>Запускаем рекламу с учётом каталога, фидов, категорий, маржинальности, сезонности и ДРР.</p>
+        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
+      </div>
+      <div class="k-table__list" data-k-accordion="multi">
+        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>товарные категории</li><li>средний чек</li><li>маржу</li><li>цикл сделки</li><li>повторные покупки</li><li>акции и сезонный спрос</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Заказы, выручку, ДРР, стоимость покупки, конверсию корзины, эффективность категорий и товарных групп.</p></div></div></div></div>
+      </div>
+    </div>
+    <div class="k-table" role="tabpanel" id="n4" aria-labelledby="nt4" hidden>
+      <div class="k-table__side">
+        <p>Настраиваем рекламу для клиник, стоматологий и медицинских центров с учётом специфики записи, консультаций и лечения.</p>
+        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
+      </div>
+      <div class="k-table__list" data-k-accordion="multi">
+        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>специализацию клиники и услуги</li><li>географию охвата и конкуренцию</li><li>режим работы и запись на приём</li><li>стоимость услуг и пакетов</li><li>отзывы и репутацию</li><li>сезонный спрос на процедуры</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость записи, конверсию в приём, повторные визиты, LTV пациента, эффективность каналов.</p></div></div></div></div>
+      </div>
+    </div>
+    <div class="k-table" role="tabpanel" id="n5" aria-labelledby="nt5" hidden>
+      <div class="k-table__side">
+        <p>Работаем с любыми направлениями бизнеса. От образовательных проектов до производства — подберём стратегию под вашу специфику.</p>
+        <a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Обсудить проект</a>
+      </div>
+      <div class="k-table__list" data-k-accordion="multi">
+        <div class="k-row is-open"><button class="k-row__head" type="button"><span class="k-row__name">Что учитываем</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><ul class="k-list k-list--cols"><li>специфику продукта или услуги</li><li>целевую аудиторию и регион</li><li>конкурентную среду</li><li>цикл сделки или принятия решения</li><li>маркетинговые каналы и историю</li><li>бюджет и цели роста</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span class="k-row__name">На что смотрим</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Стоимость заявки, качество лидов, конверсию в продажу, окупаемость рекламы, динамику роста.</p></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-wrap k-sec">
+    <div class="k-head">
+      <h2 class="k-h2">Что входит в настройку и ведение</h2>
+      <p>Восемь участков работы, которые закрываем внутри проекта</p>
+    </div>
+    <ol class="d-steps">
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-search"/></svg></span><span class="k-step__num">01</span></span><h3 class="k-h4">Аудит текущей ситуации</h3><p>Изучаем сайт, рекламные кабинеты, аналитику, CRM, посадочные страницы, заявки и текущую стоимость привлечения.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-target"/></svg></span><span class="k-step__num">02</span></span><h3 class="k-h4">Медиаплан и стратегия запуска</h3><p>Определяем, какие кампании запускать, какие сегменты разделить, какой бюджет нужен и какие показатели считать целевыми.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-layers"/></svg></span><span class="k-step__num">03</span></span><h3 class="k-h4">Сбор и кластеризация семантики</h3><p>Разделяем горячий спрос, брендовые запросы, конкурентов, категории, регионы, информационные и коммерческие запросы.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-gear"/></svg></span><span class="k-step__num">04</span></span><h3 class="k-h4">Настройка рекламных кампаний</h3><p>Запускаем поиск, РСЯ, ретаргетинг, ЕПК, товарные кампании и другие форматы под задачи бизнеса.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-pen"/></svg></span><span class="k-step__num">05</span></span><h3 class="k-h4">Подготовка объявлений и креативов</h3><p>Пишем заголовки, тексты, быстрые ссылки, уточнения, офферы, баннеры и объявления под разные сегменты аудитории.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-chart"/></svg></span><span class="k-step__num">06</span></span><h3 class="k-h4">Настройка аналитики</h3><p>Проверяем Метрику, цели, звонки, формы, UTM-метки, CRM-связку и корректность передачи данных.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-bolt"/></svg></span><span class="k-step__num">07</span></span><h3 class="k-h4">Оптимизация и развитие</h3><p>Отключаем неэффективные связки, перераспределяем бюджет, тестируем гипотезы, улучшаем объявления и посадочные страницы.</p></li>
+      <li class="k-card k-card--grey"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-doc"/></svg></span><span class="k-step__num">08</span></span><h3 class="k-h4">Отчётность и рекомендации</h3><p>Показываем не только расходы, но и результат: заявки, качество лидов, стоимость обращения, продажи, выручку и следующие шаги.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 6. Тёмная часть: аналитика, стратегии, кейсы ============ -->
+<section class="k-surface k-surface--dark">
+  <div class="k-wrap k-sec">
+    <div class="k-title-c">
+      <span class="k-pill k-pill--dark">Сквозная аналитика</span>
+      <h2 class="k-h1" style="max-width:12em">Связываем рекламу с реальными заявками и продажами</h2>
+      <p class="k-text k-muted" style="max-width:560px">Контекстная реклама не должна оцениваться только по кликам и показам. Нужно понимать, какие кампании приводят целевые обращения, какие заявки доходят до продаж, а какие просто тратят бюджет.</p>
+    </div>
+    <div class="d-flow k-mt" style="--mt:56px" aria-label="Путь клиента">
+      <span class="k-pill k-pill--dark">Клик</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
+      <span class="k-pill k-pill--dark">Визит</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
+      <span class="k-pill k-pill--dark">Заявка</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
+      <span class="k-pill k-pill--dark">Квалификация</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
+      <span class="k-pill k-pill--dark k-pill--pink">Сделка</span><svg class="k-icon"><use href="#k-i-arrow-r"/></svg>
+      <span class="k-pill k-pill--dark k-pill--pink">Выручка</span>
+    </div>
+    <div class="k-duo k-mt" style="--mt:56px;border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
+      <div>
+        <span class="k-pill k-pill--dark" style="align-self:flex-start">Что настраиваем и проверяем</span>
+        <div class="k-brackets"><span class="k-bracket">цели в Метрике</span><span class="k-bracket">звонки и call tracking</span><span class="k-bracket">UTM-метки</span><span class="k-bracket">связь с CRM</span><span class="k-bracket">передачу данных по лидам и продажам</span><span class="k-bracket">отправку форм</span><span class="k-bracket">клики по мессенджерам</span><span class="k-bracket">события e-commerce</span><span class="k-bracket">статусы заявок</span></div>
+      </div>
+      <div>
+        <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Результат для клиента</span>
+        <p class="k-h3" style="line-height:1.15">Вы видите, какие кампании приводят не просто обращения, а реальные возможности для продаж.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-wrap k-sec">
+    <div class="k-head">
+      <h2 class="k-h2">Как отличается стратегия в разных нишах</h2>
+      <div class="k-tabs" data-k-tabs role="tablist" aria-label="Стратегии" style="justify-content:flex-end">
+        <button class="k-tab" role="tab" aria-selected="true" aria-controls="s1" id="st1">Застройщики</button>
+        <button class="k-tab" role="tab" aria-selected="false" aria-controls="s2" id="st2" tabindex="-1">B2B</button>
+        <button class="k-tab" role="tab" aria-selected="false" aria-controls="s3" id="st3" tabindex="-1">Ecom</button>
+      </div>
+    </div>
+    <div role="tabpanel" id="s1" aria-labelledby="st1">
+      <p class="k-lead" style="max-width:760px">В недвижимости важно понять, насколько человек готов к покупке: интересуется конкретным ЖК, подходит ли по бюджету, рассматривает ипотеку, готов ли к звонку, показу или встрече.</p>
+      <div class="k-duo k-mt" style="border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
+        <div><span class="k-pill k-pill--dark" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>кампании по конкретным ЖК</li><li>рекламу по району, классу жилья и типу квартиры</li><li>кампании под ипотечные и акционные офферы</li><li>ретаргетинг на посетителей сайта и квиза</li><li>кампании на бренд и конкурентов</li><li>связки под готовые квартиры, старт продаж и спецпредложения</li></ul></div>
+        <div><span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Что оптимизируем</span><ol class="d-optim"><li><b>1</b>стоимость целевого лида</li><li><b>2</b>долю квалифицированных обращений</li><li><b>3</b>конверсию из заявки в показ и бронь</li><li><b>4</b>эффективность связок по каждому ЖК</li></ol></div>
+      </div>
+    </div>
+    <div role="tabpanel" id="s2" aria-labelledby="st2" hidden>
+      <p class="k-lead" style="max-width:760px">В B2B решение принимают несколько человек, а сделка может длиться месяцами. Важно получать обращения от компаний и ЛПР и видеть, какие заявки доходят до КП и договора.</p>
+      <div class="k-duo k-mt" style="border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
+        <div><span class="k-pill k-pill--dark" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>кампании по продуктам и направлениям услуг</li><li>рекламу на отрасли и регионы поставки</li><li>кампании на профессиональные и технические запросы</li><li>ретаргетинг на посетителей каталога и прайса</li><li>кампании на бренд и конкурентов</li><li>связки под длинный цикл сделки и повторные касания</li></ul></div>
+        <div><span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Что оптимизируем</span><ol class="d-optim"><li><b>1</b>стоимость целевой заявки</li><li><b>2</b>долю обращений от компаний и ЛПР</li><li><b>3</b>конверсию из заявки в КП и встречу</li><li><b>4</b>выручку по рекламным кампаниям</li></ol></div>
+      </div>
+    </div>
+    <div role="tabpanel" id="s3" aria-labelledby="st3" hidden>
+      <p class="k-lead" style="max-width:760px">В ecom результат считается в заказах и выручке. Реклама учитывает каталог, остатки, маржинальность и сезонность, а бюджет уходит в категории с лучшей окупаемостью.</p>
+      <div class="k-duo k-mt" style="border-top:1px solid rgba(255,255,255,.2);border-radius:var(--k-r-xl)">
+        <div><span class="k-pill k-pill--dark" style="align-self:flex-start">Что запускаем</span><ul class="k-list"><li>товарные кампании и ЕПК по фиду</li><li>кампании по категориям и брендам</li><li>рекламу на акции и сезонный спрос</li><li>динамический ретаргетинг на просмотренные товары</li><li>кампании на бренд магазина</li><li>связки под товары с высокой маржой</li></ul></div>
+        <div><span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Что оптимизируем</span><ol class="d-optim"><li><b>1</b>ДРР и стоимость заказа</li><li><b>2</b>конверсию корзины и оформления</li><li><b>3</b>выручку по категориям и товарным группам</li><li><b>4</b>долю повторных покупок</li></ol></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-wrap k-sec k-sec--end" style="padding-bottom:calc(var(--k-sec) + var(--k-r-xl))">
+    <h2 class="k-mega k-center" style="max-width:9em">Наши кейсы</h2>
+    <p class="k-center k-muted" style="margin:40px auto 60px">Проекты, где реклама отвечает за заявки и продажи</p>
+    <div class="d-works">
+      <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 75% 25%, #F50F72 0%, transparent 60%), linear-gradient(150deg,#3b4150 0%,#1d2129 55%,#0e1014 100%)">
+        <span class="k-work__img"></span><span class="k-work__blur"></span>
+        <span class="k-work__top"><span class="k-work__title">Supernova — ЖК в микрорайоне Ближнее Арбеково</span><span class="k-work__logo" aria-hidden="true"></span></span>
+        <span class="k-work__about"><span>Недвижимость</span><p>Как достичь KPI по целевым лидам при жёстких критериях квалификации</p></span>
+        <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Директ</span><span class="k-bracket">Таргет VK</span><span class="k-bracket">Маркет-платформа</span></span></span>
+      </a>
+      <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 20% 30%, #ff8a3d 0%, transparent 60%), linear-gradient(150deg,#3f3a33 0%,#24201c 55%,#0f0e0c 100%)">
+        <span class="k-work__img"></span><span class="k-work__blur"></span>
+        <span class="k-work__top"><span class="k-work__title">Группа компаний «АДСТ»</span><span class="k-work__logo" aria-hidden="true"></span></span>
+        <span class="k-work__about"><span>Аренда спецтехники</span><p>Как с помощью Яндекс Директа увеличить клиентскую базу по аренде спецтехники в Санкт-Петербурге и ЛО</p></span>
+        <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Контекстная реклама</span></span></span>
+      </a>
+      <a class="k-work" href="#" style="--k-media:radial-gradient(60% 60% at 70% 70%, #209EE9 0%, transparent 55%), linear-gradient(150deg,#2f3d3a 0%,#1a2321 55%,#0c100f 100%)">
+        <span class="k-work__img"></span><span class="k-work__blur"></span>
+        <span class="k-work__top"><span class="k-work__title">«Супер Потолок» — натяжные потолки</span><span class="k-work__logo" aria-hidden="true"></span></span>
+        <span class="k-work__about"><span>B2C проекты</span><p>Количество обращений и замеров выросло в 2 раза</p></span>
+        <span class="k-work__bottom"><span class="k-status" style="--dot:var(--k-green)">done</span><span class="k-brackets"><span class="k-bracket">Сайт</span><span class="k-bracket">Директ</span><span class="k-bracket">SEO</span><span class="k-bracket">Таргет</span></span></span>
+      </a>
+    </div>
+    <div class="k-center" style="text-align:center;margin-top:44px"><a href="#" class="k-btn k-btn--ghost k-btn--lg">Показать ещё</a></div>
+  </div>
+</section>
+
+<!-- ============ 7. Почему не работает, дорожная карта, тарифы, результаты ============ -->
+<section class="k-surface k-surface--white k-surface--lip" data-header="light" style="margin-top:calc(-1 * var(--k-r-xl));border-radius:var(--k-r-xl)">
+  <div class="k-wrap k-sec">
+    <div class="k-title-c" style="margin-bottom:60px">
+      <span class="k-lead k-eyebrow-t">Разбор типичных ошибок</span>
+      <h2 class="k-h1" style="max-width:12em">Почему Яндекс Директ часто не приносит результат</h2>
+    </div>
+    <div class="k-table__labels"><span>Что делаем</span><span>Причина</span></div>
+    <div class="k-table">
+      <div class="k-table__side">
+        <div class="k-table__side-top"><p>Пять причин, которые мы чаще всего находим на аудите. Откройте причину, чтобы увидеть, как мы её исправляем.</p></div>
+        <div class="k-table__side-bottom"><a href="#audit" class="k-btn k-btn--black" style="align-self:flex-start">Заказать аудит</a></div>
+      </div>
+      <div class="k-table__list" data-k-accordion>
+        <div class="k-row k-row--q is-open"><button class="k-row__head" type="button"><span class="k-row__name">Кампании оптимизируются по неправильным целям</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Перед началом продвижения оцениваем потенциал сайта: текущую видимость, конкуренцию, спрос по услугам и возможный рост трафика.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Настраиваем цели и аналитику так, чтобы оценивать реальные обращения и их качество.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Семантика собрана слишком широко</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>В рекламу попадают информационные, случайные и некоммерческие запросы.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Разделяем спрос по намерению пользователя и чистим кампании от мусорного трафика.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Нет связи с CRM и продажами</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Рекламный кабинет показывает заявки, но бизнес не понимает, какие из них стали продажами.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Связываем рекламу с CRM-статусами и анализируем путь от клика до сделки.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Все заявки считаются одинаковыми</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Спам, дубли, неподходящие обращения и целевые лиды попадают в один отчёт.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Разделяем обращения по качеству и оптимизируем рекламу по тем лидам, которые реально нужны бизнесу.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Рекламу ведут отдельно от сайта</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Объявления обещают одно, посадочная страница говорит другое, пользователь не оставляет заявку.</p><span class="k-bracket k-bracket--pink">Что делаем мы</span><p style="color:#000">Смотрим на всю связку: объявление, оффер, посадочную страницу, форму, квиз и обработку обращения.</p></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-wrap k-sec">
+    <div class="k-head">
+      <h2 class="k-h2">Как мы запускаем и развиваем рекламу</h2>
+      <p>Восемь этапов — от погружения в бизнес до плана на следующий период</p>
+    </div>
+    <ol class="d-roadmap">
+      <li><div class="k-tile k-tile--pink"><svg class="k-icon"><use href="#k-i-users"/></svg><span><span class="k-tile__n">01</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Погружаемся в бизнес</h3><p>Изучаем продукт, аудиторию, географию, конкурентов, средний чек, маржу, цикл сделки и план продаж.</p></li>
+      <li><div class="k-tile k-tile--lilac"><svg class="k-icon"><use href="#k-i-search"/></svg><span><span class="k-tile__n">02</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Проводим аудит</h3><p>Проверяем сайт, рекламные кабинеты, Метрику, цели, CRM, текущие кампании и качество заявок.</p></li>
+      <li><div class="k-tile k-tile--black"><svg class="k-icon"><use href="#k-i-target"/></svg><span><span class="k-tile__n">03</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Формируем стратегию</h3><p>Определяем структуру кампаний, рекламные форматы, бюджет, KPI и точки контроля эффективности.</p></li>
+      <li><div class="k-tile k-tile--mint"><svg class="k-icon"><use href="#k-i-chart"/></svg><span><span class="k-tile__n">04</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Настраиваем аналитику</h3><p>Подключаем цели, события, звонки, формы, UTM-метки, e-commerce и CRM-данные.</p></li>
+      <li><div class="k-tile k-tile--sand"><svg class="k-icon"><use href="#k-i-mega"/></svg><span><span class="k-tile__n">05</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Запускаем кампании</h3><p>Готовим объявления, креативы, расширения, посадочные связки и запускаем рекламу по согласованной структуре.</p></li>
+      <li><div class="k-tile"><svg class="k-icon"><use href="#k-i-eye"/></svg><span><span class="k-tile__n">06</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Собираем статистику</h3><p>Анализируем первые данные, отсеиваем неэффективные запросы и площадки, проверяем качество обращений.</p></li>
+      <li><div class="k-tile k-tile--pink"><svg class="k-icon"><use href="#k-i-bolt"/></svg><span><span class="k-tile__n">07</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Оптимизируем и масштабируем</h3><p>Перераспределяем бюджет, тестируем гипотезы, улучшаем объявления, посадочные страницы и стратегии.</p></li>
+      <li><div class="k-tile k-tile--black"><svg class="k-icon"><use href="#k-i-doc"/></svg><span><span class="k-tile__n">08</span><span class="k-tile__t" style="display:block;margin-top:8px">этап</span></span></div><h3 class="k-h4">Отчитываемся и планируем</h3><p>Показываем результаты, выводы, проблемные зоны и план действий на следующий период.</p></li>
+    </ol>
+    <div style="margin-top:56px"><a href="#audit" class="k-btn k-btn--pink k-btn--lg">Начать работу</a></div>
+  </div>
+
+  <div class="k-wrap k-sec" id="tariffs">
+    <div class="k-title-c" style="margin-bottom:60px">
+      <span class="k-lead k-eyebrow-t">Цены и формат</span>
+      <h2 class="k-h1">Форматы работы</h2>
+    </div>
+    <div class="k-table__labels"><span>Описание</span><span>Тариф</span></div>
+    <div class="k-table">
+      <div class="k-table__side">
+        <div class="k-table__side-top"><p>Стоимость — за работу агентства. Рекламный бюджет оплачивается отдельно, напрямую в Яндекс.</p></div>
+        <div class="k-table__side-bottom"><a href="#" class="k-btn k-btn--black" style="align-self:flex-start" data-k-modal>Получить расчёт стоимости</a><p class="k-table__note">Цены — ориентир для старта. Итоговую смету фиксируем до начала работ.</p></div>
+      </div>
+      <div class="k-table__list" data-k-accordion>
+        <div class="k-row is-open"><button class="k-row__head" type="button"><span><span class="k-row__name">Аудит рекламы и аналитики</span><span class="k-row__price">от 25 000 ₽</span></span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Для тех, у кого реклама уже запущена, но есть сомнения в эффективности.</p><ul class="k-list k-list--cols"><li>анализ рекламных кампаний</li><li>проверка Метрики и целей</li><li>проверка звонков, форм и CRM</li><li>анализ расходов и стоимости заявок</li><li>поиск точек слива бюджета</li><li>рекомендации по оптимизации</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span><span class="k-row__name">Настройка рекламы с нуля</span><span class="k-row__price">от 60 000 ₽</span></span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Для запуска нового проекта, продукта, ЖК, категории или региона.</p><ul class="k-list k-list--cols"><li>стратегия запуска</li><li>сбор семантики</li><li>структура кампаний</li><li>настройка объявлений</li><li>подключение базовой аналитики</li><li>запуск и первичная проверка</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span><span class="k-row__name">Ведение и развитие рекламы</span><span class="k-row__price">от 70 000 ₽ / месяц</span></span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Для бизнеса, которому нужен стабильный поток заявок или продаж.</p><ul class="k-list k-list--cols"><li>регулярная оптимизация кампаний</li><li>анализ качества лидов</li><li>работа с бюджетом</li><li>тестирование гипотез</li><li>отчётность</li><li>рекомендации по сайту и посадочным страницам</li></ul></div></div></div></div>
+        <div class="k-row"><button class="k-row__head" type="button"><span><span class="k-row__name">Performance-комплекс</span><span class="k-row__price">индивидуально</span></span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button>
+          <div class="k-row__body"><div><div class="k-row__in"><p>Для застройщиков, B2B и ecom-проектов, где важна вся воронка: от рекламы до продаж.</p><ul class="k-list k-list--cols"><li>рекламная стратегия</li><li>контекстная реклама</li><li>аналитика</li><li>CRM-данные</li><li>креативы</li><li>посадочные страницы</li><li>регулярная работа с воронкой</li></ul></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-wrap k-sec">
+    <div class="k-head">
+      <h2 class="k-h2">Что вы получаете в результате</h2>
+      <p>Шесть изменений, которые клиенты замечают в первые месяцы работы</p>
+    </div>
+    <div class="d-results">
+      <article class="k-card k-card--pink"><span class="d-sq"><svg class="k-icon"><use href="#k-i-grid"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Понятную систему продвижения</h3><p>Вы понимаете, какие кампании работают, какие заявки они приводят и куда стоит направлять бюджет.</p></div></article>
+      <article class="k-card k-card--grey"><span class="d-sq"><svg class="k-icon"><use href="#k-i-chart"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Прозрачную аналитику</h3><p>Видите не только клики, но и обращения, качество лидов, продажи, выручку и эффективность каналов.</p></div></article>
+      <article class="k-card k-card--grey"><span class="d-sq"><svg class="k-icon"><use href="#k-i-ruble"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Оптимизацию бюджета</h3><p>Деньги перераспределяются в пользу кампаний, которые дают лучший результат.</p></div></article>
+      <article class="k-card k-card--blue"><span class="d-sq"><svg class="k-icon"><use href="#k-i-check"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Улучшение качества лидов</h3><p>Мы анализируем не только количество заявок, но и их пригодность для продаж.</p></div></article>
+      <article class="k-card k-card--blue"><span class="d-sq"><svg class="k-icon"><use href="#k-i-spark"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Постоянное развитие рекламы</h3><p>Регулярно тестируем гипотезы, обновляем объявления и ищем точки роста.</p></div></article>
+      <article class="k-card k-card--grey"><span class="d-sq"><svg class="k-icon"><use href="#k-i-funnel"/></svg></span><div class="k-stack" style="--gap:12px"><h3 class="k-h4">Рекомендации по всей воронке</h3><p>Если проблема не в рекламе, а в сайте, форме, оффере или обработке заявок, мы это покажем.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. Тёмный низ: команда, аудит, вопросы, подвал ============ -->
+<section class="k-surface k-surface--night">
+  <div class="k-wrap k-sec">
+    <div class="k-head">
+      <h2 class="k-h2">Над проектом работает команда, а не один специалист</h2>
+      <p>Смотрим на рекламу шире: оффер, сайт, аналитика, качество заявок и движение клиента по воронке</p>
+    </div>
+    <div class="k-marquee" style="--gap:10px;--dur:36s" aria-label="Роли в команде">
+      <div class="k-marquee__track">
+        <div class="k-svc k-svc--pink"><svg class="k-icon"><use href="#k-i-target"/></svg><span>Стратег / маркетолог</span></div>
+        <div class="k-svc"><svg class="k-icon"><use href="#k-i-mega"/></svg><span>Специалист по контекстной рекламе</span></div>
+        <div class="k-svc"><svg class="k-icon"><use href="#k-i-chart"/></svg><span>Аналитик</span></div>
+        <div class="k-svc"><svg class="k-icon"><use href="#k-i-layers"/></svg><span>Специалист по посадочным страницам</span></div>
+        <div class="k-svc"><svg class="k-icon"><use href="#k-i-pen"/></svg><span>Копирайтер</span></div>
+        <div class="k-svc"><svg class="k-icon"><use href="#k-i-grid"/></svg><span>Дизайнер</span></div>
+        <div class="k-svc"><svg class="k-icon"><use href="#k-i-users"/></svg><span>Project manager</span></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:clamp(64px,8vw,120px)"><a href="#" class="k-cta-big" data-k-modal>Оставить заявку</a></div>
+  </div>
+
+  <div class="k-wrap k-sec" id="audit">
+    <div class="d-audit">
+      <div class="k-stack" style="--gap:32px">
+        <span class="k-pill k-pill--dark k-pill--pink" style="align-self:flex-start">Бесплатный аудит</span>
+        <h2 class="k-h1">Не уверены, что ваш Директ работает эффективно?</h2>
+        <p class="k-muted">Проведём аудит рекламных кампаний и покажем, где теряется бюджет, какие настройки мешают росту заявок и что можно улучшить в первую очередь.</p>
+        <div class="k-stack" style="--gap:16px">
+          <span class="k-small k-muted">Что проверим</span>
+          <div class="k-brackets"><span class="k-bracket">структуру кампаний</span><span class="k-bracket">объявления и креативы</span><span class="k-bracket">звонки и формы</span><span class="k-bracket">расходы и стоимость заявок</span><span class="k-bracket">семантику и минус-слова</span><span class="k-bracket">цели в Метрике</span><span class="k-bracket">посадочные страницы</span><span class="k-bracket">качество обращений</span></div>
+        </div>
+        <div class="k-row-flex"><span class="k-small k-muted">или напишите менеджеру</span><a href="#" class="k-btn k-btn--glass">Telegram</a><a href="#" class="k-btn k-btn--glass">WhatsApp</a></div>
+      </div>
+      <div class="d-audit__card">
+        <form class="k-form" data-k-form>
+          <div class="k-field"><label for="a-name">Имя</label><input class="k-input" id="a-name" autocomplete="name" placeholder="Как к вам обращаться"></div>
+          <div class="k-field"><label for="a-phone">Телефон*</label><input class="k-input" id="a-phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required><span class="k-error" id="a-phone-err" hidden>Укажите номер из 10–11 цифр</span></div>
+          <div class="k-field"><label for="a-site">Сайт</label><input class="k-input" id="a-site" placeholder="example.ru"></div>
+          <div class="k-field"><label for="a-niche">Ниша</label><select class="k-input" id="a-niche"><option value="">Выберите нишу</option><option>Недвижимость</option><option>B2B</option><option>Ecom</option><option>Медицина</option><option>Другое</option></select></div>
+          <div class="k-field k-field--full"><label for="a-budget">Рекламный бюджет в месяц</label><select class="k-input" id="a-budget"><option value="">Выберите диапазон</option><option>до 100 000 ₽</option><option>100 000 – 300 000 ₽</option><option>300 000 – 1 000 000 ₽</option><option>более 1 000 000 ₽</option></select></div>
+          <div class="k-field k-field--full"><label for="a-comment">Комментарий</label><textarea class="k-input" id="a-comment" placeholder="Что сейчас не устраивает в рекламе"></textarea></div>
+          <div class="k-field k-field--full"><span class="k-field__l">Удобный способ связи</span>
+            <div class="k-chips" role="radiogroup" aria-label="Способ связи">
+              <label class="k-chip"><input type="radio" name="a-way" id="aw1" checked><span>Телефон</span></label>
+              <label class="k-chip"><input type="radio" name="a-way" id="aw2"><span>Telegram</span></label>
+              <label class="k-chip"><input type="radio" name="a-way" id="aw3"><span>MAX</span></label>
+              <label class="k-chip"><input type="radio" name="a-way" id="aw4"><span>Email</span></label>
+            </div>
+          </div>
+          <label class="k-check"><input type="checkbox" id="a-ok" required><span>Даю согласие на обработку персональных данных и получение информационных сообщений <span class="k-error" id="a-ok-err" hidden>— нужно согласие</span></span></label>
+          <div class="k-form__foot"><button class="k-btn k-btn--pink k-btn--lg" type="submit">Получить аудит рекламы</button></div>
+          <p class="k-form__done" hidden>Прототип: форма заполнена верно, в рабочей версии заявка уйдёт менеджеру.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="k-wrap k-sec">
+    <div class="k-title-c" style="margin-bottom:60px"><span class="k-lead k-eyebrow-t">Коротко и по делу</span><h2 class="k-h1">Частые вопросы</h2></div>
+    <div class="k-table__labels k-table__labels--dark"><span>Не нашли ответ?</span><span>Вопрос</span></div>
+    <div class="k-table k-table--dark">
+      <div class="k-table__side"><div class="k-table__side-top"><p>Спросите напрямую — ответим в рабочее время.</p><a href="#" class="k-btn k-btn--pink" style="align-self:flex-start" data-k-modal>Задать вопрос</a></div></div>
+      <div class="k-table__list" data-k-accordion>
+        <div class="k-row k-row--q is-open"><button class="k-row__head" type="button"><span class="k-row__name">С какого бюджета есть смысл запускать контекстную рекламу?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Зависит от ниши, региона, конкуренции и целей. Для части проектов можно начинать с небольшого тестового бюджета, но в застройке, B2B и ecom важно сразу считать не только клики, а достаточный объём данных для оценки заявок, продаж и окупаемости.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Вы можете гарантировать количество заявок?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Мы можем подготовить прогноз и план запуска, но результат зависит от спроса, бюджета, конкуренции, сайта, оффера и обработки заявок. Поэтому мы не обещаем абстрактные «100 заявок за неделю», а строим систему, где результат можно измерять и улучшать.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Что такое целевой лид?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Целевой лид — это обращение, которое соответствует критериям бизнеса. Например, для застройщика это может быть человек, который интересуется покупкой квартиры в конкретном ЖК и подходит по бюджету. Для B2B — представитель компании, которому действительно нужна услуга или продукт.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Можно ли оптимизировать рекламу по продажам, а не по заявкам?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Да, если настроена корректная аналитика и есть данные из CRM или e-commerce. Чем лучше передаются данные о качестве лидов, заказах и продажах, тем точнее можно управлять рекламой.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Что делать, если Директ уже запускали, но он не окупился?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Начать с аудита. Часто проблема не в самом канале, а в неправильной структуре кампаний, слабой аналитике, нецелевых запросах, плохих посадочных страницах или отсутствии работы с качеством заявок.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Вы работаете только с Яндекс Директом?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>На этой странице речь о контекстной рекламе и Яндекс Директе. Но при необходимости мы смотрим шире: посадочные страницы, аналитику, CRM, SEO, креативы и другие каналы, которые влияют на итоговую эффективность маркетинга.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Как быстро можно понять, работает реклама или нет?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Первые выводы — после сбора статистики: анализируем первые данные, отсеиваем неэффективные запросы и площадки и проверяем качество обращений.</p></div></div></div></div>
+        <div class="k-row k-row--q"><button class="k-row__head" type="button"><span class="k-row__name">Вы помогаете с посадочными страницами?</span><span class="k-chev"><svg class="k-icon"><use href="#k-i-chev"/></svg></span></button><div class="k-row__body"><div><div class="k-row__in"><p>Да. Если видим, что реклама приводит трафик, но сайт плохо конвертирует, даём рекомендации по структуре, офферам, формам, квизам и посадочным страницам.</p></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="k-brand">
+  <div class="k-wrap">
+    <div class="k-brand__logo"><video data-k-autoplay muted loop playsinline preload="none" poster="../kadema-digital/media/office.jpg"><source src="../kadema-digital/media/office.webm" type="video/webm"><source src="../kadema-digital/media/office.mp4" type="video/mp4"></video></div>
+    <p class="k-brand__name">Kadema Digital</p>
+    <p class="k-brand__text">Агентство полного цикла: более 10 лет помогаем бизнесу привлекать клиентов через сайты и digital-маркетинг</p>
+    <a href="#" class="k-btn k-btn--pink k-btn--lg" data-k-modal>Обсудить проект</a>
+    <nav class="k-foot-nav" aria-label="Направления">
+      <a href="#">Разработка сайтов</a><a href="../direct/">Контекстная реклама</a><a href="#">Таргетированная реклама</a><a href="#">SEO-продвижение</a><a href="#">Аналитика</a>
+    </nav>
+    <div class="k-foot-contacts">
+      <a href="mailto:rop@marketing-na100.ru">rop@marketing-na100.ru</a>
+      <small>пн–пт с&nbsp;9:00 до&nbsp;18:00<br>г. Пенза, ул. Ставского, д.&nbsp;13, офис 104<br>© Kadema Digital, 2014–2026</small>
+      <a href="tel:+78412254720">+7 (8412) 25-47-20</a>
+    </div>
+  </div>
+</footer>
+
+</section>
+</main>
+
+<div class="k-modal" id="k-modal" aria-hidden="true">
+  <div class="k-modal__box" role="dialog" aria-modal="true" aria-labelledby="k-modal-t">
+    <button class="k-modal__close" type="button" aria-label="Закрыть">×</button>
+    <h3 class="k-h3" id="k-modal-t">Обсудим задачу</h3>
+    <p class="k-modal__sub">Оставьте контакты — перезвоним в рабочее время и зададим пару вопросов о проекте.</p>
+    <form class="k-form" data-k-form>
+      <div class="k-field k-field--full"><label for="m-name">Имя</label><input class="k-input" id="m-name" autocomplete="name"></div>
+      <div class="k-field k-field--full"><label for="m-phone">Телефон*</label><input class="k-input" id="m-phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required><span class="k-error" id="m-phone-err" hidden>Укажите номер из 10–11 цифр</span></div>
+      <label class="k-check"><input type="checkbox" id="m-ok" required><span>Даю согласие на обработку персональных данных <span class="k-error" id="m-ok-err" hidden>— нужно согласие</span></span></label>
+      <div class="k-form__foot"><button class="k-btn k-btn--pink k-btn--lg" type="submit">Отправить</button></div>
+      <p class="k-form__done" hidden>Прототип: форма заполнена верно, в рабочей версии заявка уйдёт менеджеру.</p>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
