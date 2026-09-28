@@ -71,7 +71,7 @@
 <section class="k-hero" style="min-height:0">
   <div class="k-hero__bg" aria-hidden="true" style="--k-hero-img:url(../kadema-digital/images/hero.webp)"></div>
   <div class="k-wrap k-hero__in kit-hero">
-    <span class="k-pill k-pill--glass" style="align-self:flex-start">Версия 1.0 · сентябрь 2026</span>
+    <span class="k-pill k-pill--glass" style="align-self:flex-start">Версия 2.0 · сентябрь 2026</span>
     <h1 class="k-h1">Kadema UI</h1>
     <p class="k-text k-hero__sub">Набор стилей и компонентов для страниц Kadema Digital. Собран из главной: шрифт Vela Sans, фирменный розовый, чёрное и светло-розовое полотно, таблицы-аккордеоны и метки в уголках. Всё адаптивно — от 360 до 1440+.</p>
     <div class="k-hero__row"><a href="../direct/" class="k-btn k-btn--pink k-btn--lg">Пример: страница «Директ»</a><a href="../kadema-digital/" class="k-btn k-btn--glass k-btn--lg">Главная</a></div>
@@ -79,7 +79,7 @@
 </section>
 
 <nav class="kit-nav" aria-label="Разделы набора"><div class="k-wrap">
-  <a href="#start">Подключение</a><a href="#colors">Цвет</a><a href="#type">Типографика</a><a href="#shape">Форма и сетка</a><a href="#buttons">Кнопки</a><a href="#labels">Метки</a><a href="#cards">Карточки</a><a href="#table">Таблица-аккордеон</a><a href="#blocks">Блоки</a><a href="#form">Формы</a><a href="#surfaces">Полотна</a><a href="#rules">Правила</a>
+  <a href="#start">Подключение</a><a href="#colors">Цвет</a><a href="#type">Типографика</a><a href="#shape">Форма и сетка</a><a href="#buttons">Кнопки</a><a href="#labels">Метки</a><a href="#cards">Карточки</a><a href="#table">Таблица-аккордеон</a><a href="#blocks">Блоки</a><a href="#blocks2">Блоки 2.0</a><a href="#form">Формы</a><a href="#surfaces">Полотна</a><a href="#rules">Правила</a>
 </div></nav>
 
 <!-- Подключение -->
@@ -238,6 +238,128 @@
   </div>
 </div></section>
 
+
+<!-- ===== Блоки 2.0 ===== -->
+<section class="kit-sec" id="blocks2"><div class="k-wrap">
+  <div class="k-head"><h2 class="k-h1" style="max-width:10em">Блоки 2.0</h2><p>Композиции для новых страниц. Правило: вместо сетки одинаковых карточек — блок, в котором есть действие, движение или иерархия</p></div>
+
+  <div class="k-stack" style="--gap:80px">
+  <div class="k-stack" style="--gap:20px"><span class="k-bracket k-bracket--pink">Фраза с вставками · .k-say</span>
+    <p class="k-say"><span class="k-dim">Kadema —</span> <span class="k-say__num">10+</span> лет в digital. Делаем сайты <span class="k-say__img" style="--k-media:linear-gradient(135deg,#2a0714,#F50F72)"></span> и рекламу <span class="k-say__ava" aria-hidden="true"><i>Ж</i><i>B2B</i><i>E</i></span> для бизнеса <span class="k-say__chip k-say__chip--pink">от 20 000 ₽</span></p>
+    <code>.k-say · .k-dim · .k-say__num · .k-say__chip(--pink|--black|--blue) · .k-say__ava › i · .k-say__img (--k-media)</code>
+  </div>
+
+  <div class="k-stack" style="--gap:20px"><span class="k-bracket k-bracket--pink">Список с фокусом · .k-focus</span>
+    <div class="k-focus">
+      <div class="k-focus__list" data-k-tabs="hover" role="tablist" aria-label="Пример списка">
+        <div class="k-focus__item is-on" data-k-item><button class="k-focus__btn" role="tab" aria-selected="true" aria-controls="kfs1" id="kfb1"><span class="k-focus__n">01</span><span class="k-focus__t">Заявок мало</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Строка раскрывается, справа меняется плитка. На телефоне плитка скрыта.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="kfs2" id="kfb2" tabindex="-1"><span class="k-focus__n">02</span><span class="k-focus__t">Лиды нецелевые</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Переключается наведением (data-k-tabs="hover") и кликом.</p></div></div>
+        <div class="k-focus__item" data-k-item><button class="k-focus__btn" role="tab" aria-selected="false" aria-controls="kfs3" id="kfb3" tabindex="-1"><span class="k-focus__n">03</span><span class="k-focus__t">CPL растёт</span><svg class="k-icon"><use href="#k-i-arrow"/></svg></button><div class="k-focus__desc"><p>Подходит для болей, симптомов, сценариев.</p></div></div>
+      </div>
+      <div class="k-focus__stage">
+        <div class="k-tile k-tile--pink" role="tabpanel" id="kfs1" aria-labelledby="kfb1"><svg class="k-icon"><use href="#k-i-funnel"/></svg><span><span class="k-tile__n">↓</span><span class="k-tile__t" style="display:block;margin-top:10px">Клики есть, заявок нет</span></span></div>
+        <div class="k-tile k-tile--black" role="tabpanel" id="kfs2" aria-labelledby="kfb2" hidden><svg class="k-icon"><use href="#k-i-users"/></svg><span><span class="k-tile__n">спам</span><span class="k-tile__t" style="display:block;margin-top:10px">Дубли и не ЛПР</span></span></div>
+        <div class="k-tile k-tile--sand" role="tabpanel" id="kfs3" aria-labelledby="kfb3" hidden><svg class="k-icon"><use href="#k-i-chart"/></svg><span><span class="k-tile__n">CPL ↑</span><span class="k-tile__t" style="display:block;margin-top:10px">Размытая семантика</span></span></div>
+      </div>
+    </div>
+    <code>.k-focus › .k-focus__list[data-k-tabs="hover"] › .k-focus__item[data-k-item] + .k-focus__stage › .k-tile[role=tabpanel]</code>
+  </div>
+
+  <div class="k-stack k-surface--pink" style="--gap:20px;padding:32px;border-radius:var(--k-r-xl)"><span class="k-bracket k-bracket--pink">Горизонтальный аккордеон · .k-hacc</span>
+    <div class="k-hacc" data-k-tabs role="tablist" aria-label="Пример аккордеона" style="height:420px">
+      <div class="k-hacc__panel is-on" data-k-item><button class="k-hacc__tab" role="tab" aria-selected="true" aria-controls="kh1" id="khb1"><b>01</b><span>Застройщики</span></button><div class="k-hacc__body is-on" role="tabpanel" id="kh1" aria-labelledby="khb1" data-k-keep><span class="k-pill k-pill--dark k-pill--pink">01 · Застройщикам</span><h3 class="k-h2">Активная колонка раскрывается, остальные сжимаются</h3><div class="k-hacc__cols"><ul class="k-list"><li>ниши, отрасли, тарифы</li><li>на телефоне — обычный аккордеон</li></ul><div class="k-hacc__watch"><span class="k-small" style="opacity:.5">Подсказка</span><p>Тело панели — data-k-keep</p></div></div></div></div>
+      <div class="k-hacc__panel" data-k-item><button class="k-hacc__tab" role="tab" aria-selected="false" aria-controls="kh2" id="khb2" tabindex="-1"><b>02</b><span>B2B</span></button><div class="k-hacc__body" role="tabpanel" id="kh2" aria-labelledby="khb2" data-k-keep><span class="k-pill k-pill--dark k-pill--pink">02 · B2B</span><h3 class="k-h2">Вторая панель</h3></div></div>
+      <div class="k-hacc__panel" data-k-item><button class="k-hacc__tab" role="tab" aria-selected="false" aria-controls="kh3" id="khb3" tabindex="-1"><b>03</b><span>Ecom</span></button><div class="k-hacc__body" role="tabpanel" id="kh3" aria-labelledby="khb3" data-k-keep><span class="k-pill k-pill--dark k-pill--pink">03 · Ecom</span><h3 class="k-h2">Третья панель</h3></div></div>
+    </div>
+    <code>.k-hacc[data-k-tabs] › .k-hacc__panel[data-k-item] › .k-hacc__tab[role=tab] + .k-hacc__body[data-k-keep]</code>
+  </div>
+
+  <div class="k-stack" style="--gap:20px"><span class="k-bracket k-bracket--pink">Облако выбора · .k-pick</span>
+    <div class="k-pick">
+      <div class="k-pick__cloud" data-k-tabs role="tablist" aria-label="Пример облака">
+        <button class="k-pick__chip" role="tab" aria-selected="true" aria-controls="kp1" id="kpc1"><i>01</i>Аудит</button>
+        <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="kp2" id="kpc2" tabindex="-1"><i>02</i>Семантика</button>
+        <button class="k-pick__chip" role="tab" aria-selected="false" aria-controls="kp3" id="kpc3" tabindex="-1"><i>03</i>Аналитика</button>
+      </div>
+      <div>
+        <div class="k-pick__pane" role="tabpanel" id="kp1" aria-labelledby="kpc1"><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-search"/></svg></span><span class="k-step__num">01</span></span><h3 class="k-h2">Состав работ, услуги, функции</h3><p>Для 5–10 пунктов с коротким описанием вместо сетки карточек.</p><span class="k-pick__big" aria-hidden="true">01</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="kp2" aria-labelledby="kpc2" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-layers"/></svg></span><span class="k-step__num">02</span></span><h3 class="k-h2">Второй пункт</h3><p>Панель появляется с мягким подъёмом.</p><span class="k-pick__big" aria-hidden="true">02</span></div>
+        <div class="k-pick__pane" role="tabpanel" id="kp3" aria-labelledby="kpc3" hidden><span class="k-step"><span class="k-step__icon"><svg class="k-icon"><use href="#k-i-chart"/></svg></span><span class="k-step__num">03</span></span><h3 class="k-h2">Третий пункт</h3><p>Большая цифра — водяной знак.</p><span class="k-pick__big" aria-hidden="true">03</span></div>
+      </div>
+    </div>
+    <code>.k-pick › .k-pick__cloud[data-k-tabs] › .k-pick__chip + .k-pick__pane (.k-pick__big)</code>
+  </div>
+
+  <div class="k-stack kit-demo--dark" style="--gap:20px;padding:32px;border-radius:var(--k-r-xl)"><span class="k-bracket k-bracket--pink">Поток · .k-flow</span>
+    <div class="k-flow"><span class="k-flow__dot"></span><span class="k-flow__dot" style="--d:-2.4s"></span>
+      <div class="k-flow__node"><span>Клик</span><small>UTM и Метрика</small></div><div class="k-flow__node"><span>Заявка</span><small>формы и звонки</small></div><div class="k-flow__node"><span>CRM</span><small>статусы</small></div><div class="k-flow__node k-flow__node--hot"><span>Сделка</span><small>выручка</small></div>
+    </div>
+    <code>.k-flow › .k-flow__dot(--d) + .k-flow__node(--hot) › span + small</code>
+  </div>
+
+  <div class="k-stack" style="--gap:20px"><span class="k-bracket k-bracket--pink">Дорожка / карусель · .k-car</span>
+    <div class="k-car" data-k-car>
+      <ol class="k-car__track">
+        <li class="k-stepcard"><div class="k-tile k-tile--pink"><span class="k-tile__n">01</span><svg class="k-icon"><use href="#k-i-users"/></svg></div><h3 class="k-h4">Этапы</h3><p>Линия с точками, первая — розовая.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--lilac"><span class="k-tile__n">02</span><svg class="k-icon"><use href="#k-i-search"/></svg></div><h3 class="k-h4">Свайп</h3><p>Прокрутка со снапом, стрелки и прогресс.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--black"><span class="k-tile__n">03</span><svg class="k-icon"><use href="#k-i-target"/></svg></div><h3 class="k-h4">Кейсы</h3><p>В треке могут быть и .k-work.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--mint"><span class="k-tile__n">04</span><svg class="k-icon"><use href="#k-i-chart"/></svg></div><h3 class="k-h4">Сколько угодно</h3><p>Счётчик .k-car__count — по желанию.</p></li>
+        <li class="k-stepcard"><div class="k-tile k-tile--sand"><span class="k-tile__n">05</span><svg class="k-icon"><use href="#k-i-mega"/></svg></div><h3 class="k-h4">Пятый</h3><p>Для примера прокрутки.</p></li>
+      </ol>
+      <div class="k-car__bar"><span class="k-car__count">01 / 05</span><span class="k-car__progress"><i></i></span><span class="k-car__btns"><button type="button" data-k-prev aria-label="Назад"><svg class="k-icon" style="transform:rotate(180deg)"><use href="#k-i-arrow-r"/></svg></button><button type="button" data-k-next aria-label="Вперёд"><svg class="k-icon"><use href="#k-i-arrow-r"/></svg></button></span></div>
+    </div>
+    <code>.k-car[data-k-car] › .k-car__track › (.k-stepcard | .k-work) + .k-car__bar › .k-car__count, .k-car__progress › i, [data-k-prev] [data-k-next]</code>
+  </div>
+
+  <div class="k-stack" style="--gap:20px"><span class="k-bracket k-bracket--pink">Переключатель «как бывает / как надо» · .k-flip</span>
+    <div class="k-flip" data-k-flip>
+      <div class="k-flip__toggle" role="group" aria-label="Показать" style="margin-bottom:24px"><button type="button" data-k-flip-set="bad" aria-pressed="true">Как бывает</button><button type="button" class="is-pink" data-k-flip-set="fix" aria-pressed="false">Как делаем мы</button></div>
+      <div class="k-flip__rows">
+        <div class="k-flip__row"><span class="k-flip__n">01</span><h3>Проблема</h3><div class="k-flip__txt"><p class="k-flip__bad">Так обычно бывает у клиента.</p><p class="k-flip__fix">Так это решаем мы.</p></div></div>
+        <div class="k-flip__row"><span class="k-flip__n">02</span><h3>Ещё одна</h3><div class="k-flip__txt"><p class="k-flip__bad">Текст уходит вверх с размытием.</p><p class="k-flip__fix">Решение приходит снизу.</p></div></div>
+      </div>
+    </div>
+    <code>.k-flip[data-k-flip] › .k-flip__toggle [data-k-flip-set="bad|fix"] + .k-flip__row › .k-flip__txt › .k-flip__bad + .k-flip__fix</code>
+  </div>
+
+  <div class="k-stack" style="--gap:20px"><span class="k-bracket k-bracket--pink">Стопка карточек · .k-pile</span>
+    <div class="k-pile">
+      <article class="k-pile__card" style="--i:0;--bg:var(--k-pink);--fg:#fff"><h3 class="k-h2">Карточки ложатся друг на друга при прокрутке</h3><div class="k-pile__meta"><p>position: sticky со сдвигом --i × 16px.</p><span class="k-pile__num">01</span></div></article>
+      <article class="k-pile__card" style="--i:1;--bg:#000;--fg:#fff"><h3 class="k-h2">Цвет — через --bg и --fg</h3><div class="k-pile__meta"><p>Чередуйте розовый, чёрный и светлые.</p><span class="k-pile__num">02</span></div></article>
+      <article class="k-pile__card" style="--i:2;--bg:var(--k-blue-50)"><h3 class="k-h2">3–6 карточек</h3><div class="k-pile__meta"><p>Для результатов, преимуществ, принципов.</p><span class="k-pile__num">03</span></div></article>
+    </div>
+    <code>.k-pile › .k-pile__card(style="--i;--bg;--fg") › h3 + .k-pile__meta › p + .k-pile__num</code>
+  </div>
+
+  <div class="k-stack kit-demo--dark" style="--gap:20px;padding:32px;border-radius:var(--k-r-xl)"><span class="k-bracket k-bracket--pink">Орбита · .k-orbit и чек-лист · .k-checks</span>
+    <div class="k-orbit" style="--n:5;--r:min(170px,24vw)">
+      <div class="k-orbit__core">Ваш<br>проект</div>
+      <div class="k-orbit__ring">
+        <div class="k-orbit__item" style="--i:0"><span><i><svg class="k-icon"><use href="#k-i-target"/></svg></i>Стратег</span></div>
+        <div class="k-orbit__item" style="--i:1"><span><i><svg class="k-icon"><use href="#k-i-mega"/></svg></i>Директолог</span></div>
+        <div class="k-orbit__item" style="--i:2"><span><i><svg class="k-icon"><use href="#k-i-chart"/></svg></i>Аналитик</span></div>
+        <div class="k-orbit__item" style="--i:3"><span><i><svg class="k-icon"><use href="#k-i-pen"/></svg></i>Копирайтер</span></div>
+        <div class="k-orbit__item" style="--i:4"><span><i><svg class="k-icon"><use href="#k-i-grid"/></svg></i>Дизайнер</span></div>
+      </div>
+    </div>
+    <div class="k-checks" data-k-checks id="kit-checks">
+      <label><input type="checkbox"><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Структура кампаний</label>
+      <label><input type="checkbox" checked><b><svg class="k-icon"><use href="#k-i-check"/></svg></b>Цели в Метрике</label>
+    </div>
+    <p class="k-checks__count">Отмечено <span data-k-checks-out="kit-checks">1</span> из 2</p>
+    <code>.k-orbit(style="--n") › .k-orbit__core + .k-orbit__ring › .k-orbit__item(--i) · .k-checks[data-k-checks][id] + [data-k-checks-out="id"]</code>
+  </div>
+
+  <div class="k-stack kit-demo--img" style="--gap:20px;padding:32px;border-radius:var(--k-r-xl)"><span class="k-bracket">Виджет-отчёт · .k-widget</span>
+    <aside class="k-widget"><div class="k-widget__head"><span>Сквозной отчёт</span><small>пример</small></div>
+      <div class="k-widget__row"><span>Клики</span><span class="k-widget__bar"><i style="--w:100%"></i></span><b>12 480</b></div>
+      <div class="k-widget__row k-widget__row--hot"><span>Сделки</span><span class="k-widget__bar"><i style="--w:16%"></i></span><b>57</b></div>
+      <div class="k-widget__foot"><span>CPL <b>1 850 ₽</b></span></div></aside>
+    <code style="color:rgba(255,255,255,.6)">.k-widget › .k-widget__head + .k-widget__row(--hot) › .k-widget__bar › i(--w, --d) + .k-widget__foot. Цифры — всегда с пометкой «пример»</code>
+  </div>
+  </div>
+</div></section>
+
 <!-- Формы -->
 <section class="kit-sec" id="form"><div class="k-wrap">
   <div class="k-head"><h2 class="k-h2">Формы</h2><p>На страницах форм почти нет — кнопки открывают окно. Встроенная форма — только для аудита и подобных офферов</p></div>
@@ -272,9 +394,12 @@
   <ul class="kit-rules">
     <li><b>Один розовый акцент на экран</b><span class="k-muted">Розовым — главная кнопка, активный таб или одна плашка. Остальное — чёрный, белый и серое.</span></li>
     <li><b>Крупный заголовок, тихий текст</b><span class="k-muted">Заголовки 46–128 с трекингом −0.04em, текст 16 с приглушением 50–60%.</span></li>
-    <li><b>Таблица вместо карточек</b><span class="k-muted">Списки с описаниями (тарифы, вопросы, причины) — таблицей-аккордеоном, а не сеткой карточек.</span></li>
-    <li><b>Метки в уголках — для процессов</b><span class="k-muted">⌜Этап⌟ и теги услуг. Пилюля с точкой — название раздела внутри тёмных блоков.</span></li>
-    <li><b>Чередуйте полотна</b><span class="k-muted">Белое → розовое → белое со скруглением → тёмное → ночное с подвалом.</span></li>
+    <li><b>Не больше одной сетки карточек на страницу</b><span class="k-muted">Однотипные пункты — через фокус-список, облако выбора, горизонтальный аккордеон, дорожку или стопку.</span></li>
+    <li><b>В каждом блоке — действие или движение</b><span class="k-muted">Наведение, переключение, свайп, прокрутка. Статичной оставляйте только таблицу тарифов.</span></li>
+    <li><b>Факты — фразой, а не плитками</b><span class="k-muted">Цифры и ниши вшивайте в крупный текст (.k-say), а не раскладывайте по карточкам.</span></li>
+    <li><b>Таблица — для списков с ценой и вопросов</b><span class="k-muted">Тарифы и FAQ — таблицей-аккордеоном. Это фирменный приём, его не меняем.</span></li>
+    <li><b>Метки в уголках — для процессов</b><span class="k-muted">⌜Этап⌟, теги услуг и подписи колонок. Пилюля с точкой — название раздела.</span></li>
+    <li><b>Чередуйте полотна свободно</b><span class="k-muted">Белое, розовое, тёмная вставка со скруглением внутри белого, ночной низ с подвалом. Порядок — по смыслу страницы.</span></li>
     <li><b>Формы — в окне</b><span class="k-muted">Кнопки «Обсудить проект», «Задать вопрос» открывают окно. Встроенная форма — только для отдельного оффера.</span></li>
   </ul>
 </div></section>

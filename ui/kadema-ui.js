@@ -1,6 +1,11 @@
 /* Kadema UI — поведение компонентов. Подключается после kadema-ui.css, с defer.
    Разметка управляется data-атрибутами:
-   data-k-tabs          — контейнер табов (кнопки role="tab" aria-controls="id панели")
+   data-k-tabs          — контейнер табов (кнопки role="tab" aria-controls="id панели");
+                          data-k-tabs="hover" — переключение ещё и наведением;
+                          [data-k-item] у родителя кнопки получает .is-on; панель с data-k-keep получает .is-on вместо hidden
+   data-k-car           — карусель/дорожка: .k-car__track, [data-k-prev], [data-k-next], .k-car__progress, .k-car__count
+   data-k-flip          — переключатель «как бывает / как делаем»: кнопки [data-k-flip-set="bad|fix"]
+   data-k-checks + id   — чек-лист; число отмеченных выводится в [data-k-checks-out="id"]
    data-k-accordion     — список .k-row; data-k-accordion="multi" — можно открыть несколько
    data-k-modal         — открыть окно #k-modal (любой ссылке или кнопке)
    data-k-form          — форма: проверка телефона и согласия, показ .k-form__done
@@ -76,13 +81,16 @@
     var tabs = [].slice.call(list.querySelectorAll('[role="tab"]'));
     function select(t, focus) {
       tabs.forEach(function (x) {
-        var on = x === t, p = d.getElementById(x.getAttribute('aria-controls'));
-        x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; if (p) p.hidden = !on;
+        var on = x === t, p = d.getElementById(x.getAttribute('aria-controls')), item = x.closest('[data-k-item]');
+        x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+        if (p) { if (p.hasAttribute('data-k-keep')) p.classList.toggle('is-on', on); else p.hidden = !on; }
+        if (item) item.classList.toggle('is-on', on);
       });
       if (focus) t.focus();
     }
     tabs.forEach(function (t, i) {
       t.addEventListener('click', function () { select(t); });
+      if (list.getAttribute('data-k-tabs') === 'hover' && matchMedia('(hover: hover)').matches) t.addEventListener('mouseenter', function () { select(t); });
       t.addEventListener('keydown', function (e) {
         var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
         if (step) { e.preventDefault(); select(tabs[(i + step + tabs.length) % tabs.length], true); }
@@ -136,6 +144,42 @@
       });
       var done = f.querySelector('.k-form__done'); if (done) done.hidden = !ok;
     });
+  });
+
+
+  /* ---------- карусель / дорожка: data-k-car ---------- */
+  [].forEach.call(d.querySelectorAll('[data-k-car]'), function (car) {
+    var tr = car.querySelector('.k-car__track'), prev = car.querySelector('[data-k-prev]'), next = car.querySelector('[data-k-next]'),
+        bar = car.querySelector('.k-car__progress'), cnt = car.querySelector('.k-car__count'), items = tr.children;
+    function step() { var c = items[0]; return c ? c.getBoundingClientRect().width + parseFloat(getComputedStyle(tr).columnGap || 16) : tr.clientWidth; }
+    function upd() {
+      var max = tr.scrollWidth - tr.clientWidth, x = tr.scrollLeft, k = max > 0 ? x / max : 1;
+      if (bar) bar.style.setProperty('--p', (Math.max(k, tr.clientWidth / tr.scrollWidth) * 100).toFixed(1) + '%');
+      if (prev) prev.disabled = x < 4; if (next) next.disabled = x > max - 4;
+      if (cnt) { var i = Math.min(items.length, Math.round(x / step()) + 1); cnt.textContent = String(i).padStart(2, '0') + ' / ' + String(items.length).padStart(2, '0'); }
+    }
+    if (prev) prev.addEventListener('click', function () { tr.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    if (next) next.addEventListener('click', function () { tr.scrollBy({ left: step(), behavior: 'smooth' }); });
+    tr.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+  });
+
+  /* ---------- переключатель «как бывает / как делаем»: data-k-flip ---------- */
+  [].forEach.call(d.querySelectorAll('[data-k-flip]'), function (box) {
+    var btns = [].slice.call(box.querySelectorAll('[data-k-flip-set]'));
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var fix = b.getAttribute('data-k-flip-set') === 'fix';
+        box.classList.toggle('is-fix', fix);
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+      });
+    });
+  });
+
+  /* ---------- чек-лист со счётчиком: data-k-checks ---------- */
+  [].forEach.call(d.querySelectorAll('[data-k-checks]'), function (box) {
+    var out = d.querySelectorAll('[data-k-checks-out="' + box.id + '"]');
+    function upd() { var n = box.querySelectorAll('input:checked').length; [].forEach.call(out, function (o) { o.textContent = n; }); }
+    box.addEventListener('change', upd); upd();
   });
 
   /* ---------- видео в логотипе: пауза вне экрана ---------- */
