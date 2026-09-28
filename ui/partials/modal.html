@@ -1,0 +1,14 @@
+<div class="k-modal" id="k-modal" aria-hidden="true">
+  <div class="k-modal__box" role="dialog" aria-modal="true" aria-labelledby="k-modal-t">
+    <button class="k-modal__close" type="button" aria-label="Закрыть">×</button>
+    <h3 class="k-h3" id="k-modal-t">Обсудим задачу</h3>
+    <p class="k-modal__sub">Оставьте контакты — перезвоним в рабочее время и зададим пару вопросов о проекте.</p>
+    <form class="k-form" data-k-form>
+      <div class="k-field k-field--full"><label for="m-name">Имя</label><input class="k-input" id="m-name" autocomplete="name"></div>
+      <div class="k-field k-field--full"><label for="m-phone">Телефон*</label><input class="k-input" id="m-phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required><span class="k-error" id="m-phone-err" hidden>Укажите номер из 10–11 цифр</span></div>
+      <label class="k-check"><input type="checkbox" id="m-ok" required><span>Даю согласие на обработку персональных данных <span class="k-error" id="m-ok-err" hidden>— нужно согласие</span></span></label>
+      <div class="k-form__foot"><button class="k-btn k-btn--pink k-btn--lg" type="submit">Отправить</button></div>
+      <p class="k-form__done" hidden>Прототип: форма заполнена верно, в рабочей версии заявка уйдёт менеджеру.</p>
+    </form>
+  </div>
+</div>
